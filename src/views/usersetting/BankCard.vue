@@ -1,0 +1,171 @@
+<template>
+  <van-row class="bankcard">
+    <van-row class="top_nav_bar nav_bgm">
+      <van-nav-bar title="设置" left-arrow @click-left="onBack()" />
+    </van-row>
+    <van-row class="bankcard_content">
+      <van-row class="flex card_item border_bom">
+        <span>开户名</span>
+        <span class="flex_1 sales_input">
+          <van-field v-model="name" placeholder="请输入" />
+        </span>
+      </van-row>
+      <van-row class="flex card_item border_bom">
+        <span class="title">开户行</span>
+        <van-row class="openingBank flex flex_1">
+          <span class="flex_1">{{openingBankValue ? openingBankValue:'请选择'}}</span>
+          <van-icon name="arrow" @click="showOpeningBank" />
+        </van-row>
+      </van-row>
+      <van-row class="flex card_item border_bom">
+        <span>银行卡号</span>
+        <span class="flex_1 sales_input">
+          <van-field v-model="bankCard" type="number" placeholder="你本人的银行卡卡号" />
+        </span>
+      </van-row>
+      <van-row class="notice">温馨提示：请提供与平台注册手机号绑定的银行账号</van-row>
+      <van-row class="public_btn">
+        <button @click="goContract">确&nbsp;认</button>
+      </van-row>
+    </van-row>
+    <!-- 开户行选择 -->
+    <!-- 上滑进入 -->
+    <van-row class="showbank">
+      <transition name="van-slide-up">
+        <van-row v-show="openingBankShow">
+          <van-picker
+            show-toolbar
+            title="开户行选择"
+            :columns="openingBank"
+            @cancel="openingBankShow = false"
+            @confirm="onConfirm"
+          />
+        </van-row>
+      </transition>
+    </van-row>
+  </van-row>
+</template>
+<script>
+import bankList from "@/js/bank";
+export default {
+  nama: "bankcard",
+  data() {
+    return {
+      openingBankShow: false,
+      bankList: bankList,
+      openingBank: [],
+      name: "",
+      bankCard: "",
+      openingBankValue: ""
+    };
+  },
+  created() {
+    // H5 plus事件处理
+    function plusReady() {
+      // 设置系统状态栏背景为蓝色
+      plus.navigator.setStatusBarBackground("#2A76FF");
+      plus.navigator.setStatusBarStyle("light");
+    }
+    if (window.plus) {
+      plusReady();
+    } else {
+      document.addEventListener("plusready", plusReady, false);
+    }
+    this.getBankList();
+  },
+  methods: {
+    onBack() {
+      history.back();
+    },
+    showOpeningBank() {
+      this.openingBankShow = true;
+    },
+    onConfirm(value) {
+      this.openingBankShow = false;
+      this.openingBankValue = value;
+    },
+    getBankList() {
+      let temp = [];
+      this.bankList.bankList.forEach(value => {
+        temp.push(value.text);
+      });
+      this.openingBank = temp;
+      console.log(temp);
+    },
+    goContract() {
+      this.$Dialog
+        .confirm({
+          message: "请确定提交信息是否正确，银行卡绑定是否与本人信息一致！",
+          confirmButtonText: "确定", //改变确认按钮上显示的文字
+          cancelButtonText: "修改" //改变取消按钮上显示的文字
+        })
+        .then(() => {
+          console.log("已确认信息无误！");
+          this.$router.push({ path: "/signcontract" });
+        })
+        .catch(() => {});
+    }
+  }
+};
+</script>
+<style>
+.padding_3 {
+  padding: 0.5rem 0.3rem;
+}
+
+.bankcard_content .padding_3 .van-cell {
+  font-size: 0.75rem;
+  padding: 0rem 1rem;
+}
+.card_item .van-cell {
+  font-size: 0.75rem;
+  padding: 0rem 1rem;
+}
+.bankcard .showbank {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+</style>
+<style scoped>
+.bankcard_content {
+  margin-top: 2rem;
+}
+.flex {
+  align-items: center;
+}
+.flex span {
+  font-size: 0.75rem;
+}
+.flex span:nth-child(1) {
+  width: 3rem;
+  text-align: left;
+}
+.openingBank {
+  color: #999;
+}
+.openingBank span {
+  font-size: 0.75rem;
+}
+.openingBank {
+  padding-left: 1rem;
+}
+.notice {
+  font-size: 0.625rem;
+  color: #999;
+  text-align: left;
+  margin-top: 0.3125rem;
+  padding: 0.3125rem 1rem;
+}
+.card_item {
+  padding: 0.6rem 1rem;
+}
+.public_btn {
+  padding: 0rem 1rem;
+}
+.openingBank .van-icon {
+  color: #c7c7cc;
+  font-size: 0.75rem;
+}
+</style>
