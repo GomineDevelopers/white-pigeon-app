@@ -63,6 +63,30 @@
           <van-icon name="arrow" @click="officeShow = true" />
         </van-row>
       </van-row>
+      <van-row class="info_module">
+        <van-row class="row_title">学历</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{educationValue ? educationValue:'请选择'}}</span>
+          <van-icon name="arrow" @click="educationShow = true" />
+        </van-row>
+      </van-row>
+      <van-row class="info_module">
+        <van-row class="row_title">专业人士分类</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{professionValue ? professionValue:'请选择'}}</span>
+          <van-icon name="arrow" @click="professionShow = true" />
+        </van-row>
+      </van-row>
+      <van-row class="info_module">
+        <van-row class="row_title">学术头衔</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{academicValue ? academicValue:'请选择'}}</span>
+          <van-icon name="arrow" @click="academicShow = true" />
+        </van-row>
+      </van-row>
+      <van-row class="public_btn">
+        <button>创&nbsp;建</button>
+      </van-row>
     </van-row>
 
     <!-- 医院选择 -->
@@ -135,6 +159,48 @@
         </van-row>
       </transition>
     </van-row>
+    <!-- 学历选择 -->
+    <van-row class="showbank">
+      <transition name="van-slide-up">
+        <van-row v-show="educationShow">
+          <van-picker
+            show-toolbar
+            title="学历选择"
+            :columns="educationList"
+            @cancel="educationShow = false"
+            @confirm="educationConfirm"
+          />
+        </van-row>
+      </transition>
+    </van-row>
+    <!-- 专业人士选择 -->
+    <van-row class="showbank">
+      <transition name="van-slide-up">
+        <van-row v-show="professionShow">
+          <van-picker
+            show-toolbar
+            title="专业人士选择"
+            :columns="professionList"
+            @cancel="professionShow = false"
+            @confirm="professionConfirm"
+          />
+        </van-row>
+      </transition>
+    </van-row>
+    <!-- 学术头衔选择 -->
+    <van-row class="showbank">
+      <transition name="van-slide-up">
+        <van-row v-show="academicShow">
+          <van-picker
+            show-toolbar
+            title="学术头衔选择"
+            :columns="academicList"
+            @cancel="academicShow = false"
+            @confirm="academicConfirm"
+          />
+        </van-row>
+      </transition>
+    </van-row>
   </van-row>
 </template>
 <script>
@@ -163,7 +229,16 @@ export default {
       customerStatusList: ["在职", "离职"],
       officeValue: "",
       officeShow: false,
-      officeList: ["院长", "主任医师", "副主任医师", "医师"]
+      officeList: ["院长", "主任医师", "副主任医师", "医师"],
+      educationValue: "",
+      educationShow: false,
+      educationList: ["本科", "硕士", "博士"],
+      professionValue: "",
+      professionShow: false,
+      professionList: ["专家", "专家", "专家"],
+      academicValue: "",
+      academicShow: false,
+      academicList: []
     };
   },
   created() {
@@ -202,6 +277,18 @@ export default {
     officeConfirm(value) {
       this.officeValue = value;
       this.officeShow = false;
+    },
+    educationConfirm(value) {
+      this.educationValue = value;
+      this.educationShow = false;
+    },
+    professionConfirm(value) {
+      this.professionValue = value;
+      this.professionShow = false;
+    },
+    academicConfirm(value) {
+      this.academicValue = value;
+      this.academicShow = false;
     }
   }
 };
