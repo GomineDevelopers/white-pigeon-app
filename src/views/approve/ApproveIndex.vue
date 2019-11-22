@@ -5,14 +5,14 @@
     </van-row>
     <van-row class="main_body height_auto">
       <van-row class="approve_nav flex">
-        <span :class="active ? 'active':''" @click="switchOption">全部</span>
-        <span :class="active ? '':'active'" @click="switchOption">待审批</span>
+        <span :class="active ? 'active':''" @click="switchOption">产品</span>
+        <span :class="active ? '':'active'" @click="switchOption">医生</span>
       </van-row>
       <van-row class="approve_content">
         <div class="approve_list" v-show="active">
           <div
             class="approve_item flex justify_between"
-            v-for="(item,index) in approveList"
+            v-for="(item,index) in productList"
             :key="index+'a'"
             @click="getDetail"
           >
@@ -43,9 +43,9 @@
         <div class="approve_list" v-show="!active">
           <div
             class="approve_item flex justify_between"
-            v-for="(item,index) in awaitApproveList"
+            v-for="(item,index) in hospitalList"
             :key="index+'b'"
-            @click="getDetail"
+            @click="getDoctorDetail"
           >
             <div class="approve_item_detail">
               <ul>
@@ -55,8 +55,8 @@
                   <span>{{item.hospitalName}}</span>
                 </li>
                 <li class="flex justify_start">
-                  <span>承诺销量：</span>
-                  <span>{{item.sales}}</span>
+                  <span>医生：</span>
+                  <span>{{item.doctor}}</span>
                 </li>
                 <li class="flex justify_start">
                   <span>申请时间：</span>
@@ -81,8 +81,8 @@ export default {
   data() {
     return {
       active: true,
-      //全部审批
-      approveList: [
+      //产品
+      productList: [
         {
           title: "XXXX提交的产品申请",
           hospitalName: "上海长海医院",
@@ -91,7 +91,7 @@ export default {
           approveState: "succeed"
         },
         {
-          title: "XXXX提交的医生申请",
+          title: "XXXX提交的产品申请",
           hospitalName: "上海长海医院",
           sales: "产品1 - 3321/月",
           approveDate: "2019.10.15 15:32:32",
@@ -105,7 +105,7 @@ export default {
           approveState: "notPass"
         },
         {
-          title: "XXXX提交的医生申请",
+          title: "XXXX提交的产品申请",
           hospitalName: "上海长海医院",
           sales: "产品1 - 3321/月",
           approveDate: "2019.10.15 15:32:32",
@@ -117,56 +117,49 @@ export default {
           sales: "产品1 - 3321/月",
           approveDate: "2019.10.15 15:32:32",
           approveState: "notPass"
-        },
-        {
-          title: "XXXX提交的医生申请",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "await"
         }
       ],
-      //待审批
-      awaitApproveList: [
+      //医生
+      hospitalList: [
         {
-          title: "XXXX提交的产品申请",
+          title: "XXXX提交的医生申请",
           hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
+          doctor: "张XX",
+          approveDate: "2019.10.15 15:32:32",
+          approveState: "succeed"
+        },
+        {
+          title: "XXXX提交的医生申请",
+          hospitalName: "上海长海医院",
+          doctor: "张XX",
           approveDate: "2019.10.15 15:32:32",
           approveState: "await"
         },
         {
           title: "XXXX提交的医生申请",
           hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
+          doctor: "张XX",
           approveDate: "2019.10.15 15:32:32",
-          approveState: "await"
+          approveState: "notPass"
         },
         {
-          title: "XXXX提交的产品申请",
+          title: "XXXX提交的医生申请",
           hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
+          doctor: "张XX",
           approveDate: "2019.10.15 15:32:32",
           approveState: "await"
         },
         {
           title: "XXXX提交的医生申请",
           hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
+          doctor: "张XX",
           approveDate: "2019.10.15 15:32:32",
-          approveState: "await"
+          approveState: "notPass"
         },
         {
           title: "XXXX提交的医生申请",
           hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "await"
-        },
-        {
-          title: "XXXX提交的医生申请",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
+          doctor: "张XX",
           approveDate: "2019.10.15 15:32:32",
           approveState: "await"
         }
@@ -195,6 +188,9 @@ export default {
     },
     getDetail() {
       this.$router.push({ path: "/hospitalapprove" });
+    },
+    getDoctorDetail() {
+      this.$router.push({ path: "/doctorapprove" });
     }
   }
 };

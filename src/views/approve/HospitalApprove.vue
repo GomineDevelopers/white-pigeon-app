@@ -3,7 +3,7 @@
     <van-row class="top_nav_bar nav_bgm">
       <van-nav-bar title="审批" left-arrow @click-left="onBack()" />
     </van-row>
-    <van-row class="main_body">
+    <van-row class="approve_content_body">
       <van-row class="approve_detail">
         <ul>
           <li>
@@ -24,14 +24,14 @@
           </li>
         </ul>
       </van-row>
-      <van-row class="handle">
-        <span>
-          <button class="refuse" @click="showRefuse">拒绝</button>
-        </span>
-        <span>
-          <button class="pass" @click="pass">通过</button>
-        </span>
-      </van-row>
+    </van-row>
+    <van-row class="handle">
+      <span>
+        <button class="refuse" @click="showRefuse">拒绝</button>
+      </span>
+      <span>
+        <button class="pass" @click="pass">通过</button>
+      </span>
     </van-row>
     <van-row class="refuse_daio">
       <van-dialog v-model="show" title="拒绝理由" show-cancel-button>
@@ -81,6 +81,10 @@ export default {
 }
 </style>
 <style scoped>
+.approve_content_body {
+  margin-top: 2rem;
+  padding: 0rem 1rem;
+}
 .approve_detail ul li {
   display: -webkit-flex;
   display: flex;
@@ -104,18 +108,23 @@ export default {
 .handle {
   display: -webkit-flex;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   position: fixed;
   bottom: 1.25rem;
-  width: 85%;
+  width: calc(100% - 2rem);
+  padding: 0rem 1rem;
   margin: auto;
+}
+.handle span {
+  width: 46%;
+  height: 1.5625rem;
 }
 .refuse,
 .pass {
-  width: 5.6875rem;
+  display: block;
+  width: 100%;
   height: 1.5625rem;
   line-height: 1.5625rem;
-  margin-left: 0.9375rem;
   border: none;
   border-radius: 0.25rem;
 }
@@ -126,5 +135,6 @@ export default {
 .pass {
   background: #3399ff;
   color: #fff;
+  margin-left: 0.7rem;
 }
 </style>

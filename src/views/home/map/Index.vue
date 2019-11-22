@@ -5,6 +5,16 @@
       <div class="img_button2" @click="goIndex3"></div>
       <div class="img_button3" @click="goIndex2"></div>
     </van-row>
+    <van-row class="search flex flex_align_center">
+      <van-row class="search_input flex flex_align_center">
+        <van-icon name="arrow-left" />
+        <van-field v-model="keywords" placeholder="请输入用户名" />
+        <span class="search_text">筛选</span>
+      </van-row>
+      <van-row class="search_icon flex flex_align_center" @click="showInput">
+        <van-icon name="search" />
+      </van-row>
+    </van-row>
     <!-- <baidu-map
       class="baidu_map_view"
       :center="center"
@@ -19,6 +29,7 @@ export default {
   name: "index",
   data() {
     return {
+      keywords: "",
       center: { lng: 0, lat: 0 },
       zoom: 11,
       mapStyle: {
@@ -2753,10 +2764,18 @@ export default {
     },
     goIndex3() {
       this.$router.push({ path: "/home/Children" });
-    }
+    },
+
+    // 搜索图标点击事件
+    showInput() {}
   }
 };
 </script>
+<style>
+.search .van-cell:not(:last-child)::after {
+  border-bottom: none;
+}
+</style>
 <style scoped>
 .index img {
   width: 100vw;
@@ -2793,5 +2812,48 @@ export default {
 .anchorBL {
   width: 0 !important;
   height: 0 !important;
+}
+
+/* 搜索开始 */
+.search {
+  position: fixed;
+  top: 3.5rem;
+  right: 1rem;
+  /* left: 0.5rem; */
+  height: 2rem;
+  /* background: #fff; */
+  border-radius: 0.25rem;
+}
+.search_icon {
+  height: 1.8rem;
+  width: 1.8rem;
+  border-radius: 50%;
+  background: #fff;
+  justify-content: center;
+  margin-left: 0.3rem;
+}
+.search_icon .van-icon {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #3399ff;
+}
+.search_input {
+  /* width: 78vw; */
+  width: calc(100vw - 4rem);
+  display: none;
+}
+.search_input .van-icon {
+  color: #a8aec1;
+}
+.search_input .van-cell {
+  font-size: 0.625rem;
+  border-bottom: none;
+}
+.search_text {
+  width: 3rem;
+  border-right: 1px solid #ccc;
+  padding-right: 0.3rem;
+
+  font-size: 0.625rem;
 }
 </style>

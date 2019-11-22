@@ -38,7 +38,7 @@
         class="approve_item flex justify_between"
         v-for="(item,index) in mettingList"
         :key="index+'b'"
-        @click="getDetail(item.visitState)"
+        @click="getDetail(item.mettingState)"
       >
         <div class="approve_item_detail">
           <ul>
@@ -153,6 +153,15 @@ export default {
     },
     newMetting() {
       this.$router.push({ path: "/newMetting" });
+    },
+    //点击每一项
+    getDetail(status) {
+      console.log(status);
+      if (status != "new") {
+        this.$router.push({ path: "/mettingdetailcontent" });
+      } else {
+        this.$router.push({ path: "/mettingdetailedit" });
+      }
     }
   }
 };

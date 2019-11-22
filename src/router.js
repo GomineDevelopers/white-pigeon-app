@@ -98,6 +98,18 @@ export default new Router({
         import( /* webpackChunkName: "metting" */ "./views/metting/NewMetting.vue")
     },
     {
+      path: "/mettingdetailcontent",
+      name: "mettingdetailcontent",
+      component: () =>
+        import( /* webpackChunkName: "metting" */ "./views/metting/MettingDetailContent.vue")
+    },
+    {
+      path: "/mettingdetailedit",
+      name: "mettingdetailedit",
+      component: () =>
+        import( /* webpackChunkName: "metting" */ "./views/metting/MettingDetailEdit.vue")
+    },
+    {
       path: "/notify",
       name: "notify",
       component: () =>
