@@ -18,6 +18,7 @@
           class="doctor_item flex flex_align_center"
           v-for="(list,index) in doctorList"
           :key="index+'do'"
+          @click="doctorDetail"
         >
           <van-row class="doctor_item_left flex_1">
             <van-row class="doctor_item_name">
@@ -116,6 +117,9 @@ export default {
     },
     newDoctor() {
       this.$router.push({ path: "/newdoctor" });
+    },
+    doctorDetail() {
+      this.$router.push({ path: "/doctordetail" });
     }
   }
 };

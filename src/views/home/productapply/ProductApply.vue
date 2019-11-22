@@ -194,7 +194,7 @@ export default {
   overflow: hidden;
 }
 .main_body3 {
-  padding: 0.5rem 1rem 1.25rem 1rem;
+  padding: 0rem 1rem 1.25rem 1rem;
   text-align: left;
   height: 70vh;
   overflow-y: auto;

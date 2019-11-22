@@ -81,22 +81,50 @@ export default {
         { name: "申请", link: "/home/productapply", span: "4" },
         { name: "积分", link: "/home/integral", span: "4" }
       ],
+      //左侧导航栏
       asideNav: [
         { name: "首页", src: require("../assets/image/sy.png"), link: "/home" },
-        { name: "拜访", src: require("../assets/image/bf.png"), link: "/home" },
-        { name: "会议", src: require("../assets/image/hy.png"), link: "/home" },
-        { name: "申请", src: require("../assets/image/sq.png"), link: "/home" },
-        { name: "奖金", src: require("../assets/image/jj.png"), link: "/home" },
+        {
+          name: "拜访",
+          src: require("../assets/image/bf.png"),
+          link: "/visitrecord"
+        },
+        {
+          name: "会议",
+          src: require("../assets/image/hy.png"),
+          link: "/mettingrecord"
+        },
+        {
+          name: "申请",
+          src: require("../assets/image/sq.png"),
+          link: "/home/productapply"
+        },
+        {
+          name: "积分",
+          src: require("../assets/image/jj.png"),
+          link: "/home/integral"
+        },
         {
           name: "医生",
           src: require("../assets/image/ys.png"),
           link: "/doctormanagement"
         },
-        { name: "医院", src: require("../assets/image/yy.png"), link: "/home" },
-        { name: "资料", src: require("../assets/image/zl.png"), link: "/home" },
-        { name: "审批", src: require("../assets/image/sp.png"), link: "/home" }
+        {
+          name: "医院",
+          src: require("../assets/image/yy.png"),
+          link: "/hospitalmanagement"
+        },
+        { name: "资料", src: require("../assets/image/zl.png"), link: "" },
+        {
+          name: "审批",
+          src: require("../assets/image/sp.png"),
+          link: "/approveindex"
+        }
       ]
     };
+  },
+  watch: {
+    $route: "setNavActive"
   },
   created() {
     // H5 plus事件处理
@@ -137,6 +165,7 @@ export default {
         default:
           break;
       }
+      console.log(routePath);
     },
     goSetting() {
       this.$router.push({ path: "/usersetting" });

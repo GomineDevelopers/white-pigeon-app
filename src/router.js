@@ -62,6 +62,54 @@ export default new Router({
       ]
     },
     {
+      path: "/visitrecord",
+      name: "visitrecord",
+      component: () =>
+        import( /* webpackChunkName: "visit" */ "./views/visit/VisitRecord.vue")
+    },
+    {
+      path: "/visitdetailedit",
+      name: "visitdetailedit",
+      component: () =>
+        import( /* webpackChunkName: "visit" */ "./views/visit/VisitDetailEdit.vue")
+    },
+    {
+      path: "/visitdetailcontent",
+      name: "visitdetailcontent",
+      component: () =>
+        import( /* webpackChunkName: "visit" */ "./views/visit/VisitDetailContent.vue")
+    },
+    {
+      path: "/newvisit",
+      name: "newvisit",
+      component: () =>
+        import( /* webpackChunkName: "visit" */ "./views/visit/NewVisit.vue")
+    },
+    {
+      path: "/mettingrecord",
+      name: "mettingrecord",
+      component: () =>
+        import( /* webpackChunkName: "metting" */ "./views/metting/MettingRecord.vue")
+    },
+    {
+      path: "/newmetting",
+      name: "newmetting",
+      component: () =>
+        import( /* webpackChunkName: "metting" */ "./views/metting/NewMetting.vue")
+    },
+    {
+      path: "/mettingdetailcontent",
+      name: "mettingdetailcontent",
+      component: () =>
+        import( /* webpackChunkName: "metting" */ "./views/metting/MettingDetailContent.vue")
+    },
+    {
+      path: "/mettingdetailedit",
+      name: "mettingdetailedit",
+      component: () =>
+        import( /* webpackChunkName: "metting" */ "./views/metting/MettingDetailEdit.vue")
+    },
+    {
       path: "/notify",
       name: "notify",
       component: () =>
@@ -215,6 +263,15 @@ export default new Router({
         import(
           /* webpackChunkName: "management" */
           "./views/management/NewDoctor.vue"
+        )
+    },
+    {
+      path: "/doctordetail",
+      name: "doctordetail",
+      component: () =>
+        import(
+          /* webpackChunkName: "management" */
+          "./views/management/DoctorDetail.vue"
         )
     },
     {

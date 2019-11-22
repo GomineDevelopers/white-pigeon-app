@@ -76,6 +76,7 @@ export default {
 .integral_total span:nth-child(1) {
   font-size: 0.75rem;
   margin-bottom: 0.2rem;
+  color: #000;
 }
 .integral_total span:nth-child(2) {
   font-size: 0.625rem;
@@ -91,6 +92,7 @@ export default {
 }
 .integral_detail_title {
   margin-bottom: 0.55rem;
+  color: #000;
 }
 .integral_detail ul li {
   display: -webkit-flex;
