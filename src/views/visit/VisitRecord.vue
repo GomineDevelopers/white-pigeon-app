@@ -33,11 +33,11 @@
             <div class="approve_item_detail">
               <ul>
                 <li>{{item.title}}</li>
-                <li class="flex justify_start">
+                <li class="flex justify_start flex_align_center">
                   <span>目的：</span>
                   <span>{{item.goal}}</span>
                 </li>
-                <li class="flex justify_start">
+                <li class="flex justify_start flex_align_center">
                   <span>拜访时间：</span>
                   <span>{{item.visitDate}}</span>
                 </li>
@@ -198,6 +198,19 @@ export default {
   },
   mounted() {
     this.visitList = this.visitAllList;
+  },
+  created() {
+    // H5 plus事件处理
+    function plusReady() {
+      // 设置系统状态栏背景为蓝色
+      plus.navigator.setStatusBarBackground("#2A76FF");
+      plus.navigator.setStatusBarStyle("light");
+    }
+    if (window.plus) {
+      plusReady();
+    } else {
+      document.addEventListener("plusready", plusReady, false);
+    }
   },
   methods: {
     navHandle(index, status) {

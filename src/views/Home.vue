@@ -89,7 +89,11 @@ export default {
           src: require("../assets/image/bf.png"),
           link: "/visitrecord"
         },
-        { name: "会议", src: require("../assets/image/hy.png"), link: "/home" },
+        {
+          name: "会议",
+          src: require("../assets/image/hy.png"),
+          link: "/mettingrecord"
+        },
         { name: "申请", src: require("../assets/image/sq.png"), link: "/home" },
         { name: "奖金", src: require("../assets/image/jj.png"), link: "/home" },
         {

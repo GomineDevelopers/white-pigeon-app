@@ -11,15 +11,15 @@
           <div class="approve_item_detail">
             <ul>
               <li>{{item.title}}</li>
-              <li class="flex justify_start">
+              <li class="flex justify_start flex_align_center">
                 <span>医院名：</span>
                 <span>{{item.hospitalName}}</span>
               </li>
-              <li class="flex justify_start">
+              <li class="flex justify_start flex_align_center">
                 <span>承诺销量：</span>
                 <span>{{item.sales}}</span>
               </li>
-              <li class="flex justify_start">
+              <li class="flex justify_start flex_align_center">
                 <span>申请时间：</span>
                 <span>{{item.approveDate}}</span>
               </li>
