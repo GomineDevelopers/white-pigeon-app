@@ -17,7 +17,7 @@
         <van-icon name="arrow" class="right_icon" />
       </van-row>
       <van-row class="public_btn">
-        <button>推出登录</button>
+        <button>退出登录</button>
       </van-row>
     </van-row>
   </van-row>

@@ -273,3 +273,10 @@ span {
   right: 0;
   left: 0;
 }
+
+.more {
+  margin-top: .75rem;
+  text-align: center;
+  font-size: .625rem;
+  color: #A8AEC1;
+}

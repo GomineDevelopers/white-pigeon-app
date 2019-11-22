@@ -59,7 +59,7 @@ export default {
 }
 .approve_item {
   border-bottom: 1px solid #ecf1f8;
-  padding: 0.4375rem 0rem 0.1875rem 0rem;
+  padding: 0.4rem 0rem;
 }
 .approve_item_detail {
   width: 80%;

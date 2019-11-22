@@ -179,7 +179,7 @@
         <van-row v-show="professionShow">
           <van-picker
             show-toolbar
-            title="专业人士选择"
+            title="专业人士分类选择"
             :columns="professionList"
             @cancel="professionShow = false"
             @confirm="professionConfirm"
@@ -235,10 +235,10 @@ export default {
       educationList: ["本科", "硕士", "博士"],
       professionValue: "",
       professionShow: false,
-      professionList: ["专家", "专家", "专家"],
+      professionList: ["执业医师", "专家", "执业医师"],
       academicValue: "",
       academicShow: false,
-      academicList: []
+      academicList: ["教授"]
     };
   },
   created() {
