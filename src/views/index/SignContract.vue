@@ -1,7 +1,7 @@
 <template>
   <van-row class="signcontract">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="合同签署www" />
+      <van-nav-bar title="合同签署" />
     </van-row>
     <van-row class="main_body">
       <van-row class="public_module">
@@ -110,14 +110,20 @@
           <van-row class="sign_matter_item">
             <span>3. 技术服务的要求:</span>
             <ul class="disc_ul">
-              <li>要求服务者责任心强，能够根据需求约定，在服务结束时间保质保量的完成需求。验收方式可以通过线上的方式提交。服务过程中和完成后不得随意泄露甲方信息。</li>
-              <li>根据甲方业务需求，对公司重点产品在全国范围内指定医院及产品进行学术推广活动。</li>
+              <li>
+                要求服务者责任心强，能够根据需求约定，在服务结束时间保质保量的完成需求。验收方式可以通过线上的方式提交。服务过程中和完成后不得随意泄露甲方信息。
+              </li>
+              <li>
+                根据甲方业务需求，对公司重点产品在全国范围内指定医院及产品进行学术推广活动。
+              </li>
             </ul>
           </van-row>
           <van-row class="sign_title1">三.协作事项与双方责任</van-row>
           <van-row>
             <ul>
-              <li>1.甲方与乙方应确认好工作内容、工作期限、交付标准、支付金额等事项，无异议后乙方开始工作。</li>
+              <li>
+                1.甲方与乙方应确认好工作内容、工作期限、交付标准、支付金额等事项，无异议后乙方开始工作。
+              </li>
               <li>
                 2.为了最大程度确保乙方按甲方的委托要求完成服务，甲方应尽量详细地向乙方说明需求详情，交付要求，
                 并提供必要的相关材料和支持。
@@ -158,17 +164,19 @@
                 对甲方提起侵害著作权或其它权利之诉讼
                 ，乙方应负责出面抗辩并承担由此产生的所有赔偿责任。
               </li>
-              <li>3.双方同意，乙方在本合同项下提供的服务工作成果归甲方所有。但服务中涉及第三方知识产权的除外。</li>
+              <li>
+                3.双方同意，乙方在本合同项下提供的服务工作成果归甲方所有。但服务中涉及第三方知识产权的除外。
+              </li>
               <li>
                 4.甲乙双方应严格按照本合同约定履行各自义务，任何一方违反本合同约定的，应向另一方承担全部违约责
                 任，包括但不限于继续履行、支付违约金、赔偿损失等。
               </li>
             </ul>
           </van-row>
-          <van-row class="sign_title1">
-            五.本合同一式 2 份，甲方执 1 份，乙方执 1
-            份，每份合同具有同等法律效力。
-          </van-row>
+          <van-row class="sign_title1"
+            >五.本合同一式 2 份，甲方执 1 份，乙方执 1
+            份，每份合同具有同等法律效力。</van-row
+          >
           <van-row class="sign_moudle">
             <van-row>
               甲方：
@@ -176,6 +184,9 @@
             </van-row>
             <van-row class="second_party_sign">乙方：</van-row>
             <!-- <van-row class="signature_card flex">电子签名</van-row> -->
+            <div :style="sign_lable_css" class="sign_label">
+              <span v-show="isShowSignLabel">电子签名</span>
+            </div>
             <div class="canvas_box" ref="canvasBox">
               <canvas
                 @touchstart="touchStart"
@@ -219,7 +230,14 @@ export default {
       canvasTxt: null,
       startX: 0,
       startY: 0,
-      img: null
+      img: null,
+      isShowSignLabel: true, //签名提示
+      sign_lable_css: {
+        //签名提示样式
+        width: 0,
+        height: 0,
+        lineHeight: 0
+      }
     };
   },
   created() {
@@ -239,17 +257,24 @@ export default {
     let canvas = this.$refs.canvasCont;
     canvas.width = this.$refs.canvasBox.offsetWidth - 2;
     canvas.height = canvas.width / 2;
+
+    let txtPosLeft = canvas.width / 2;
+    let txtPosRight = canvas.width / 4;
     this.canvasTxt = canvas.getContext("2d");
+    this.sign_lable_css.width = `${canvas.width}px`;
+    this.sign_lable_css.height = `${canvas.width / 2}px`;
+    this.sign_lable_css.lineHeight = `${canvas.width / 2}px`;
   },
   methods: {
     //手势事件
     touchStart(ev) {
       let evt = ev || event;
       evt.preventDefault();
-      console.log(evt.touches.length);
+
       if (evt.touches.length == 1) {
         this.startX = evt.targetTouches[0].pageX - evt.target.offsetLeft;
         this.startY = evt.targetTouches[0].pageY - evt.target.offsetTop;
+        this.isShowSignLabel = false;
       }
     },
 
@@ -281,7 +306,8 @@ export default {
     },
 
     // base64编码的图片
-    base64ToFile(dataurl, filename = "usersign") {
+    base64ToFile(dataurl) {
+      let filename = "usersign";
       let arr = dataurl.split(",");
       let mime = arr[0].match(/:(.*?);/)[1];
       let suffix = mime.split("/")[1];
@@ -304,6 +330,7 @@ export default {
         this.$refs.canvasCont.width,
         this.$refs.canvasCont.height
       );
+      this.isShowSignLabel = true;
     },
 
     goManagement() {
@@ -397,8 +424,17 @@ export default {
   flex: 1;
 }
 canvas {
-  background: #f8faff;
+  /* background: #f8faff; */
+  background: transparent;
   border: 1px solid #e6e6e6;
+}
+.sign_label {
+  position: absolute;
+  z-index: -1;
+  font-size: 16px;
+  color: #a8aec1;
+  text-align: center;
+  background: #f8faff;
 }
 .reset_btn {
   float: right;

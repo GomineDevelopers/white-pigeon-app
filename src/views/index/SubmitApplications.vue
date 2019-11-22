@@ -15,7 +15,7 @@
         <van-row class="flex bgm_white padding_3 border_bom">
           <span class="title">完成时间</span>
           <span class="icon_right flex flex_1 flex_align_center">
-            <span class="flex_1 time_select">{{time ? time:'请选择'}}</span>
+            <span class="flex_1 time_select">{{ time ? time : "请选择" }}</span>
             <van-icon name="arrow" @click="timeShow = true" />
           </span>
         </van-row>
@@ -26,7 +26,12 @@
           </van-row>
           <van-row class="bgm_white">
             <van-cell-group>
-              <van-field v-model="message" autosize type="textarea" placeholder="对医院基本情况的了解" />
+              <van-field
+                v-model="message"
+                autosize
+                type="textarea"
+                placeholder="对医院基本情况的了解"
+              />
             </van-cell-group>
           </van-row>
           <van-row class="tag_edit flex justify_between">
@@ -34,7 +39,9 @@
             <span>编辑</span>
           </van-row>
           <van-row class="hospitall_tag flex">
-            <span v-for="(tag,index) in hospitallTag" :key="index+'c'">{{tag}}</span>
+            <span v-for="(tag, index) in hospitallTag" :key="index + 'c'">{{
+              tag
+            }}</span>
           </van-row>
         </van-row>
         <van-row class="padding_3">
@@ -44,7 +51,12 @@
           </van-row>
           <van-row class="bgm_white message2">
             <van-cell-group>
-              <van-field v-model="message2" autosize type="textarea" placeholder="对医院竟品情况的了解" />
+              <van-field
+                v-model="message2"
+                autosize
+                type="textarea"
+                placeholder="对医院竟品情况的了解"
+              />
             </van-cell-group>
           </van-row>
         </van-row>

@@ -1,20 +1,227 @@
 <template>
   <van-row class="index">
-    <van-row>
-      <img src="@/assets/image/index.png" />
-      <div class="img_button2" @click="goIndex3"></div>
-      <div class="img_button3" @click="goIndex2"></div>
-    </van-row>
-    <!-- <baidu-map
+    <!-- map start -->
+    <baidu-map
       class="baidu_map_view"
       :center="center"
       :zoom="zoom"
       :mapStyle="mapStyle"
+      :scroll-wheel-zoom="true"
       @ready="handler"
-    ></baidu-map>-->
+    >
+      <template v-for="(item, index) in hospitalData">
+        <template v-if="item.status === 0"
+          ><bm-marker
+            :position="item.position"
+            @click="clickHandler(item)"
+            v-bind:key="index"
+            :icon="{
+              url: statusIcon.icon_0,
+              size: bmLabelStyle.size
+            }"
+          >
+            <bm-label
+              :content="item.content"
+              :labelStyle="bmLabelStyle.labelStyle"
+              :offset="bmLabelStyle.offset"
+            /> </bm-marker
+        ></template>
+        <template v-else-if="item.status === 1"
+          ><bm-marker
+            :position="item.position"
+            @click="clickHandler(item)"
+            v-bind:key="index"
+            :icon="{
+              url: statusIcon.icon_1,
+              size: bmLabelStyle.size
+            }"
+          >
+            <bm-label
+              :content="item.content"
+              :labelStyle="bmLabelStyle.labelStyle"
+              :offset="bmLabelStyle.offset"
+            /> </bm-marker
+        ></template>
+        <template v-else-if="item.status === 2"
+          ><bm-marker
+            :position="item.position"
+            @click="clickHandler(item)"
+            v-bind:key="index"
+            :icon="{
+              url: statusIcon.icon_2,
+              size: bmLabelStyle.size
+            }"
+          >
+            <bm-label
+              :content="item.content"
+              :labelStyle="bmLabelStyle.labelStyle"
+              :offset="bmLabelStyle.offset"
+            /> </bm-marker
+        ></template>
+      </template>
+    </baidu-map>
+    <!-- map end -->
+    <!-- bottom-nav start -->
+    <div class="van-tabbar--fixed van-tabbar bottom_bar">
+      <a class="bottom_bar_item" href="javascript:;">
+        <img src="@/assets/image/develop_0.png" />
+        <span>空白</span>
+      </a>
+      <a class="bottom_bar_item" href="javascript:;">
+        <img src="@/assets/image/develop_1.png" />
+        <span>开发中</span>
+      </a>
+      <a class="bottom_bar_item" href="javascript:;">
+        <img src="@/assets/image/develop_2.png" />
+        <span>已开发</span>
+      </a>
+      <a class="bottom_bar_item" href="javascript:;">
+        <img src="@/assets/image/develop_3.png" />
+        <span>不可开发</span>
+      </a>
+      <a class="bottom_bar_item" href="javascript:;">
+        <img src="@/assets/image/develop_4.png" />
+        <span>警告</span>
+      </a>
+    </div>
+    <!-- bottom-nav end -->
+    <!-- popup start -->
+    <div class="van-popup popup_wrap">
+      <p><span></span></p>
+      <h1 class="pop_title">{{ hosSingleData.content }}</h1>
+      <ul class="pop_hosp_type">
+        <li v-for="(item, key) in hosSingleData.type" v-bind:key="key">
+          {{ item }}
+        </li>
+      </ul>
+      <div class="addr">{{ hosSingleData.address }}</div>
+    </div>
+    <!-- popup end -->
   </van-row>
 </template>
 <script>
+// 引入地图覆盖层状态图标
+import statusIcon_0 from "@/assets/image/home_mapicon_0.png";
+import statusIcon_1 from "@/assets/image/home_mapicon_1.png";
+import statusIcon_2 from "@/assets/image/home_mapicon_2.png";
+import statusIcon_3 from "@/assets/image/home_mapicon_3.png";
+import statusIcon_4 from "@/assets/image/home_mapicon_4.png";
+// 定义地图样式
+let mapStyleJson = [
+  {
+    featureType: "background",
+    elementType: "geometry",
+    stylers: {
+      color: "#f5f6f7ff"
+    }
+  },
+  {
+    featureType: "poilabel",
+    elementType: "labels",
+    stylers: {
+      visibility: "off"
+    }
+  },
+  {
+    featureType: "poilabel",
+    elementType: "labels.icon",
+    stylers: {
+      visibility: "off"
+    }
+  },
+  {
+    featureType: "scenicspots",
+    elementType: "labels",
+    stylers: {
+      visibility: "off"
+    }
+  },
+  {
+    featureType: "manmade",
+    elementType: "labels",
+    stylers: {
+      visibility: "off"
+    }
+  },
+  {
+    featureType: "manmade",
+    elementType: "geometry",
+    stylers: {
+      visibility: "off"
+    }
+  },
+  {
+    featureType: "districtlabel",
+    elementType: "labels",
+    stylers: {
+      visibility: "off"
+    }
+  },
+  {
+    featureType: "districtlabel",
+    elementType: "labels.icon",
+    stylers: {
+      visibility: "off"
+    }
+  },
+  {
+    featureType: "road",
+    elementType: "labels",
+    stylers: {
+      visibility: "off"
+    }
+  },
+  {
+    featureType: "subway",
+    elementType: "geometry",
+    stylers: {
+      visibility: "off"
+    }
+  },
+  {
+    featureType: "road",
+    elementType: "geometry.fill",
+    stylers: {
+      color: "#ffffffff"
+    }
+  },
+  {
+    featureType: "road",
+    elementType: "geometry.stroke",
+    stylers: {
+      color: "#e2e7edff"
+    }
+  },
+  {
+    featureType: "green",
+    elementType: "geometry",
+    stylers: {
+      visibility: "on",
+      color: "#cceac8ff"
+    }
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: {
+      visibility: "on",
+      color: "#b4d8feff"
+    }
+  }
+];
+// 定义覆盖层字体样式
+let bmLabelStyle = {
+  color: "#a9adaf",
+  fontSize: "10px",
+  border: "none",
+  width: "80px",
+  textAlign: "center",
+  whiteSpace: "normal",
+  background: "transparent"
+};
+
+let bmLabelOffset = { width: -20, height: 30 }; // 定义覆盖层字体位置
+let bmIconSize = { width: 40, height: 40 }; // 定义覆盖层图标大小
 export default {
   name: "index",
   data() {
@@ -22,2765 +229,79 @@ export default {
       center: { lng: 0, lat: 0 },
       zoom: 11,
       mapStyle: {
-        styleJson: [
-          {
-            featureType: "water",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              color: "#ccd6d7ff"
-            }
-          },
-          {
-            featureType: "green",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              color: "#dee5e5ff"
-            }
-          },
-          {
-            featureType: "building",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "building",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#d1dbdbff"
-            }
-          },
-          {
-            featureType: "building",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#aab6b6ff"
-            }
-          },
-          {
-            featureType: "subwaystation",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              color: "#888fa0ff"
-            }
-          },
-          {
-            featureType: "education",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              color: "#e1e7e7ff"
-            }
-          },
-          {
-            featureType: "medical",
-            elementType: "geometry",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "scenicspots",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              color: "#d1dbdbff"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              weight: 4
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#cacfcfff"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "arterial",
-            elementType: "geometry",
-            stylers: {
-              visibility: "on",
-              weight: 2
-            }
-          },
-          {
-            featureType: "arterial",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#fbfffeff"
-            }
-          },
-          {
-            featureType: "arterial",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#cacfcfff"
-            }
-          },
-          {
-            featureType: "arterial",
-            elementType: "labels",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "arterial",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "arterial",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "local",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              weight: 1
-            }
-          },
-          {
-            featureType: "local",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#fbfffeff"
-            }
-          },
-          {
-            featureType: "local",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#cacfcfff"
-            }
-          },
-          {
-            featureType: "local",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "local",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "local",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "railway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              weight: 1
-            }
-          },
-          {
-            featureType: "railway",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#9494941a"
-            }
-          },
-          {
-            featureType: "railway",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#ffffff1a"
-            }
-          },
-          {
-            featureType: "subway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              weight: 1
-            }
-          },
-          {
-            featureType: "subway",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#c3bed433"
-            }
-          },
-          {
-            featureType: "subway",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#ffffff33"
-            }
-          },
-          {
-            featureType: "subway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "subway",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#979c9aff"
-            }
-          },
-          {
-            featureType: "subway",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "continent",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "continent",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "continent",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#333333ff"
-            }
-          },
-          {
-            featureType: "continent",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "city",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "city",
-            elementType: "labels",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "city",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#454d50ff"
-            }
-          },
-          {
-            featureType: "city",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "town",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "town",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "town",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#454d50ff"
-            }
-          },
-          {
-            featureType: "town",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "road",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "road",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#fbfffeff"
-            }
-          },
-          {
-            featureType: "poilabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "districtlabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "poilabel",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "districtlabel",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#888fa0ff"
-            }
-          },
-          {
-            featureType: "transportation",
-            elementType: "geometry",
-            stylers: {
-              color: "#d1dbdbff",
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "companylabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "restaurantlabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "lifeservicelabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "carservicelabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "financelabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "otherlabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "village",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "district",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "land",
-            elementType: "geometry",
-            stylers: {
-              color: "#edf3f3ff"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#cacfcfff"
-            }
-          },
-          {
-            featureType: "provincialway",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#cacfcfff"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#cacfcfff"
-            }
-          },
-          {
-            featureType: "road",
-            elementType: "geometry.stroke",
-            stylers: {
-              color: "#cacfcfff"
-            }
-          },
-          {
-            featureType: "subwaylabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "subwaylabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "tertiarywaysign",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "tertiarywaysign",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "provincialwaysign",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "provincialwaysign",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "nationalwaysign",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "nationalwaysign",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "highwaysign",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "highwaysign",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#fbfffeff"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "provincialway",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "highway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "6"
-            }
-          },
-          {
-            featureType: "highway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "7"
-            }
-          },
-          {
-            featureType: "highway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "6"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "7"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "6"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "7"
-            }
-          },
-          {
-            featureType: "highway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "nationalway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "6"
-            }
-          },
-          {
-            featureType: "nationalway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "7"
-            }
-          },
-          {
-            featureType: "nationalway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "6"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "7"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "6"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "7"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "provincialway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "8,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "provincialway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "8,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "provincialway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "8,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "6"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "7"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            stylers: {
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "6"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "7"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "6"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "7"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off",
-              curZoomRegionId: "0",
-              curZoomRegion: "6,8",
-              level: "8"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#fbfffeff"
-            }
-          },
-          {
-            featureType: "water",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#8f5a33ff"
-            }
-          },
-          {
-            featureType: "water",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "country",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#8f5a33ff"
-            }
-          },
-          {
-            featureType: "country",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "country",
-            elementType: "labels.text",
-            stylers: {
-              fontsize: 28
-            }
-          },
-          {
-            featureType: "manmade",
-            elementType: "geometry",
-            stylers: {
-              color: "#dfe7e7ff",
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "provincialway",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#fbfffeff"
-            }
-          },
-          {
-            featureType: "tertiaryway",
-            elementType: "geometry.fill",
-            stylers: {
-              color: "#fbfffeff"
-            }
-          },
-          {
-            featureType: "manmade",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "manmade",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "scenicspots",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "scenicspots",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "airportlabel",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "airportlabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "scenicspotslabel",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "scenicspotslabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "educationlabel",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "educationlabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "medicallabel",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "medicallabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "companylabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "restaurantlabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "hotellabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "hotellabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "shoppinglabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "shoppinglabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "lifeservicelabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "carservicelabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "transportationlabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "transportationlabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "financelabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "entertainment",
-            elementType: "geometry",
-            stylers: {
-              color: "#d1dbdbff",
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "estate",
-            elementType: "geometry",
-            stylers: {
-              color: "#d1dbdbff",
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "shopping",
-            elementType: "geometry",
-            stylers: {
-              color: "#d1dbdbff",
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "education",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "education",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "medical",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "transportation",
-            elementType: "labels.text.fill",
-            stylers: {
-              color: "#999999ff"
-            }
-          },
-          {
-            featureType: "transportation",
-            elementType: "labels.text.stroke",
-            stylers: {
-              color: "#ffffffff"
-            }
-          },
-          {
-            featureType: "road",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "manmade",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "water",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "education",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "scenicspots",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "transportation",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "nationalway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "provincialway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "provincialway",
-            elementType: "labels",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "cityhighway",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "scenicspotsway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "universityway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "vacationway",
-            elementType: "geometry",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "roadarrow",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "airportlabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "on"
-            }
-          },
-          {
-            featureType: "scenicspotslabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "educationlabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "entertainmentlabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "entertainmentlabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "estatelabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "estatelabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "businesstowerlabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "businesstowerlabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "governmentlabel",
-            elementType: "labels",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "governmentlabel",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          },
-          {
-            featureType: "local",
-            elementType: "labels.icon",
-            stylers: {
-              visibility: "off"
-            }
-          }
-        ]
-        // styleJson: [
-        //   {
-        //     featureType: "water",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       color: "#ccd6d7ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "green",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       color: "#dee5e5ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "building",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "building",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#d1dbdbff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "building",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#aab6b6ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "subwaystation",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       color: "#888fa0ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "education",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       color: "#e1e7e7ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "medical",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "scenicspots",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       color: "#d1dbdbff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       weight: 4
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#cacfcfff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "arterial",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "on",
-        //       weight: 2
-        //     }
-        //   },
-        //   {
-        //     featureType: "arterial",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#fbfffeff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "arterial",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#cacfcfff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "arterial",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "arterial",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "arterial",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "local",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       weight: 1
-        //     }
-        //   },
-        //   {
-        //     featureType: "local",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#fbfffeff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "local",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#cacfcfff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "local",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "local",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "local",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "railway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       weight: 1
-        //     }
-        //   },
-        //   {
-        //     featureType: "railway",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#9494941a"
-        //     }
-        //   },
-        //   {
-        //     featureType: "railway",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#ffffff1a"
-        //     }
-        //   },
-        //   {
-        //     featureType: "subway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       weight: 1
-        //     }
-        //   },
-        //   {
-        //     featureType: "subway",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#c3bed433"
-        //     }
-        //   },
-        //   {
-        //     featureType: "subway",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#ffffff33"
-        //     }
-        //   },
-        //   {
-        //     featureType: "subway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "subway",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#979c9aff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "subway",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "continent",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "continent",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "continent",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#333333ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "continent",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "city",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "city",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "city",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#454d50ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "city",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "town",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "town",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "town",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#454d50ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "town",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "road",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "road",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#fbfffeff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "poilabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "districtlabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "poilabel",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "districtlabel",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#888fa0ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "transportation",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       color: "#d1dbdbff",
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "companylabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "restaurantlabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "lifeservicelabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "carservicelabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "financelabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "otherlabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "village",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "district",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "land",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       color: "#edf3f3ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#cacfcfff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialway",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#cacfcfff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#cacfcfff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "road",
-        //     elementType: "geometry.stroke",
-        //     stylers: {
-        //       color: "#cacfcfff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "subwaylabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "subwaylabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "tertiarywaysign",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "tertiarywaysign",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialwaysign",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialwaysign",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalwaysign",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalwaysign",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highwaysign",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highwaysign",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#fbfffeff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialway",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "6"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "7"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "6"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "7"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "6"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "7"
-        //     }
-        //   },
-        //   {
-        //     featureType: "highway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "6"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "7"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "6"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "7"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "6"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "7"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "8,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "8,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "8,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "6"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "7"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     stylers: {
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "6"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "7"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "6"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "7"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off",
-        //       curZoomRegionId: "0",
-        //       curZoomRegion: "6,8",
-        //       level: "8"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#fbfffeff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "water",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#8f5a33ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "water",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "country",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#8f5a33ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "country",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "country",
-        //     elementType: "labels.text",
-        //     stylers: {
-        //       fontsize: 28
-        //     }
-        //   },
-        //   {
-        //     featureType: "manmade",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       color: "#dfe7e7ff",
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialway",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#fbfffeff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "tertiaryway",
-        //     elementType: "geometry.fill",
-        //     stylers: {
-        //       color: "#fbfffeff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "manmade",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "manmade",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "scenicspots",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "scenicspots",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "airportlabel",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "airportlabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "scenicspotslabel",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "scenicspotslabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "educationlabel",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "educationlabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "medicallabel",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "medicallabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "companylabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "restaurantlabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "hotellabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "hotellabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "shoppinglabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "shoppinglabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "lifeservicelabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "carservicelabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "transportationlabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "transportationlabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "financelabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "entertainment",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       color: "#d1dbdbff",
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "estate",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       color: "#d1dbdbff",
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "shopping",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       color: "#d1dbdbff",
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "education",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "education",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "medical",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "transportation",
-        //     elementType: "labels.text.fill",
-        //     stylers: {
-        //       color: "#999999ff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "transportation",
-        //     elementType: "labels.text.stroke",
-        //     stylers: {
-        //       color: "#ffffffff"
-        //     }
-        //   },
-        //   {
-        //     featureType: "road",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "manmade",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "water",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "education",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "scenicspots",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "transportation",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "nationalway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "provincialway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "cityhighway",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "scenicspotsway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "universityway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "vacationway",
-        //     elementType: "geometry",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "roadarrow",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "airportlabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "on"
-        //     }
-        //   },
-        //   {
-        //     featureType: "scenicspotslabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "educationlabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "entertainmentlabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "entertainmentlabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "estatelabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "estatelabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "businesstowerlabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "businesstowerlabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "governmentlabel",
-        //     elementType: "labels",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   },
-        //   {
-        //     featureType: "governmentlabel",
-        //     elementType: "labels.icon",
-        //     stylers: {
-        //       visibility: "off"
-        //     }
-        //   }
-        // ]
-      }
+        //地图样式
+        styleJson: mapStyleJson
+      },
+      statusIcon: {
+        //覆盖层状态图标
+        icon_0: statusIcon_0,
+        icon_1: statusIcon_1,
+        icon_2: statusIcon_2,
+        icon_3: statusIcon_3,
+        icon_4: statusIcon_4
+      },
+      bmLabelStyle: {
+        //覆盖层样式
+        size: bmIconSize,
+        labelStyle: bmLabelStyle,
+        offset: bmLabelOffset
+      },
+      hospitalData: [
+        //医院数据
+        {
+          position: { lng: 121.5199, lat: 31.24347 },
+          content: "上海儿童医学中心",
+          status: 1,
+          address: "上海浦东新区即墨路150号",
+          type: ["综合医院", "三级甲等", "公立医院"]
+        },
+        {
+          position: { lng: 121.5307, lat: 31.21144 },
+          content: "上海东方医院",
+          status: 2,
+          address: "上海市浦东新区高桥镇大同路358号",
+          type: ["公立医院"]
+        },
+        {
+          position: { lng: 121.5416, lat: 31.23308 },
+          content: "上海仁济医院（东部）",
+          status: 0,
+          address: "上海市南汇区惠南镇东门大街339号",
+          type: ["三级甲等", "公立医院"]
+        }
+      ],
+      hosSingleData: {}
     };
   },
   created() {},
   methods: {
     handler({ BMap, map }) {
-      console.log(BMap, map);
-      this.center.lng = 121.533818364278;
-      this.center.lat = 31.3154308373997;
-      this.zoom = 15;
+      this.center.lng = 121.536019;
+      this.center.lat = 31.222785;
+      this.zoom = 14;
     },
-    goIndex2() {
-      this.$router.push({ path: "/home/index2" });
-    },
-    goIndex3() {
-      this.$router.push({ path: "/home/Children" });
+    clickHandler(data) {
+      this.hosSingleData = data;
     }
+    // goIndex2() {
+    //   this.$router.push({ path: "/home/index2" });
+    // },
+    // goIndex3() {
+    //   this.$router.push({ path: "/home/Children" });
+    // }
   }
 };
 </script>
+<style>
+.anchorBL {
+  display: none !important;
+}
+.BMap_Marker img {
+  widows: 100%;
+  height: 100%;
+}
+</style>
 <style scoped>
-.index img {
-  width: 100vw;
-  height: 98vh;
-}
-.img_button2 {
-  width: 30vw;
-  height: 10vw;
-  /* border: 1px solid #333; */
-  position: absolute;
-  top: 42vh;
-  left: 30vw;
-}
-.img_button3 {
-  width: 30vw;
-  height: 10vw;
-  /* border: 1px solid #333; */
-  position: absolute;
-  top: 17vh;
-  right: 3vw;
-}
-.index {
-  position: relative;
-}
 .baidu_map_view {
   width: 100%;
   height: 99.9vh;
@@ -2793,5 +314,71 @@ export default {
 .anchorBL {
   width: 0 !important;
   height: 0 !important;
+}
+.bottom_bar {
+  background: transparent;
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.5) 40%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+.bottom_bar img {
+  width: 0.7rem;
+  margin-right: 0.15rem;
+}
+.bottom_bar span {
+  color: #3a4055;
+  font-size: 0.5rem;
+  font-weight: 600;
+}
+.bottom_bar .bottom_bar_item {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+.popup_wrap {
+  left: 5%;
+  bottom: 1rem;
+  width: 80%;
+  text-align: left;
+  overflow: hidden;
+  padding: 0 5% 20px;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+.popup_wrap .pop_title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+.popup_wrap .pop_hosp_type {
+  overflow: hidden;
+}
+.popup_wrap .pop_hosp_type li {
+  display: inline-block;
+  float: left;
+  margin-right: 0.4rem;
+  margin-bottom: 0.4rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.375rem;
+  color: #ffbb18;
+  border: 1px solid #ffbb18;
+  border-radius: 50px;
+}
+.popup_wrap .addr {
+  color: #a8aec1;
+  font-size: 0.625rem;
 }
 </style>
