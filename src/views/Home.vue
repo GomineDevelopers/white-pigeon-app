@@ -56,10 +56,11 @@
       </van-col>
       <van-col
         span="3"
-        class="left_nav flex flex_align_center flex_justify_center"
+        class="notify_col left_nav flex flex_align_center flex_justify_center"
         @click="goNotify"
       >
         <van-icon name="bell" />
+        <i class="notify">{{notify}}</i>
       </van-col>
     </van-row>
     <van-row class="home_router_view">
@@ -73,6 +74,7 @@ export default {
   name: "home",
   data() {
     return {
+      notify: "5",
       asideShow: false,
       navActive: 0,
       navList: [
@@ -253,5 +255,25 @@ export default {
 .bottom_nav span {
   font-size: 0.6875rem;
   margin-left: 0.3125rem;
+}
+.notify_col {
+  position: relative;
+}
+.notify_col .notify {
+  position: absolute;
+  top: -0.125rem;
+  right: 0.2rem;
+  background: red;
+  color: #fff;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  font-size: 0.5rem;
+  text-align: center;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
 }
 </style>

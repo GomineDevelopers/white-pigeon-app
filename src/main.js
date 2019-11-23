@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import axios from "axios";
 
 //自己的配置
 import BaiduMap from "vue-baidu-map";
@@ -17,6 +18,8 @@ Vue.use(BaiduMap, {
 import {
   commonTools
 } from "@/js/public";
+
+Vue.prototype.$axios = axios;
 Vue.prototype.$commonTools = commonTools;
 Vue.prototype.$ = jquery;
 

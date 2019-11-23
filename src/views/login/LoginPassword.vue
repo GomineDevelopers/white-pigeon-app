@@ -8,7 +8,7 @@
       </van-row>
       <van-row>
         <van-row class="name_input">
-          <van-field v-model="userName" placeholder="请输入手机号" />
+          <van-field v-model="phone" type="number" placeholder="请输入手机号" />
         </van-row>
         <van-row class="password_input">
           <van-col span="16">
@@ -39,12 +39,27 @@ export default {
   name: "loginpassword",
   data() {
     return {
-      userName: "",
+      phone: "",
       password: ""
     };
   },
   methods: {
     login() {
+      let regs = /^1[3456789]\d{9}$/;
+      if (!regs.test(this.phone)) {
+        this.$notify({
+          type: "warning",
+          message: "手机号码有误，请重新输入！"
+        });
+        return false;
+      }
+      if (this.password.length == 0) {
+        this.$notify({
+          type: "warning",
+          message: "请输入密码！"
+        });
+        return false;
+      }
       this.$router.push({ path: "/answer" }); //跳转到识别测试
     }
   }

@@ -8,13 +8,13 @@
       </van-row>
       <van-row>
         <van-row class="name_input">
-          <van-field v-model="userName" placeholder="请输入手机号" />
+          <van-field v-model="phone" type="number" placeholder="请输入手机号" />
         </van-row>
         <van-row class="password_input">
           <van-col span="14">
             <van-field v-model="authCode" placeholder="请输入验证码" />
           </van-col>
-          <van-col span="10" class="forget_password_btn">
+          <van-col span="10" class="forget_password_btn" @click="getAuthCode">
             <span></span> 获取验证码
           </van-col>
         </van-row>
@@ -38,13 +38,38 @@ export default {
   name: "loginsms",
   data() {
     return {
-      userName: "",
+      phone: "",
       authCode: ""
     };
   },
   methods: {
     login() {
+      let regs = /^1[3456789]\d{9}$/;
+      if (!regs.test(this.phone)) {
+        this.$notify({
+          type: "warning",
+          message: "手机号码有误，请重新输入！"
+        });
+        return false;
+      }
+      if (this.authCode.length == 0) {
+        this.$notify({
+          type: "warning",
+          message: "请输入验证码！"
+        });
+        return false;
+      }
       this.$router.push({ path: "/answer" }); //跳转到识别测试
+    },
+    getAuthCode() {
+      let regs = /^1[3456789]\d{9}$/;
+      if (!regs.test(this.phone)) {
+        this.$notify({
+          type: "warning",
+          message: "手机号码有误，请重新输入！"
+        });
+        return false;
+      }
     }
   }
 };

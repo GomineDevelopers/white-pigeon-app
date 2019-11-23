@@ -17,7 +17,8 @@ import {
   RadioGroup,
   Radio,
   Picker,
-  Popup
+  Popup,
+  Notify
 } from 'vant'
 
 Vue.use(Button)
@@ -38,5 +39,6 @@ Vue.use(RadioGroup)
 Vue.use(Radio)
 Vue.use(Picker)
 Vue.use(Popup)
+Vue.use(Notify);
 
 Vue.prototype.$Dialog = Dialog

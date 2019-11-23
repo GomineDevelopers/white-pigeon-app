@@ -1,15 +1,39 @@
 <template>
   <van-row class="index">
     <!-- map start -->
-
-    <van-row class="search flex flex_align_center">
-      <van-row class="search_input flex flex_align_center">
-        <van-icon name="arrow-left" />
-        <van-field v-model="keywords" placeholder="请输入用户名" />
-        <span class="search_text">筛选</span>
+    <van-row class="search">
+      <van-row class="search_content flex flex_align_center">
+        <van-row class="search_input flex flex_align_center" v-show="inputShow">
+          <van-icon name="arrow-left" @click="inputHidden" />
+          <van-field v-model="keywords" placeholder="请输入" @input="handleInput" />
+          <span class="search_text" @click="handleTag">筛选</span>
+        </van-row>
+        <van-row class="search_icon flex flex_align_center" @click="showInput">
+          <van-icon name="search" />
+        </van-row>
       </van-row>
-      <van-row class="search_icon flex flex_align_center" @click="showInput">
-        <van-icon name="search" />
+      <transition name="van-slide-right">
+        <van-row class="hospital_list">
+          <ul>
+            <li v-for="(hospitalItem,index) in hospitalSearchList" :key="index+'ho'">
+              <span>{{hospitalItem.name}}</span>
+              <span>{{hospitalItem.address}}</span>
+            </li>
+          </ul>
+        </van-row>
+      </transition>
+      <van-row class="hospital_tag">
+        <van-row class="tag_item flex">
+          <span class="blank">空白</span>
+          <span class="developing">开发中</span>
+          <span class="developed">已开发</span>
+          <span class="none">不可开发</span>
+          <span class="warning">警告</span>
+        </van-row>
+        <van-row class="tag_btn flex">
+          <button>重置</button>
+          <button>确定</button>
+        </van-row>
       </van-row>
     </van-row>
     <baidu-map
@@ -21,8 +45,8 @@
       @ready="handler"
     >
       <template v-for="(item, index) in hospitalData">
-        <template v-if="item.status === 0"
-          ><bm-marker
+        <template v-if="item.status === 0">
+          <bm-marker
             :position="item.position"
             @click="clickHandler(item)"
             v-bind:key="index"
@@ -35,10 +59,11 @@
               :content="item.content"
               :labelStyle="bmLabelStyle.labelStyle"
               :offset="bmLabelStyle.offset"
-            /> </bm-marker
-        ></template>
-        <template v-else-if="item.status === 1"
-          ><bm-marker
+            />
+          </bm-marker>
+        </template>
+        <template v-else-if="item.status === 1">
+          <bm-marker
             :position="item.position"
             @click="clickHandler(item)"
             v-bind:key="index"
@@ -51,10 +76,11 @@
               :content="item.content"
               :labelStyle="bmLabelStyle.labelStyle"
               :offset="bmLabelStyle.offset"
-            /> </bm-marker
-        ></template>
-        <template v-else-if="item.status === 2"
-          ><bm-marker
+            />
+          </bm-marker>
+        </template>
+        <template v-else-if="item.status === 2">
+          <bm-marker
             :position="item.position"
             @click="clickHandler(item)"
             v-bind:key="index"
@@ -67,8 +93,9 @@
               :content="item.content"
               :labelStyle="bmLabelStyle.labelStyle"
               :offset="bmLabelStyle.offset"
-            /> </bm-marker
-        ></template>
+            />
+          </bm-marker>
+        </template>
       </template>
     </baidu-map>
     <!-- map end -->
@@ -97,13 +124,13 @@
     </div>
     <!-- bottom-nav end -->
     <!-- popup start -->
-    <div class="van-popup popup_wrap">
-      <p><span></span></p>
+    <div class="van-popup popup_wrap" v-show="Object.keys(hosSingleData).length !=0">
+      <p>
+        <span></span>
+      </p>
       <h1 class="pop_title">{{ hosSingleData.content }}</h1>
       <ul class="pop_hosp_type">
-        <li v-for="(item, key) in hosSingleData.type" v-bind:key="key">
-          {{ item }}
-        </li>
+        <li v-for="(item, key) in hosSingleData.type" v-bind:key="key">{{ item }}</li>
       </ul>
       <div class="addr">{{ hosSingleData.address }}</div>
     </div>
@@ -237,7 +264,31 @@ export default {
   name: "index",
   data() {
     return {
+      inputShow: false, //输入框隐藏
+      tagShow: false, //tag标签模块隐藏
       keywords: "",
+      hospitalSearchList: [
+        {
+          name: "上海仁济医院",
+          address: "上海市南汇区惠南镇东门大街339号"
+        },
+        {
+          name: "上海东方医院",
+          address: "上海市浦东新区高桥镇大同路358号"
+        },
+        {
+          name: "上海儿童医学中心",
+          address: "上海浦东新区即墨路150号"
+        },
+        {
+          name: "上海远洋医院",
+          address: "上海市徐汇区汾阳路83号"
+        },
+        {
+          name: "上海邮电医院",
+          address: "上海市徐汇区汾阳路83号"
+        }
+      ],
       center: { lng: 0, lat: 0 },
       zoom: 11,
       mapStyle: {
@@ -285,7 +336,9 @@ export default {
       hosSingleData: {}
     };
   },
-  created() {},
+  created() {
+    console.log(this.hosSingleData);
+  },
   methods: {
     handler({ BMap, map }) {
       this.center.lng = 121.536019;
@@ -296,8 +349,34 @@ export default {
       this.hosSingleData = data;
     },
 
-    // 搜索图标点击事件
-    showInput() {}
+    // 搜索图标点击现实输入框
+    showInput() {
+      this.inputShow = true;
+      $(".search_content").css("background", "#fff");
+    },
+    //输入框左侧小图标点击隐藏输入框
+    inputHidden() {
+      this.inputShow = false;
+      this.keywords = "";
+      $(".search_content").css("background", "transparent");
+      $(".hospital_tag").hide();
+      $(".hospital_list").hide();
+    },
+    //点击筛选出现筛选标签
+    handleTag() {
+      $(".hospital_tag").slideToggle();
+      $(".hospital_list").slideUp();
+    },
+    //输入框输入事件
+    handleInput(value) {
+      $(".hospital_tag").slideUp();
+      if (value.length > 4) {
+        console.log("开始搜索");
+        $(".hospital_list").slideDown();
+      } else {
+        $(".hospital_list").slideUp();
+      }
+    }
   }
 };
 </script>
@@ -374,7 +453,7 @@ export default {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 .popup_wrap .pop_title {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 .popup_wrap .pop_hosp_type {
@@ -393,15 +472,16 @@ export default {
 }
 .popup_wrap .addr {
   color: #a8aec1;
+  font-size: 0.625rem;
 }
 /* 搜索开始 */
 .search {
   position: fixed;
   top: 3.5rem;
   right: 1rem;
-  /* left: 0.5rem; */
-  height: 2rem;
-  /* background: #fff; */
+  z-index: 99;
+}
+.search_content {
   border-radius: 0.25rem;
 }
 .search_icon {
@@ -418,22 +498,105 @@ export default {
   color: #3399ff;
 }
 .search_input {
-  /* width: 78vw; */
   width: calc(100vw - 4rem);
-  display: none;
 }
 .search_input .van-icon {
   color: #a8aec1;
 }
 .search_input .van-cell {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   border-bottom: none;
 }
 .search_text {
   width: 3rem;
   border-right: 1px solid #ccc;
   padding-right: 0.3rem;
-
+  color: #3399ff;
   font-size: 0.625rem;
+}
+.hospital_tag,
+.hospital_list {
+  width: calc(100vw - 3.5rem);
+  overflow: hidden;
+  padding: 0.8rem 0.8rem;
+  background: #fff;
+  margin-top: 0.5rem;
+  border-radius: 0.25rem;
+}
+.hospital_tag {
+  display: none;
+}
+.tag_item {
+  flex-wrap: wrap;
+  justify-content: start;
+}
+.tag_item span {
+  padding: 0.2rem 0.7rem;
+  min-width: 2rem;
+  margin-right: 0.6rem;
+  font-size: 0.625rem;
+  margin-bottom: 0.6rem;
+  border-radius: 0.25rem;
+}
+.blank {
+  background: #c9f3e7;
+  color: #1b9e79;
+}
+.developing {
+  background: #f5e0aa;
+  color: #e2a50c;
+}
+.developed {
+  background: #bbdbfb;
+  color: #3399ff;
+}
+.none {
+  background: #dee2ec;
+  color: #999;
+}
+.warning {
+  background: #f5c9d0;
+  color: #ff506f;
+}
+.tag_btn {
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+.tag_btn button {
+  width: calc(100% - 1.25rem);
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  padding: 0.3rem 0rem;
+}
+.tag_btn button:nth-child(1) {
+  margin-right: 1.25rem;
+  background: #f5d0bc;
+  color: #f86e24;
+}
+.tag_btn button:nth-child(2) {
+  background: #3399ff;
+  color: #fff;
+}
+
+.hospital_list {
+  height: 10rem;
+  overflow: auto;
+  text-align: left;
+  display: none;
+}
+.hospital_list ul li {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0.3rem 0rem;
+}
+.hospital_list ul li span:nth-child(1) {
+  font-size: 0.75rem;
+}
+.hospital_list ul li span:nth-child(2) {
+  font-size: 0.625rem;
+  color: #a8aec1;
 }
 </style>

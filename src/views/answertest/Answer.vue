@@ -182,12 +182,12 @@ export default {
   color: #a8aec1;
 }
 .answer_question {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   padding: 0.4375rem 0rem 0.3125rem 0rem;
 }
 .next_btn {
   position: absolute;
-  bottom: 0.625rem;
+  bottom: 0.8rem;
   right: 0.3125rem;
   left: 0.3125rem;
 }

@@ -1,7 +1,7 @@
 
 <template>
   <van-row class="improvepersonalinfo">
-    <van-row class="top_nav_bar">
+    <van-row class="top_nav_bar nav_bgm">
       <van-nav-bar title="完善信息" />
     </van-row>
     <van-row class="main_body">
@@ -120,9 +120,9 @@ export default {
   created() {
     // H5 plus事件处理
     function plusReady() {
-      // 设置系统状态栏背景为白色
-      plus.navigator.setStatusBarBackground("#FFF");
-      plus.navigator.setStatusBarStyle("dark");
+      // 设置系统状态栏背景为蓝色
+      plus.navigator.setStatusBarBackground("#2A76FF");
+      plus.navigator.setStatusBarStyle("light");
     }
     if (window.plus) {
       plusReady();
