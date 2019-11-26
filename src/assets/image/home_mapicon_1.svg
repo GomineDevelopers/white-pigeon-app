@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>医院选点/中等</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="9" cy="9" r="9"></circle>
+        <filter x="-166.7%" y="-166.7%" width="433.3%" height="433.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.2   0 0 0 0 0.6   0 0 0 0 1  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="组件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="组件/地图" transform="translate(-334.000000, -797.000000)">
+            <g id="地图">
+                <g id="点" transform="translate(27.000000, 165.000000)">
+                    <g id="医院选点/圆点/中等" transform="translate(326.000000, 651.000000)">
+                        <g id="椭圆形备份-11">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                            <use fill="#3399FF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        </g>
+                        <g id="医院" stroke-width="1" fill-rule="evenodd" transform="translate(3.000000, 3.000000)" fill="#FFFFFF">
+                            <path d="M10.2856299,4.28571597 L7.7142874,4.28571597 L7.7142874,1.71428403 C7.7142874,0.767486283 6.9467145,0 5.99991726,0 C5.05320276,0 4.2857126,0.767487465 4.2857126,1.71428403 L4.2857126,4.28571597 L1.71420466,4.28571597 C0.767490159,4.28571597 0,5.05320344 0,6 C0,6.94671264 0.767488977,7.71428403 1.71420466,7.71428403 L4.28572442,7.71428403 L4.28572442,10.285716 C4.28572442,11.2325137 5.05321339,12 5.99992908,12 C6.94672868,12 7.71429922,11.2325125 7.71429922,10.285716 L7.71429922,7.71427221 L10.2856299,7.71427221 C11.2324295,7.71427221 12,6.94670081 12,5.99998818 C12,5.05319044 11.2324271,4.28571597 10.2856299,4.28571597 Z" id="路径" fill-rule="nonzero"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

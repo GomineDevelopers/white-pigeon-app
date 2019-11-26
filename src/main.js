@@ -17,7 +17,6 @@ Vue.use(BaiduMap, {
 });
 import { commonTools } from "@/js/public";
 
-Vue.prototype.$axios = axios;
 Vue.prototype.$api = api;
 Vue.prototype.$commonTools = commonTools;
 Vue.prototype.$ = jquery;

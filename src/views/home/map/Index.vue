@@ -204,7 +204,7 @@
 <script>
 // 引入地图覆盖层状态图标
 import statusIcon_0 from "@/assets/image/home_mapicon_0.png";
-import statusIcon_1 from "@/assets/image/home_mapicon_1.png";
+import statusIcon_1 from "@/assets/image/home_mapicon_1.svg";
 import statusIcon_2 from "@/assets/image/home_mapicon_2.png";
 import statusIcon_3 from "@/assets/image/home_mapicon_3.png";
 import statusIcon_4 from "@/assets/image/home_mapicon_4.png";
