@@ -5,11 +5,7 @@
       <van-row class="search_content flex flex_align_center">
         <van-row class="search_input flex flex_align_center" v-show="inputShow">
           <van-icon name="arrow-left" @click="inputHidden" />
-          <van-field
-            v-model="keywords"
-            placeholder="请输入"
-            @input="handleInput"
-          />
+          <van-field v-model="keywords" placeholder="请输入" @input="handleInput" />
           <span class="search_text" @click="handleTag">筛选</span>
         </van-row>
         <van-row class="search_icon flex flex_align_center" @click="showInput">
@@ -19,10 +15,7 @@
       <transition name="van-slide-right">
         <van-row class="hospital_list">
           <ul>
-            <li
-              v-for="(hospitalItem, index) in hospitalSearchList"
-              :key="index + 'ho'"
-            >
+            <li v-for="(hospitalItem, index) in hospitalSearchList" :key="index + 'ho'">
               <span>{{ hospitalItem.name }}</span>
               <span>{{ hospitalItem.address }}</span>
             </li>
@@ -113,15 +106,11 @@
           url: statusIcon.address,
           size: { width: 26, height: 34 }
         }"
-      >
-      </bm-marker>
+      ></bm-marker>
     </baidu-map>
     <!-- map end -->
     <!-- bottom-nav start -->
-    <div
-      v-show="bottomNavIsShow"
-      class="van-tabbar--fixed van-tabbar bottom_bar"
-    >
+    <div v-show="bottomNavIsShow" class="van-tabbar--fixed van-tabbar bottom_bar">
       <a class="bottom_bar_item" href="javascript:;">
         <img src="@/assets/image/develop_0.png" />
         <span>空白</span>
@@ -156,13 +145,9 @@
         <p class="popup_top_line">
           <span></span>
         </p>
-        <h1 class="pop_title">
-          {{ hosSingleData.content }}
-        </h1>
+        <h1 class="pop_title">{{ hosSingleData.content }}</h1>
         <ul class="pop_hosp_type">
-          <li v-for="(item, key) in hosSingleData.type" v-bind:key="key">
-            {{ item }}
-          </li>
+          <li v-for="(item, key) in hosSingleData.type" v-bind:key="key">{{ item }}</li>
         </ul>
         <div class="addr">{{ hosSingleData.address }}</div>
         <img class="approve" src="@/assets/image/approveing.png" />
@@ -170,21 +155,14 @@
       <!-- 拉出详情 start -->
       <!-- <div class="hospital_pull_detail">
         <div class="no_develop">您暂时无法开发此医院</div>
-      </div> -->
-      <div
-        class="hospital_pull_detail"
-        :style="{ height: hospitalDetailHeight }"
-      >
+      </div>-->
+      <div class="hospital_pull_detail" :style="{ height: hospitalDetailHeight }">
         <div class="hospital_pull_cont">
           <ul>
-            <li
-              class="pull_cell"
-              v-for="(item, index) in hospitalFoldData"
-              :key="index"
-            >
+            <li class="pull_cell" v-for="(item, index) in hospitalFoldData" :key="index">
               <div class="pull_cell_head">
-                <span class="tit">{{ item.title }}</span
-                ><span class="arrow">{{ item.to }}</span>
+                <span class="tit">{{ item.title }}</span>
+                <span class="arrow">{{ item.to }}</span>
               </div>
               <div class="pull_cell_cont" v-html="item.cont"></div>
             </li>
