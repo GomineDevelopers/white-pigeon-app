@@ -108,10 +108,10 @@
       <bm-marker
         v-show="currentPostion"
         :position="currentPostion"
-        :offset="{ width: 8, height: -6 }"
+        :offset="{ width: 7, height: -6 }"
         :icon="{
           url: statusIcon.address,
-          size: { width: 26, height: 34 }
+          size: { width: 21, height: 27 }
         }"
       >
       </bm-marker>
@@ -173,7 +173,8 @@
       </div> -->
       <div
         class="hospital_pull_detail"
-        :style="{ height: hospitalDetailHeight }"
+        :style="{ height: hospitalDetailScrollHeight }"
+        ref="hoDetailHeight"
       >
         <div class="hospital_pull_cont">
           <ul>
@@ -203,12 +204,12 @@
 </template>
 <script>
 // 引入地图覆盖层状态图标
-import statusIcon_0 from "@/assets/image/home_mapicon_0.png";
+import statusIcon_0 from "@/assets/image/home_mapicon_0.svg";
 import statusIcon_1 from "@/assets/image/home_mapicon_1.svg";
-import statusIcon_2 from "@/assets/image/home_mapicon_2.png";
-import statusIcon_3 from "@/assets/image/home_mapicon_3.png";
-import statusIcon_4 from "@/assets/image/home_mapicon_4.png";
-import address from "@/assets/image/address.png";
+import statusIcon_2 from "@/assets/image/home_mapicon_2.svg";
+import statusIcon_3 from "@/assets/image/home_mapicon_3.svg";
+import statusIcon_4 from "@/assets/image/home_mapicon_4.svg";
+import address from "@/assets/image/address.svg";
 // 定义地图样式
 let mapStyleJson = [
   {
@@ -323,8 +324,8 @@ let bmLabelStyle = {
   background: "transparent"
 };
 
-let bmLabelOffset = { width: -12, height: 40 }; // 定义覆盖层字体位置
-let bmIconSize = { width: 40, height: 40 }; // 定义覆盖层图标大小
+let bmLabelOffset = { width: -16, height: 32 }; // 定义覆盖层字体位置
+let bmIconSize = { width: 36, height: 36 }; // 定义覆盖层图标大小
 export default {
   name: "index",
   data() {
@@ -429,7 +430,7 @@ export default {
             "<p>潜力：一般</p><p>中标价：32.2元/盒</p> <p>主要科室：消化内科</p><p>适应症：胃灼热、嗳气、恶心、呕吐、早饱、上腹胀等 消化道症状</p>"
         }
       ],
-      hospitalDetailHeight: 0,
+      hospitalDetailScrollHeight: 0,
       startY: 0
     };
   },
@@ -495,32 +496,38 @@ export default {
           .slideUp();
       });
     },
-    // 详情弹窗拉动
+    // 详情弹窗开始
     touchStart(e) {
       this.startY = e.touches[0].clientY;
-      // console.log(e.touches[0].clientY);
+      this.hoDetailHeight = this.$refs.hoDetailHeight.offsetHeight;
     },
+     // 详情弹窗开始
     touchMove(e) {
       let _this = this;
       let MoveY = e.touches[0].clientY - _this.startY;
       let MoveYAbs = Math.abs(MoveY);
-      // console.log(Math.abs(MoveY));
-      if (MoveY < 0) {
-        _this.hospitalDetailHeight = MoveYAbs + "px";
-      } else {
-        if (MoveYAbs >= 30) {
-          _this.hospitalDetailHeight = 0;
-        }
+      let pullDownMoveY;
+      if (MoveY < 0 && _this.hoDetailHeight === 0) {
+        _this.hospitalDetailScrollHeight = `${MoveYAbs}px`;
+      } else if (MoveY > 0 && _this.hoDetailHeight > 0) {
+        _this.hospitalDetailScrollHeight = `${_this.hoDetailHeight -
+          MoveYAbs}px`;
       }
     },
+     // 详情弹窗开始
     touchEnd(e) {
       let _this = this;
       let MoveY = e.changedTouches[0].clientY - _this.startY;
-      console.log(MoveY);
+      // console.log(MoveY);
       let MoveYAbs = Math.abs(MoveY);
-      if (MoveYAbs >= 30) {
-        _this.hospitalDetailHeight = "100%";
+      if (MoveYAbs >= 20) {
+        if (MoveY < 0) {
+          _this.hospitalDetailScrollHeight = "100%";
+        } else {
+          _this.hospitalDetailScrollHeight = "0px";
+        }
       }
+
       // console.log(e.changedTouches[0].clientY);
     }
   }
