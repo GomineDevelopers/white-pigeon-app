@@ -60,7 +60,23 @@ export default {
         });
         return false;
       }
-      this.$router.push({ path: "/answer" }); //跳转到识别测试
+      let postData = {
+        email: this.phone,
+        password: this.password
+      };
+      this.$api
+        .loginPassword(postData)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            this.$toast.success("登录成功！");
+            this.$Cookie.set("token", res.token, 360);
+            this.$router.push({ path: "/answer" });
+          } else {
+            this.$toast.fail(res.message);
+          }
+        })
+        .catch(error => {});
     }
   }
 };
