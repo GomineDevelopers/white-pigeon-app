@@ -196,6 +196,7 @@ export default {
   left: 0rem;
   right: 0rem;
   z-index: 99;
+  padding: 0rem 0.5rem;
 }
 .left_nav,
 .right_notice {
