@@ -21,6 +21,12 @@ Vue.prototype.$api = api;
 Vue.prototype.$commonTools = commonTools;
 Vue.prototype.$ = jquery;
 
+// 获取本地存储token
+(() => {
+  let localToken = localStorage.getItem("item");
+  store.commit("setToken", localToken);
+})();
+
 Vue.config.productionTip = false;
 
 new Vue({
