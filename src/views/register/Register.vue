@@ -50,6 +50,13 @@ export default {
         });
         return false;
       }
+      let postData = { mobile: this.phone, type: 1 };
+      this.$api
+        .authCode(postData)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(error => {});
     },
     //点击注册
     registerInfo() {
@@ -82,7 +89,18 @@ export default {
         });
         return false;
       }
-      this.$router.push({ path: "/" });
+      let data = {
+        mobile: this.phone,
+        password: this.password,
+        confirmPasswd: this.passwordAgain,
+        code: this.authCode
+      };
+      // $api
+      //   .register()
+      //   .then(res => {})
+      //   .catch(error => {});
+
+      //this.$router.push({ path: "/" });
     }
   }
 };
