@@ -113,8 +113,7 @@
           url: statusIcon.address,
           size: { width: 21, height: 27 }
         }"
-      >
-      </bm-marker>
+      ></bm-marker>
     </baidu-map>
     <!-- map end -->
     <!-- bottom-nav start -->
@@ -156,9 +155,7 @@
         <p class="popup_top_line">
           <span></span>
         </p>
-        <h1 class="pop_title">
-          {{ hosSingleData.content }}
-        </h1>
+        <h1 class="pop_title">{{ hosSingleData.content }}</h1>
         <ul class="pop_hosp_type">
           <li v-for="(item, key) in hosSingleData.type" v-bind:key="key">
             {{ item }}
@@ -184,8 +181,8 @@
               :key="index"
             >
               <div class="pull_cell_head">
-                <span class="tit">{{ item.title }}</span
-                ><span class="arrow">{{ item.to }}</span>
+                <span class="tit">{{ item.title }}</span>
+                <span class="arrow">{{ item.to }}</span>
               </div>
               <div class="pull_cell_cont" v-html="item.cont"></div>
             </li>
@@ -501,7 +498,7 @@ export default {
       this.startY = e.touches[0].clientY;
       this.hoDetailHeight = this.$refs.hoDetailHeight.offsetHeight;
     },
-     // 详情弹窗开始
+    // 详情弹窗开始
     touchMove(e) {
       let _this = this;
       let MoveY = e.touches[0].clientY - _this.startY;
@@ -514,7 +511,7 @@ export default {
           MoveYAbs}px`;
       }
     },
-     // 详情弹窗开始
+    // 详情弹窗开始
     touchEnd(e) {
       let _this = this;
       let MoveY = e.changedTouches[0].clientY - _this.startY;
