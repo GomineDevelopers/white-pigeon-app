@@ -29,7 +29,11 @@
       <van-row class="await_develop_product hospital_module">
         <van-row class="await_develop_product_list">
           <van-radio-group v-model="product">
-            <van-cell title="立维宁（乌本美司片）-0.25g*6片  ¥110.63" clickable @click="product = '1'">
+            <van-cell
+              title="立维宁（乌本美司片）-0.25g*6片  ¥110.63"
+              clickable
+              @click="product = '1'"
+            >
               <van-radio slot="right-icon" name="1" />
             </van-cell>
             <!-- <van-cell title="磺胺间二甲氧嘧啶-0.25g*6片  ¥23.89" clickable @click="product = 'OTC'">

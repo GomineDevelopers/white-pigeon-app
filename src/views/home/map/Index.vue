@@ -507,9 +507,6 @@ export default {
       // console.log(Math.abs(MoveY));
       if (MoveY < 0) {
         _this.hospitalDetailHeight = MoveYAbs + "px";
-        if (MoveYAbs >= 30) {
-          _this.hospitalDetailHeight = "100%";
-        }
       } else {
         if (MoveYAbs >= 30) {
           _this.hospitalDetailHeight = 0;
@@ -518,6 +515,12 @@ export default {
     },
     touchEnd(e) {
       let _this = this;
+      let MoveY = e.changedTouches[0].clientY - _this.startY;
+      console.log(MoveY);
+      let MoveYAbs = Math.abs(MoveY);
+      if (MoveYAbs >= 30) {
+        _this.hospitalDetailHeight = "100%";
+      }
       // console.log(e.changedTouches[0].clientY);
     }
   }
@@ -567,6 +570,7 @@ export default {
   color: #3a4055;
   font-size: 0.5rem;
   font-weight: 600;
+  padding-top: 2px;
 }
 .bottom_bar .bottom_bar_item {
   display: -webkit-box;
