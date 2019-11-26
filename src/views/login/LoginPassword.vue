@@ -16,7 +16,7 @@
           </van-col>
           <van-col span="8" class="forget_password_btn">
             <span></span>
-            <router-link :to="{ path: '/RetrievePassword' }">忘记密码</router-link>
+            <router-link :to="{ path: '/retrievePassword' }">忘记密码</router-link>
           </van-col>
         </van-row>
         <van-row class="login_btn">
@@ -70,13 +70,29 @@ export default {
           console.log(res);
           if (res.code == 200) {
             this.$toast.success("登录成功！");
-            this.$Cookie.set("token", res.token, 360);
-            this.$router.push({ path: "/answer" });
-          } else {
-            this.$toast.fail(res.message);
+            this.$store.commit('setToken', res.token)  //设置store中token
+            localStorage.setItem("token", res.token);
+            this.$api
+              .userInfo()
+              .then(res => {
+                // console.log(res);
+                if ((res.invite_code === null || res.invite_code == '') && res.identify_status != 1) {
+                  this.$router.push({ path: "/answer" });
+                } else {
+                  this.$router.push({ path: "/" });
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          } else if (res.code == 401) {
+            this.$toast.fail("用户名或密码错误");
           }
         })
-        .catch(error => {});
+        .catch(error => {
+          console.log(error);
+          console.log("未知错误")
+        });
     }
   }
 };

@@ -13,11 +13,7 @@
           </van-row>
         </van-row>
         <van-row>
-          <van-row
-            class="asideNavitem flex flex_align_center"
-            v-for="(asideNavItem,index1) in asideNav"
-            :key="index1+'as'"
-          >
+          <van-row class="asideNavitem flex flex_align_center" v-for="(asideNavItem,index1) in asideNav" :key="index1+'as'">
             <img :src="asideNavItem.src" />
             <router-link :to="{ path: asideNavItem.link }">{{asideNavItem.name}}</router-link>
           </van-row>
@@ -36,29 +32,13 @@
     </van-popup>
     <!-- aside结束 -->
     <van-row class="home_nav_bar flex flex_align_center">
-      <van-col
-        span="3"
-        class="left_nav flex flex_align_center flex_justify_center"
-        @click="asideShow = true"
-      >
+      <van-col span="3" class="left_nav flex flex_align_center flex_justify_center" @click="asideShow = true">
         <van-icon name="wap-nav" />
       </van-col>
-      <van-col
-        :span="navItem.span"
-        v-for="(navItem,index) in navList"
-        :key="index+'nav'"
-        @click="navHandle(index)"
-      >
-        <router-link
-          :class="index === navActive ? 'active_Link':''"
-          :to="{ path: navItem.link }"
-        >{{navItem.name}}</router-link>
+      <van-col :span="navItem.span" v-for="(navItem,index) in navList" :key="index+'nav'" @click="navHandle(index)">
+        <router-link :class="index === navActive ? 'active_Link':''" :to="{ path: navItem.link }">{{navItem.name}}</router-link>
       </van-col>
-      <van-col
-        span="3"
-        class="notify_col left_nav flex flex_align_center flex_justify_center"
-        @click="goNotify"
-      >
+      <van-col span="3" class="notify_col left_nav flex flex_align_center flex_justify_center" @click="goNotify">
         <van-icon name="bell" />
         <i class="notify">{{notify}}</i>
       </van-col>
@@ -78,14 +58,14 @@ export default {
       asideShow: false,
       navActive: 0,
       navList: [
-        { name: "地图", link: "/home", span: "4" },
+        { name: "地图", link: "/", span: "4" },
         { name: "拜访/会议", link: "/home/visit", span: "6" },
         { name: "申请", link: "/home/productapply", span: "4" },
         { name: "积分", link: "/home/integral", span: "4" }
       ],
       //左侧导航栏
       asideNav: [
-        { name: "首页", src: require("../assets/image/sy.png"), link: "/home" },
+        { name: "首页", src: require("../assets/image/sy.png"), link: "/" },
         {
           name: "拜访",
           src: require("../assets/image/bf.png"),
@@ -142,7 +122,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route.path); //
     this.setNavActive();
   },
   methods: {
@@ -152,7 +131,7 @@ export default {
     setNavActive() {
       let routePath = this.$route.path;
       switch (routePath) {
-        case "/home":
+        case "/":
           this.navActive = 0;
           break;
         case "/home/visit":

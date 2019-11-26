@@ -24,10 +24,31 @@ Vue.prototype.$ = jquery;
 Vue.prototype.$Cookie = Cookie;
 
 // 获取本地存储token
-(() => {
-  let localToken = localStorage.getItem("item");
-  store.commit("setToken", localToken);
-})();
+// (() => {
+//   let localToken = localStorage.getItem('token');
+//   store.commit("setToken", localToken);
+// })();
+// 检查用户登录状态
+router.beforeEach((to, from, next) => {
+  let token = localStorage.getItem('token'); //从localStorage中取用户uid
+  //以下几个路由无需token
+  if (to.path == "/retrievePassword" || to.path == "/loginsms" || to.path == "/register") {
+    next()
+  } else {
+    if (token) {
+      store.commit("setToken", token);
+      next();
+    } else {
+      if (to.path == "/loginpassword") {
+        next(); //注意在router.beforeEach中一定要用next()来跳出导航循环
+      } else {
+        //如果用户去的页面不是登录页则跳转登录页
+        next("/loginpassword");
+      }
+    }
+  }
+
+});
 
 Vue.config.productionTip = false;
 

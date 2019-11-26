@@ -8,39 +8,39 @@ export default new Router({
   // base: './',
   // mode: "history",
   routes: [{
-      path: "/home",
+      path: "/",
       name: "home",
       component: Home,
       children: [{
           path: "/",
           name: "index",
           component: () =>
-            import( /* webpackChunkName: "home" */ "./views/home/map/Index.vue")
+            import( /* webpackChunkName: "home" */ "./views/home/map/Index.vue"),
         },
-        {
-          path: "/home/index2",
-          name: "index2",
-          component: () =>
-            import( /* webpackChunkName: "home" */ "./views//home/map/Index2.vue")
-        },
-        {
-          path: "/home/index3",
-          name: "index3",
-          component: () =>
-            import( /* webpackChunkName: "home" */ "./views//home/map/Index3.vue")
-        },
-        {
-          path: "/home/children",
-          name: "children",
-          component: () =>
-            import( /* webpackChunkName: "home" */ "./views//home/map/Children.vue")
-        },
-        {
-          path: "/home/children2",
-          name: "children2",
-          component: () =>
-            import( /* webpackChunkName: "home" */ "./views//home/map/Children2.vue")
-        },
+        // {
+        //   path: "/home/index2",
+        //   name: "index2",
+        //   component: () =>
+        //     import( /* webpackChunkName: "home" */ "./views//home/map/Index2.vue")
+        // },
+        // {
+        //   path: "/home/index3",
+        //   name: "index3",
+        //   component: () =>
+        //     import( /* webpackChunkName: "home" */ "./views//home/map/Index3.vue")
+        // },
+        // {
+        //   path: "/home/children",
+        //   name: "children",
+        //   component: () =>
+        //     import( /* webpackChunkName: "home" */ "./views//home/map/Children.vue")
+        // },
+        // {
+        //   path: "/home/children2",
+        //   name: "children2",
+        //   component: () =>
+        //     import( /* webpackChunkName: "home" */ "./views//home/map/Children2.vue")
+        // },
         {
           path: "/home/visit",
           name: "visit",
@@ -65,7 +65,11 @@ export default new Router({
       path: "/visitrecord",
       name: "visitrecord",
       component: () =>
-        import( /* webpackChunkName: "visit" */ "./views/visit/VisitRecord.vue")
+        import( /* webpackChunkName: "visit" */ "./views/visit/VisitRecord.vue"),
+      meta: {
+        title: "拜访记录",
+        requiresAuth: true
+      }
     },
     {
       path: "/visitdetailedit",
@@ -95,7 +99,11 @@ export default new Router({
       path: "/newmetting",
       name: "newmetting",
       component: () =>
-        import( /* webpackChunkName: "metting" */ "./views/metting/NewMetting.vue")
+        import( /* webpackChunkName: "metting" */ "./views/metting/NewMetting.vue"),
+      meta: {
+        title: "新建会议",
+        requiresAuth: true
+      }
     },
     {
       path: "/mettingdetailcontent",
@@ -107,7 +115,11 @@ export default new Router({
       path: "/mettingdetailedit",
       name: "mettingdetailedit",
       component: () =>
-        import( /* webpackChunkName: "metting" */ "./views/metting/MettingDetailEdit.vue")
+        import( /* webpackChunkName: "metting" */ "./views/metting/MettingDetailEdit.vue"),
+      meta: {
+        title: "编辑会议",
+        requiresAuth: true
+      }
     },
     {
       path: "/notify",
@@ -122,7 +134,7 @@ export default new Router({
         import( /* webpackChunkName: "home" */ "./views/home/productapply/ProductApplyDetail.vue")
     },
     {
-      path: "/",
+      path: "/loginpassword",
       name: "loginpassword",
       component: () =>
         import(

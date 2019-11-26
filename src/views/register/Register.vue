@@ -51,6 +51,9 @@ export default {
         });
         return false;
       }
+      setTimeout(() => {
+        this.isDisable = true;
+      }, 60000);
       let postData = { mobile: this.phone, type: 1 };
       if (this.isDisable) {
         this.$api
@@ -60,10 +63,9 @@ export default {
             if (res.code == 200) {
               this.isDisable = false;
               this.$toast.success("验证码发送成功！");
+            } else if (res.code == 2004) {
+              this.$toast.fail("此手机号已经注册！");
             }
-            setTimeout(() => {
-              this.isDisable = true;
-            }, 60000);
           })
           .catch(error => {
             console.log(error);

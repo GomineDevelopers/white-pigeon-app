@@ -30,6 +30,7 @@ export default {
   name: "retrivepassword",
   data() {
     return {
+      isDisable: true,
       phone: "",
       password: "",
       passwordAgain: "",
@@ -49,6 +50,30 @@ export default {
           message: "手机号码有误，请重新输入！"
         });
         return false;
+      }
+      setTimeout(() => {
+        this.isDisable = true;
+      }, 60000);
+      let postData = {
+        mobile: this.phone,
+        type: 2      };
+      if (this.isDisable) {
+        this.$api
+          .authCode(postData)
+          .then(res => {
+            console.log(res);
+            if (res.code == 200) {
+              this.isDisable = false;
+              this.$toast.success("验证码发送成功！");
+            } else if (res.code == 2004) {
+              this.$toast.fail("此手机号已经注册！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else {
+        this.$toast.fail("操作频繁，请稍后再试！");
       }
     },
     //点击确定
@@ -82,7 +107,27 @@ export default {
         });
         return false;
       }
-      this.$router.push({ path: "/" });
+      let postData = {
+        mobile: this.phone,
+        password: this.password,
+        confirmPasswd: this.passwordAgain,
+        code: this.authCode
+      }
+      this.$api.forgetPassword(postData)
+        .then(res => {
+          if (res.code == 200) {
+            this.$toast.success("找回密码成功！");
+            localStorage.removeItem('token')
+            this.$router.push({ path: '/' })
+          } else {
+            this.$toast.fail(res.message);
+          }
+          console.log(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      // this.$router.push({ path: "/" });
     }
   }
 };
