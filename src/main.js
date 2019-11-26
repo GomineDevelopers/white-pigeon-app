@@ -15,11 +15,13 @@ Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: "4vWwiDYUhYY3S5uLoPbZqUEz"
 });
-import { commonTools } from "@/js/public";
+import {
+  Cookie
+} from "@/js/cookie";
 
 Vue.prototype.$api = api;
-Vue.prototype.$commonTools = commonTools;
 Vue.prototype.$ = jquery;
+Vue.prototype.$Cookie = Cookie;
 
 // 获取本地存储token
 (() => {

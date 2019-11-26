@@ -33,7 +33,8 @@ export default {
       phone: "",
       password: "",
       passwordAgain: "",
-      authCode: ""
+      authCode: "",
+      isDisable: true
     };
   },
   methods: {
@@ -51,12 +52,25 @@ export default {
         return false;
       }
       let postData = { mobile: this.phone, type: 1 };
-      this.$api
-        .authCode(postData)
-        .then(res => {
-          console.log(res);
-        })
-        .catch(error => {});
+      if (this.isDisable) {
+        this.$api
+          .authCode(postData)
+          .then(res => {
+            console.log(res);
+            if (res.code == 200) {
+              this.isDisable = false;
+              this.$toast.success("验证码发送成功！");
+            }
+            setTimeout(() => {
+              this.isDisable = true;
+            }, 60000);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else {
+        this.$toast.fail("操作频繁，请稍后再试！");
+      }
     },
     //点击注册
     registerInfo() {
@@ -89,18 +103,26 @@ export default {
         });
         return false;
       }
-      let data = {
+      let postData = {
         mobile: this.phone,
         password: this.password,
         confirmPasswd: this.passwordAgain,
         code: this.authCode
       };
-      // $api
-      //   .register()
-      //   .then(res => {})
-      //   .catch(error => {});
-
-      //this.$router.push({ path: "/" });
+      this.$api
+        .register(postData)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            this.$toast.success("注册成功！");
+            this.$router.push({ path: "/" });
+          } else {
+            this.$toast.fail(res.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
