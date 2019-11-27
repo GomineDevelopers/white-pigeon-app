@@ -92,11 +92,7 @@
         </template>
       </template>
       <!-- 点击定位当前图标 -->
-      <bm-marker v-show="currentPostion" 
-      top
-      :position="{lng: currentPostion.lng, lat: currentPostion.lat}" 
-      :offset="{ width: 7, height: -6 }" 
-      :icon="{url: statusIcon.address,size: { width: 21, height: 27 }}">
+      <bm-marker v-show="currentPostion" top :position="{lng: currentPostion.lng, lat: currentPostion.lat}" :offset="{ width: 7, height: -6 }" :icon="{url: statusIcon.address,size: { width: 21, height: 27 }}">
       </bm-marker>
     </baidu-map>
     <!-- map end -->
@@ -295,7 +291,7 @@ export default {
   name: "index",
   data() {
     return {
-      inject:['reload'],
+      inject: ['reload'],
       dialogShow: false,  //省份输入框
       areaList: AreaList, // 指定数据源
       provinceValue: [{ code: '', name: '' }],  //省
@@ -305,8 +301,8 @@ export default {
       isPopup: true, //显示医院详情弹窗
       keywords: "",
       currentPostion: {
-        lng:'',
-        lat:''
+        lng: '',
+        lat: ''
       },
       bottomNavIsShow: true,
       hospitalSearchList: [
@@ -423,7 +419,7 @@ export default {
       console.log(data)
       this.currentPostion.lng = data.hospital_longtude;
       this.currentPostion.lat = data.hospital_latitude;
-      let status = data.hospital_status   // 1-已
+      let status = data.hospital_status   // 1-已开发  
       // if(status==0){
 
       // }

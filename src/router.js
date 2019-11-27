@@ -8,7 +8,7 @@ export default new Router({
   // base: './',
   // mode: "history",
   routes: [{
-      path: "/",
+      path: "/home",
       name: "home",
       component: Home,
       children: [{
@@ -167,7 +167,7 @@ export default new Router({
         )
     },
     {
-      path: "/improvepersonalinfo",
+      path: "/", //improvepersonalinfo
       name: "improvepersonalinfo",
       component: () =>
         import(

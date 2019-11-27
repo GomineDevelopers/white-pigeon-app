@@ -30,6 +30,10 @@
             <router-link :to="{ path: '/register' }">新用户注册</router-link>
           </van-col>
         </van-row>
+        <van-row>res{{res}}</van-row> 
+        <van-row>
+          error:{{error}}
+        </van-row>
       </van-row>
     </van-row>
   </van-row>
@@ -40,7 +44,9 @@ export default {
   data() {
     return {
       phone: "",
-      password: ""
+      password: "",
+      error:'',
+      res:''
     };
   },
   methods: {
@@ -68,6 +74,8 @@ export default {
         .loginPassword(postData)
         .then(res => {
           console.log(res);
+          this.res = res
+          // alert(res)
           if (res.code == 200) {
             this.$toast.success("登录成功！");
             this.$store.commit('setToken', res.token)  //设置store中token
@@ -92,6 +100,8 @@ export default {
           }
         })
         .catch(error => {
+          // alert(error)
+          this.error = error
           console.log(error);
           console.log("未知错误")
         });

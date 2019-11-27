@@ -38,6 +38,12 @@
       </van-row>
       {{ "拍照:" + carm }}
       {{ "相册:" + gall }}
+      <van-row v-for="(item,index) in entry" :key="index">
+        {{'e   '+item}}
+        <van-row v-if="typeof(item) == Object">
+          <van-row v-for="(item2,index2) in item" :key="index2+'s'">{{'e2   '+item2}}</van-row>
+        </van-row>
+      </van-row>
       <van-row class="info_module">
         <van-row>身份证照片</van-row>
         <van-row class="IDcard_upload flex">
@@ -65,23 +71,14 @@
     <!-- 上滑进入 -->
     <transition name="van-slide-up">
       <van-row class="area_option" v-show="areaListShow">
-        <van-area
-          :area-list="areaList"
-          @confirm="areaConfirmFn"
-          @cancel="areaListShow = false"
-        />
+        <van-area :area-list="areaList" @confirm="areaConfirmFn" @cancel="areaListShow = false" />
       </van-row>
     </transition>
 
     <!-- 身份证时间选择 -->
     <transition name="van-slide-up">
       <van-row class="area_option" v-show="IDdateShow">
-        <van-datetime-picker
-          v-model="currentDate"
-          type="date"
-          @confirm="dateConfirmFn"
-          @cancel="IDdateShow = false"
-        />
+        <van-datetime-picker v-model="currentDate" type="date" @confirm="dateConfirmFn" @cancel="IDdateShow = false" />
       </van-row>
     </transition>
 
@@ -89,12 +86,7 @@
     <van-row class="showOption">
       <transition name="van-slide-up">
         <van-row v-show="photographShow">
-          <van-picker
-            show-toolbar
-            :columns="photographOption"
-            @cancel="photographShow = false"
-            @confirm="photographConfirm"
-          />
+          <van-picker show-toolbar :columns="photographOption" @cancel="photographShow = false" @confirm="photographConfirm" />
         </van-row>
       </transition>
     </van-row>
@@ -122,7 +114,8 @@ export default {
       IDcardurl1: "",
       IDcardurl2: "",
       carm: null,
-      gall: null
+      gall: null,
+      entry: null
     };
   },
   created() {
@@ -201,7 +194,7 @@ export default {
       let This = this;
       console.log("从相册中选择图片:");
       plus.gallery.pick(
-        function(path) {
+        function (path) {
           This.gall = path;
           //从相册中选择图片
           //通过This.IDcardFlag判断当前是身份证是正面还是反面
@@ -213,7 +206,7 @@ export default {
           // This.IDcardurl1 = path;
           // alert(path);
         },
-        function(e) {
+        function (e) {
           //取消选择图片
           console.log("取消选择图片");
         },
@@ -226,14 +219,18 @@ export default {
       var cmr = plus.camera.getCamera();
       var res = cmr.supportedImageResolutions[0];
       var fmt = cmr.supportedImageFormats[0];
+      // var imgFile1res = res
+      // var imgFile2 = res
+      // console.log("cmr", cmr)
       // console.log("Resolution: " + res + ", Format: " + fmt);
       cmr.captureImage(
-        function(path) {
+        function (path) {
           //处理拍摄照片的路径，在页面展示
           plus.io.resolveLocalFileSystemURL(
             path,
-            function(entry) {
-              This.carm = entry;
+            function (entry) {
+              This.entry = entry;
+              console.log(typeof (entry))
               //通过This.IDcardFlag判断当前是身份证是正面还是反面
               if (This.IDcardFlag === 1) {
                 This.IDcardurl1 = entry.fullPath;
@@ -242,12 +239,12 @@ export default {
               }
               // alert("真实路径："+entry.fullPath);
             },
-            function(e) {
+            function (e) {
               alert(e.message);
             }
           );
         },
-        function(error) {
+        function (error) {
           alert("拍摄失败: " + error.message);
         },
         { resolution: res, format: fmt }
