@@ -1,4 +1,3 @@
-
 <template>
   <van-row class="improvepersonalinfo">
     <van-row class="top_nav_bar nav_bgm">
@@ -8,7 +7,7 @@
       <van-row class="info_module">
         <van-row>所属城市</van-row>
         <van-row class="icon_right flex">
-          <span>{{areaValue ? areaValue:'请选择业务所属省市'}}</span>
+          <span>{{ areaValue ? areaValue : "请选择业务所属省市" }}</span>
           <van-icon name="arrow" @click="areaListShow = true" />
         </van-row>
       </van-row>
@@ -33,10 +32,12 @@
       <van-row class="info_module">
         <van-row>证件有效期</van-row>
         <van-row class="icon_right flex">
-          <span>{{IDdateValue ? IDdateValue:'请选择身份证有效期'}}</span>
+          <span>{{ IDdateValue ? IDdateValue : "请选择身份证有效期" }}</span>
           <van-icon name="arrow" @click="IDdateShow = true" />
         </van-row>
       </van-row>
+      {{ "拍照:" + carm }}
+      {{ "相册:" + gall }}
       <van-row class="info_module">
         <van-row>身份证照片</van-row>
         <van-row class="IDcard_upload flex">
@@ -64,7 +65,11 @@
     <!-- 上滑进入 -->
     <transition name="van-slide-up">
       <van-row class="area_option" v-show="areaListShow">
-        <van-area :area-list="areaList" @confirm="areaConfirmFn" @cancel="areaListShow = false" />
+        <van-area
+          :area-list="areaList"
+          @confirm="areaConfirmFn"
+          @cancel="areaListShow = false"
+        />
       </van-row>
     </transition>
 
@@ -96,6 +101,7 @@
   </van-row>
 </template>
 <script>
+import * as qiniu from "qiniu-js";
 import AreaList from "@/js/area";
 export default {
   name: "improvepersonalinfo",
@@ -114,7 +120,9 @@ export default {
       IDdateValue: "",
       IDaddress: "",
       IDcardurl1: "",
-      IDcardurl2: ""
+      IDcardurl2: "",
+      carm: null,
+      gall: null
     };
   },
   created() {
@@ -194,6 +202,7 @@ export default {
       console.log("从相册中选择图片:");
       plus.gallery.pick(
         function(path) {
+          This.gall = path;
           //从相册中选择图片
           //通过This.IDcardFlag判断当前是身份证是正面还是反面
           if (This.IDcardFlag === 1) {
@@ -224,6 +233,7 @@ export default {
           plus.io.resolveLocalFileSystemURL(
             path,
             function(entry) {
+              This.carm = entry;
               //通过This.IDcardFlag判断当前是身份证是正面还是反面
               if (This.IDcardFlag === 1) {
                 This.IDcardurl1 = entry.fullPath;
@@ -243,7 +253,44 @@ export default {
         { resolution: res, format: fmt }
       );
     },
-
+    // 上传图片到七牛云
+    uploadToQiniuyun(file) {
+      let that = this;
+      const config = {
+        useCdnDomain: true,
+        region: qiniu.region.z2
+      };
+      let api = "http://xbg.zidata.cn/";
+      let token =
+        "wOmPSnAO6hOEzRY6p0Dz8KMF8suRWK1LnBYYQrEV:vIvBzye9M30h7vavuNJrCrpd9_U=:eyJzY29wZSI6ImdvbWluZTEyMyIsImRlYWRsaW5lIjoxNTc0ODQzMjYyfQ==";
+      let fileName = file.name;
+      let putExtra = {
+        fname: "",
+        params: {},
+        mimeType: null
+      };
+      const observable = qiniu.upload(file, fileName, token, putExtra, config);
+      observable.subscribe(
+        res => {
+          console.log(res.total);
+          that.value = Math.floor(res.total.percent);
+        },
+        err => {
+          switch (err.code) {
+            case 401:
+              alert("图片上传失败");
+              break;
+            default:
+              alert(err.message);
+              break;
+          }
+        },
+        res => {
+          console.log(res);
+          that.imgSrc = `${api}${res.key}`;
+        }
+      );
+    },
     submitInfo() {
       let vm = this;
       this.$Dialog
