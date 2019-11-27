@@ -39,7 +39,8 @@
         <router-link :class="index === navActive ? 'active_Link':''" :to="{ path: navItem.link }">{{navItem.name}}</router-link>
       </van-col>
       <van-col span="3" class="notify_col left_nav flex flex_align_center flex_justify_center" @click="goNotify">
-        <van-icon name="bell" />
+        <!-- <van-icon name="bell" /> -->
+        <img class="notify_icon" src="../assets/image/notify.png">
         <i class="notify">{{notify}}</i>
       </van-col>
     </van-row>
@@ -146,7 +147,7 @@ export default {
         default:
           break;
       }
-      console.log(routePath);
+      // console.log(routePath);
     },
     goSetting() {
       this.$router.push({ path: "/usersetting" });
@@ -255,5 +256,8 @@ export default {
   align-items: center;
   justify-content: center;
   font-style: normal;
+}
+.notify_icon {
+  width: 0.9rem;
 }
 </style>

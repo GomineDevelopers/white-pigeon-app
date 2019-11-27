@@ -158,13 +158,17 @@ export default {
           console.log(res)
           if (res.code == 200) {
             this.$toast.success("答题提交成功！");
-            this.$router.push({ path: '/' })
+            setTimeout(() => {
+              this.$router.push({ path: '/' })
+            }, 1000)
           } else if (res.code == 9002) {
             this.$toast.fail("对不起您没有通过答题！");
             this.$router.push({ path: '/answer' })
           } else if (res.code == 9004) {
             this.$toast.fail("你已经通过答题了,请勿重复提交");
-            this.$router.push({ path: '/' })
+            setTimeout(() => {
+              this.$router.push({ path: '/' })
+            }, 1000)
           }
         })
         .catch(error => {
@@ -180,13 +184,17 @@ export default {
           console.log(res)
           if (res.code == 200) {
             this.$toast.success("推荐码验证成功！");
-            this.$router.push({ path: '/' })
+            setTimeout(() => {
+              this.$router.push({ path: '/' })
+            }, 1000)
           } else if (res.code == 9002) {
             this.$toast.fail("输入的推荐码有误！");
             this.$router.push({ path: '/answer' })
           } else if (res.code == 9004) {
             this.$toast.fail("你已经提交过了,请勿重复提交");
-            this.$router.push({ path: '/' })
+            setTimeout(() => {
+              this.$router.push({ path: '/' })
+            }, 1000)
           }
         })
         .catch(error => {

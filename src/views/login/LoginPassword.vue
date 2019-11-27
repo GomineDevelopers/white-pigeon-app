@@ -75,8 +75,10 @@ export default {
             this.$api
               .userInfo()
               .then(res => {
-                // console.log(res);
-                if ((res.invite_code === null || res.invite_code == '') && res.identify_status != 1) {
+                console.log(res);
+                console.log(res.user.invite_code)
+                console.log(res.user.identify_status)
+                if ((res.user.invite_code == null || res.user.invite_code == '') && res.user.identify_status != 1) {
                   this.$router.push({ path: "/answer" });
                 } else {
                   this.$router.push({ path: "/" });
