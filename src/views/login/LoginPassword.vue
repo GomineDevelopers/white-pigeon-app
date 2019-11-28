@@ -30,7 +30,7 @@
             <router-link :to="{ path: '/register' }">新用户注册</router-link>
           </van-col>
         </van-row>
-        <van-row>res{{res}}</van-row> 
+        <van-row>res{{res}}</van-row>
         <van-row>
           error:{{error}}
         </van-row>
@@ -45,8 +45,8 @@ export default {
     return {
       phone: "",
       password: "",
-      error:'',
-      res:''
+      error: '',
+      res: ''
     };
   },
   methods: {
@@ -73,9 +73,8 @@ export default {
       this.$api
         .loginPassword(postData)
         .then(res => {
-          console.log(res);
+          // console.log(res);
           this.res = res
-          // alert(res)
           if (res.code == 200) {
             this.$toast.success("登录成功！");
             this.$store.commit('setToken', res.token)  //设置store中token
@@ -83,9 +82,9 @@ export default {
             this.$api
               .userInfo()
               .then(res => {
-                console.log(res);
-                console.log(res.user.invite_code)
-                console.log(res.user.identify_status)
+                // console.log(res);
+                // console.log(res.user.invite_code)
+                // console.log(res.user.identify_status)
                 if ((res.user.invite_code == null || res.user.invite_code == '') && res.user.identify_status != 1) {
                   this.$router.push({ path: "/answer" });
                 } else {
@@ -100,10 +99,8 @@ export default {
           }
         })
         .catch(error => {
-          // alert(error)
           this.error = error
           console.log(error);
-          console.log("未知错误")
         });
     }
   }

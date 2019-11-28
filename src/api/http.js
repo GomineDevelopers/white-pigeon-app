@@ -4,7 +4,7 @@ import {
   Toast
 } from "vant";
 import store from "@/store";
-console.log(store.state);
+// console.log(store.state);
 
 // 环境的切换
 // if (process.env.NODE_ENV == "development") {
@@ -40,13 +40,13 @@ axios.interceptors.response.use(
     // 如果 header 中存在 token，那么触发 refreshToken 方法，替换本地的 token
     if (response.headers.authorization) {
       let newToken = response.headers.authorization
-      console.log("newToken", newToken.split(" ")[1])
+      // console.log("newToken", newToken.split(" ")[1])
       store.dispatch('refreshToken', newToken.split(" ")[1])
     }
 
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
-    console.log(response);
+    // console.log(response);
     if (response.status === 200) {
       return Promise.resolve(response);
     } else {
