@@ -21,6 +21,7 @@
               <span>{{ hospitalItem.hospital_address }}</span>
             </li>
           </ul>
+          <van-row class="none_hospital_data" v-if="hospitalSearchList.length == 0">无数据</van-row>
         </van-row>
       </transition>
       <van-row class="hospital_tag">
@@ -28,8 +29,8 @@
           <span :class="activeTag === tagItem ? 'active':''" v-for='(tagItem,index) in hospital_tag' :key="index+'tag'" @click="activeTag=tagItem">{{tagItem}}</span>
         </van-row>
         <van-row class="tag_btn flex">
-          <button>重置</button>
-          <button>确定</button>
+          <button @click="activeTag=''">重置</button>
+          <button @click="submitTag">确定</button>
         </van-row>
       </van-row>
     </van-row>
@@ -53,7 +54,7 @@
     <!-- <van-popup v-model="show">内容</van-popup> -->
     <!-- 遮罩选择省结束 -->
     <baidu-map @click="showSetting" class="baidu_map_view" :center="center" :zoom="zoom" :mapStyle="mapStyle" :scroll-wheel-zoom="true" @ready="handler">
-      <template v-for="(item, index) in hospitalData">
+      <template v-for="(item, index) in filterHospital">
         <template v-if="item.hospital_status === 1">
           <bm-marker :position="{lng: item.hospital_longtude, lat: item.hospital_latitude}" @click="clickHandler(item)" v-bind:key="index" :icon="{
               url: statusIcon.icon_1,
@@ -319,6 +320,7 @@ export default {
         // }
       ],
       activeTag: '',
+      currentTagStatus: '',  //筛选医院标签
       hospital_tag: ["空白", "开发中", "已开发", "不可开发", "警告"],
       //点击医院是当前坐标
       currentPostion: {
@@ -406,16 +408,17 @@ export default {
   },
   //过滤
   computed: {
-    //搜索filter过滤
-    // filterHospital() {
-    //   if (this.activeTag == '') {
-    //     return this.hospitalList;
-    //   } else {
-    //     return this.hospitalList.filter(value => {
-    //       return value.name.match(this.search);
-    //     });
-    //   }
-    // }
+    //搜索filter过滤筛选
+    filterHospital() {
+      // console.log(this.currentTagStatus)
+      if (this.currentTagStatus == '') {
+        return this.hospitalData;
+      } else {
+        return this.hospitalData.filter(value => {
+          return value.hospital_status == this.currentTagStatus
+        });
+      }
+    }
   },
   created() {
     this.getUserInfo();
@@ -472,7 +475,7 @@ export default {
       this.$api
         .userInfo()
         .then(res => {
-          console.log(res)
+          // console.log(res)
           //判断用户是否有工作地城市信息
           if (res.user.province_code == null || res.user.province_code == '') {
             this.dialogShow = true
@@ -481,7 +484,7 @@ export default {
             //在此处获取医院信息
             this.$api.hospitalinit()
               .then(res => {
-                // console.log(res)
+                console.log(res)
                 if (res.code == 200) {
                   this.hospitalData = res.data
                 }
@@ -533,7 +536,7 @@ export default {
         }
         this.$api.hospitalList(params)
           .then(res => {
-            // console.log(res)
+            console.log(res)
             if (res.code == 200) {
               this.hospitalSearchList = res.hospital_lst
             }
@@ -546,6 +549,7 @@ export default {
         $(".hospital_list").slideUp();
       }
     },
+    //点击搜索医院列表定位
     positionHospital(item) {
       //点击搜索出的医院列表
       // console.log(item)
@@ -553,6 +557,31 @@ export default {
       this.center.lat = item.hospital_latitude
       this.inputHidden()
       this.hosSingleData = {}
+    },
+    //标签筛选
+    submitTag() {
+      switch (this.activeTag) {
+        case '空白':
+          this.currentTagStatus = 3
+          break;
+        case '开发中':
+          this.currentTagStatus = 4
+          break;
+        case '已开发':
+          this.currentTagStatus = 1
+          break;
+        case '不可开发':
+          this.currentTagStatus = 2
+          break;
+        case '警告':
+          this.currentTagStatus = 5
+          break;
+        default:
+          break;
+      }
+      this.inputHidden()
+      console.log(this.activeTag)
+      console.log(this.currentTagStatus)
     },
     //弹框省市确认
     provinceConfirm(value) {
@@ -1036,5 +1065,10 @@ export default {
 .province_button span {
   font-size: 0.75rem;
   color: #108ee9;
+}
+.none_hospital_data {
+  font-size: 0.625rem;
+  color: #666;
+  text-align: center;
 }
 </style>
