@@ -12,7 +12,6 @@ import * as qiniu from "qiniu-js";
 export function upload(file,type) {
   return new Promise((resolve) => {
     let files = file['file'];
-    console.log(files)
     switch (type) {
       case 0:
         if (!files.type.match('image.*')) {
