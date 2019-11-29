@@ -510,20 +510,22 @@ export default {
     },
     //点击医院获取详细信息
     clickHandler(data) {
-      console.log(data);
+      this.hosSingleData = {};
+      this.hospitalFoldData = [];
+      // console.log(data);
       //设置当前定位点
       this.visitShow = data.hospital_status;
       this.currentPostion.lng = data.hospital_longtude;
       this.currentPostion.lat = data.hospital_latitude;
       let status = data.hospital_status; // 1-已开发  2-不可开发  3-空白医院  4-开发中
+      let params = { hospital_id: data.id };
       if (status == 1) {
       } else if (status == 2) {
       } else if (status == 3) {
-        let params = { hospital_id: data.id };
         this.$api
           .hospitalBlank(params)
           .then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.code == 200) {
               let hospitolContent = res.hospital_data;
               this.hosSingleData = {
@@ -540,7 +542,8 @@ export default {
 
               this.hospitalRouteParams = {
                 infomation: this.hosSingleData,
-                product: this.hospitalFoldData
+                awaitApplyProduct: this.hospitalFoldData,
+                developmentProduct: []
               };
             }
           })
@@ -548,6 +551,34 @@ export default {
             console.log(error);
           });
       } else if (status == 4) {
+        //开发中医院
+        this.$api
+          .hospitalDevelopment(params)
+          .then(res => {
+            console.log(res);
+            let hospitolContent = res.hospital_data;
+            this.hosSingleData = {
+              content: hospitolContent.hospital_name,
+              address: hospitolContent.detail_address,
+              status: hospitolContent.status,
+              hospital_type: setHospitalLevel(hospitolContent.hospital_level),
+              hospital_level: setHospitalType(hospitolContent.hospital_type),
+              hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
+              hospital_mobile: hospitolContent.hospital_mobile,
+              hospital_id: hospitolContent.id
+            };
+            this.hospitalFoldData.push(...res.development_data);
+            this.hospitalFoldData.push(...res.development_no_apply_data);
+
+            this.hospitalRouteParams = {
+              infomation: this.hosSingleData,
+              awaitApplyProduct: res.development_no_apply_data,
+              developmentProduct: res.development_data
+            };
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
       this.bottomNavIsShow = false;
     },
@@ -756,7 +787,6 @@ export default {
     },
     //点击申请医院
     applyForHospital() {
-      
       if (!this.isComplete) {
         // console.log("未完善信息")
         this.$Dialog
@@ -766,7 +796,7 @@ export default {
             cancelButtonText: "取消" //改变取消按钮上显示的文字
           })
           .then(() => {
-            this.$router.push({ path: '/improvepersonalinfo' })   //去完善信息
+            this.$router.push({ path: "/improvepersonalinfo" }); //去完善信息
           })
           .catch(() => {
             console.log("取消完善信息！");
