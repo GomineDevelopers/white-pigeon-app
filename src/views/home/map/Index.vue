@@ -16,7 +16,11 @@
       <transition name="van-slide-right">
         <van-row class="hospital_list">
           <ul>
-            <li v-for="(hospitalItem, index) in hospitalSearchList" :key="index + 'ho'" @click="positionHospital(hospitalItem)">
+            <li
+              v-for="(hospitalItem, index) in hospitalSearchList"
+              :key="index + 'ho'"
+              @click="positionHospital(hospitalItem)"
+            >
               <span>{{ hospitalItem.hospital_name }}</span>
               <span>{{ hospitalItem.hospital_address }}</span>
             </li>
@@ -26,10 +30,16 @@
       </transition>
       <van-row class="hospital_tag">
         <van-row class="tag_item flex">
-          <span :class="activeTag === tagItem ? 'active':''" v-for='(tagItem,index) in hospital_tag' :key="index+'tag'" @click="activeTag=tagItem">{{tagItem}}</span>
+          <span
+            :class="activeTag === tagItem ? 'active' : ''"
+            v-for="(tagItem, index) in hospital_tag"
+            :key="index + 'tag'"
+            @click="activeTag = tagItem"
+            >{{ tagItem }}</span
+          >
         </van-row>
         <van-row class="tag_btn flex">
-          <button @click="activeTag=''">重置</button>
+          <button @click="activeTag = ''">重置</button>
           <button @click="submitTag">确定</button>
         </van-row>
       </van-row>
@@ -39,57 +49,112 @@
     <van-popup class="province_dialog" v-model="dialogShow">
       <van-row class="province_select">
         <van-row class="province_select_title">请选择工作所属省份/直辖市</van-row>
-        <van-row class="province_select_text flex" @click="provinceShow=!provinceShow">
-          <span>{{provinceValue[0].name ? provinceValue[0].name:'请选择'}}</span>
+        <van-row class="province_select_text flex" @click="provinceShow = !provinceShow">
+          <span>{{ provinceValue[0].name ? provinceValue[0].name : "请选择" }}</span>
           <van-icon name="arrow-down" />
         </van-row>
       </van-row>
       <transition name="van-slide-up">
         <van-row class="provinceArea" v-show="provinceShow">
-          <van-area :area-list="areaList" :columns-num="1" @cancel="provinceShow=false" @confirm="provinceConfirm" />
+          <van-area
+            :area-list="areaList"
+            :columns-num="1"
+            @cancel="provinceShow = false"
+            @confirm="provinceConfirm"
+          />
         </van-row>
       </transition>
       <van-row class="province_button" @click="provinceSubmit"><span>确&nbsp;定</span></van-row>
     </van-popup>
     <!-- <van-popup v-model="show">内容</van-popup> -->
     <!-- 遮罩选择省结束 -->
-    <baidu-map @click="showSetting" class="baidu_map_view" :center="center" :zoom="zoom" :mapStyle="mapStyle" :scroll-wheel-zoom="true" @ready="handler">
+    <baidu-map
+      @click="showSetting"
+      class="baidu_map_view"
+      :center="center"
+      :zoom="zoom"
+      :mapStyle="mapStyle"
+      :scroll-wheel-zoom="true"
+      @ready="handler"
+    >
       <template v-for="(item, index) in filterHospital">
         <template v-if="item.hospital_status === 1">
-          <bm-marker :position="{lng: item.hospital_longtude, lat: item.hospital_latitude}" @click="clickHandler(item)" v-bind:key="index" :icon="{
+          <bm-marker
+            :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+            @click="clickHandler(item)"
+            v-bind:key="index"
+            :icon="{
               url: statusIcon.icon_1,
               size: bmLabelStyle.size
-            }">
-            <bm-label :content="item.hospital_name" :labelStyle="bmLabelStyle.labelStyle" :offset="bmLabelStyle.offset" />
+            }"
+          >
+            <bm-label
+              :content="item.hospital_name"
+              :labelStyle="bmLabelStyle.labelStyle"
+              :offset="bmLabelStyle.offset"
+            />
           </bm-marker>
         </template>
         <template v-else-if="item.hospital_status === 2">
-          <bm-marker :position="{lng: item.hospital_longtude, lat: item.hospital_latitude}" @click="clickHandler(item)" v-bind:key="index" :icon="{
+          <bm-marker
+            :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+            @click="clickHandler(item)"
+            v-bind:key="index"
+            :icon="{
               url: statusIcon.icon_3,
               size: bmLabelStyle.size
-            }">
-            <bm-label :content="item.hospital_name" :labelStyle="bmLabelStyle.labelStyle" :offset="bmLabelStyle.offset" />
+            }"
+          >
+            <bm-label
+              :content="item.hospital_name"
+              :labelStyle="bmLabelStyle.labelStyle"
+              :offset="bmLabelStyle.offset"
+            />
           </bm-marker>
         </template>
         <template v-else-if="item.hospital_status === 3">
-          <bm-marker :position="{lng: item.hospital_longtude, lat: item.hospital_latitude}" @click="clickHandler(item)" v-bind:key="index" :icon="{
+          <bm-marker
+            :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+            @click="clickHandler(item)"
+            v-bind:key="index"
+            :icon="{
               url: statusIcon.icon_2,
               size: bmLabelStyle.size
-            }">
-            <bm-label :content="item.hospital_name" :labelStyle="bmLabelStyle.labelStyle" :offset="bmLabelStyle.offset" />
+            }"
+          >
+            <bm-label
+              :content="item.hospital_name"
+              :labelStyle="bmLabelStyle.labelStyle"
+              :offset="bmLabelStyle.offset"
+            />
           </bm-marker>
         </template>
         <template v-else-if="item.hospital_status === 4">
-          <bm-marker :position="{lng: item.hospital_longtude, lat: item.hospital_latitude}" @click="clickHandler(item)" v-bind:key="index" :icon="{
+          <bm-marker
+            :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+            @click="clickHandler(item)"
+            v-bind:key="index"
+            :icon="{
               url: statusIcon.icon_0,
               size: bmLabelStyle.size
-            }">
-            <bm-label :content="item.hospital_name" :labelStyle="bmLabelStyle.labelStyle" :offset="bmLabelStyle.offset" />
+            }"
+          >
+            <bm-label
+              :content="item.hospital_name"
+              :labelStyle="bmLabelStyle.labelStyle"
+              :offset="bmLabelStyle.offset"
+            />
           </bm-marker>
         </template>
       </template>
       <!-- 点击定位当前图标 -->
-      <bm-marker v-show="currentPostion" top :position="{lng: currentPostion.lng, lat: currentPostion.lat}" :offset="{ width: 7, height: -6 }" :icon="{url: statusIcon.address,size: { width: 21, height: 27 }}">
+      <bm-marker
+        v-show="currentPostion"
+        top
+        :position="{ lng: currentPostion.lng, lat: currentPostion.lat }"
+        :offset="{ width: 7, height: -6 }"
+        :icon="{ url: statusIcon.address, size: { width: 21, height: 27 } }"
+      >
       </bm-marker>
     </baidu-map>
     <!-- map end -->
@@ -118,16 +183,23 @@
     </div>
     <!-- bottom-nav end -->
     <!-- popup start -->
-    <div class="van-popup popup_wrap" v-show="Object.keys(hosSingleData) !=0" :class="{ popup_show: isPopup }" @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)">
+    <div
+      class="van-popup popup_wrap"
+      v-show="Object.keys(hosSingleData) != 0"
+      :class="{ popup_show: isPopup }"
+      @touchstart="touchStart($event)"
+      @touchmove="touchMove($event)"
+      @touchend="touchEnd($event)"
+    >
       <div class="popup_top">
         <p class="popup_top_line">
           <span></span>
         </p>
-        <h1 class="pop_title">{{ hosSingleData.content}}</h1>
+        <h1 class="pop_title">{{ hosSingleData.content }}</h1>
         <ul class="pop_hosp_type">
-          <li class="hospital_type">{{hosSingleData.hospital_type}}</li>
-          <li class="hospital_level">{{hosSingleData.hospital_level}}</li>
-          <li class="hospital_run_type">{{hosSingleData.hospital_run_type}}</li>
+          <li class="hospital_type">{{ hosSingleData.hospital_type }}</li>
+          <li class="hospital_level">{{ hosSingleData.hospital_level }}</li>
+          <li class="hospital_run_type">{{ hosSingleData.hospital_run_type }}</li>
         </ul>
         <div class="addr">地址：{{ hosSingleData.address }}</div>
         <!-- 审核中的img在医院状态为开发中时显示 -->
@@ -136,10 +208,10 @@
       <!-- 此处医院状态为已开发医院时显示 -->
       <van-row class="pull_developed" v-show="visitShow == 1">
         <van-col span="12" class="line">
-          <router-link :to="{ path:'/newvisit' }">创建拜访</router-link>
+          <router-link :to="{ path: '/newvisit' }">创建拜访</router-link>
         </van-col>
         <van-col span="12">
-          <router-link :to="{ path:'/newmetting' }">创建会议</router-link>
+          <router-link :to="{ path: '/newmetting' }">创建会议</router-link>
         </van-col>
       </van-row>
 
@@ -147,7 +219,11 @@
       <div class="hospital_pull_detail" v-show="visitShow == 2">
         <div class="no_develop">您暂时无法开发此医院</div>
       </div>
-      <div class="hospital_pull_detail" :style="{ height: hospitalDetailScrollHeight }" ref="hoDetailHeight">
+      <div
+        class="hospital_pull_detail"
+        :style="{ height: hospitalDetailScrollHeight }"
+        ref="hoDetailHeight"
+      >
         <div class="hospital_pull_cont">
           <ul>
             <li class="pull_cell" v-for="(item, index) in hospitalFoldData" :key="index">
@@ -157,15 +233,15 @@
               </div>
               <div class="pull_cell_cont">
                 <p>潜力：一般</p>
-                <p>中标价：{{item.bidding_price}}</p>
-                <p>主要科室：{{item.section_name}}</p>
-                <p>适应症：{{item.indications}}</p>
+                <p>中标价：{{ item.bidding_price }}</p>
+                <p>主要科室：{{ item.section_name }}</p>
+                <p>适应症：{{ item.indications }}</p>
               </div>
               <!-- <div class="pull_cell_cont" v-html="item.cont"></div> -->
             </li>
           </ul>
         </div>
-        <van-button class="apply_btn" size="large" @click="applyForHospital">申请医院</van-button>
+        <van-button class="apply_btn" size="large" @click="applyForHospital()">申请医院</van-button>
       </div>
       <!-- 拉出详情 end -->
     </div>
@@ -174,15 +250,15 @@
 </template>
 <script>
 import AreaList from "@/js/area"; //省份数据
-import { setHospitalLevel, setHospitalType, setHospitalRunType } from "@/js/public"
+import { setHospitalLevel, setHospitalType, setHospitalRunType } from "@/js/public";
 // 引入地图覆盖层状态图标
 import statusIcon_0 from "@/assets/image/home_mapicon_0.svg"; //开发中
-import statusIcon_1 from "@/assets/image/home_mapicon_1.svg";  //已开发
+import statusIcon_1 from "@/assets/image/home_mapicon_1.svg"; //已开发
 import statusIcon_2 from "@/assets/image/home_mapicon_2.svg"; //空白
-import statusIcon_3 from "@/assets/image/home_mapicon_3.svg";  //不可开发
-import statusIcon_4 from "@/assets/image/home_mapicon_4.svg";  //警告
+import statusIcon_3 from "@/assets/image/home_mapicon_3.svg"; //不可开发
+import statusIcon_4 from "@/assets/image/home_mapicon_4.svg"; //警告
 import address from "@/assets/image/address.svg";
-import { setPriority } from 'os';
+import { setPriority } from "os";
 // 定义地图样式
 let mapStyleJson = [
   {
@@ -303,33 +379,33 @@ export default {
   name: "index",
   data() {
     return {
-      inject: ['reload'],  //刷新页面
-      dialogShow: false,  //省份输入框
-      isComplete: null,  //用户是否完善信息
+      inject: ["reload"], //刷新页面
+      dialogShow: false, //省份输入框
+      isComplete: null, //用户是否完善信息
       areaList: AreaList, // 指定数据源
-      provinceValue: [{ code: '', name: '' }],  //省
+      provinceValue: [{ code: "", name: "" }], //省
       provinceShow: false, //省份选择
       inputShow: false, //输入框隐藏
       tagShow: false, //tag标签模块隐藏
       isPopup: true, //显示医院详情弹窗
-      keywords: "",  //输入框关键字
+      keywords: "", //输入框关键字
       hospitalSearchList: [
         // {
         //   name: "上海仁济医院",
         //   address: "上海市南汇区惠南镇东门大街339号"
         // }
       ],
-      noneHospitalList: false,  //无数据的展示
-      activeTag: '',
-      currentTagStatus: '',  //筛选医院标签
+      noneHospitalList: false, //无数据的展示
+      activeTag: "",
+      currentTagStatus: "", //筛选医院标签
       hospital_tag: ["空白", "开发中", "已开发", "不可开发", "警告"],
       //点击医院是当前坐标
       currentPostion: {
-        lng: '',
-        lat: ''
+        lng: "",
+        lat: ""
       },
       bottomNavIsShow: true,
-      center: { lng: 121.536019, lat: 31.222785 },  //当前定位
+      center: { lng: 121.536019, lat: 31.222785 }, //当前定位
       zoom: 14,
       mapStyle: {
         //地图样式
@@ -381,7 +457,7 @@ export default {
         // address: "上海浦东新区即墨路150号",
         // type: ["综合医院", "三级甲等", "公立医院"]
       },
-      visitShow: '',  //已开发医院显示创建拜访和创建会议
+      visitShow: "", //已开发医院显示创建拜访和创建会议
       //医院产品数据
       hospitalFoldData: [
         // {
@@ -403,6 +479,7 @@ export default {
         //     "<p>潜力：一般</p><p>中标价：32.2元/盒</p> <p>主要科室：消化内科</p><p>适应症：胃灼热、嗳气、恶心、呕吐、早饱、上腹胀等 消化道症状</p>"
         // }
       ],
+      hospitalRouteParams: {}, //用户选中的医院ID
       hospitalDetailScrollHeight: 0,
       startY: 0
     };
@@ -412,11 +489,11 @@ export default {
     //搜索filter过滤筛选
     filterHospital() {
       // console.log(this.currentTagStatus)
-      if (this.currentTagStatus == '') {
+      if (this.currentTagStatus == "") {
         return this.hospitalData;
       } else {
         return this.hospitalData.filter(value => {
-          return value.hospital_status == this.currentTagStatus
+          return value.hospital_status == this.currentTagStatus;
         });
       }
     }
@@ -424,9 +501,7 @@ export default {
   created() {
     this.getUserInfo();
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     handler({ BMap, map }) {
       // this.center.lng = 121.536019;
@@ -435,23 +510,22 @@ export default {
     },
     //点击医院获取详细信息
     clickHandler(data) {
-      console.log(data)
+      console.log(data);
       //设置当前定位点
-      this.visitShow = data.hospital_status
+      this.visitShow = data.hospital_status;
       this.currentPostion.lng = data.hospital_longtude;
       this.currentPostion.lat = data.hospital_latitude;
-      let status = data.hospital_status   // 1-已开发  2-不可开发  3-空白医院  4-开发中
+      let status = data.hospital_status; // 1-已开发  2-不可开发  3-空白医院  4-开发中
       if (status == 1) {
-
       } else if (status == 2) {
-
       } else if (status == 3) {
-        let params = { hospital_id: data.id }
-        this.$api.hospitalBlank(params)
+        let params = { hospital_id: data.id };
+        this.$api
+          .hospitalBlank(params)
           .then(res => {
-            console.log(res)
+            console.log(res);
             if (res.code == 200) {
-              let hospitolContent = res.hospital_data
+              let hospitolContent = res.hospital_data;
               this.hosSingleData = {
                 content: hospitolContent.hospital_name,
                 address: hospitolContent.detail_address,
@@ -459,15 +533,20 @@ export default {
                 hospital_type: setHospitalLevel(hospitolContent.hospital_level),
                 hospital_level: setHospitalType(hospitolContent.hospital_type),
                 hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
-              }
-              this.hospitalFoldData = res.product_data
+                hospital_mobile: hospitolContent.hospital_mobile
+              };
+              this.hospitalFoldData = res.product_data;
+
+              this.hospitalRouteParams = {
+                infomation: this.hosSingleData,
+                product: this.hospitalFoldData
+              };
             }
           })
           .catch(error => {
-            console.log(error)
-          })
+            console.log(error);
+          });
       } else if (status == 4) {
-
       }
       this.bottomNavIsShow = false;
     },
@@ -478,24 +557,25 @@ export default {
         .then(res => {
           // console.log(res)
           //判断用户是否有工作地城市信息
-          if (res.user.province_code == null || res.user.province_code == '') {
-            this.dialogShow = true
+          if (res.user.province_code == null || res.user.province_code == "") {
+            this.dialogShow = true;
           } else {
-            this.dialogShow = false
+            this.dialogShow = false;
             //在此处获取医院信息
-            this.$api.hospitalinit()
+            this.$api
+              .hospitalinit()
               .then(res => {
-                console.log(res)
+                // console.log(res)
                 if (res.code == 200) {
-                  this.hospitalData = res.data
+                  this.hospitalData = res.data;
                 }
               })
               .catch(error => {
-                console.log(error)
-              })
+                console.log(error);
+              });
           }
           if (res.user.is_complete == 2) {
-            this.isComplete = false
+            this.isComplete = false;
           }
           // console.log("用户信息", res);
         })
@@ -507,7 +587,7 @@ export default {
     showInput() {
       this.inputShow = true;
       $(".search_content").css("background", "#fff");
-      this.getSearchResult()
+      this.getSearchResult();
     },
     //输入框左侧小图标点击隐藏输入框
     inputHidden() {
@@ -520,15 +600,15 @@ export default {
     },
     //点击筛选出现筛选标签
     handleTag() {
-      this.keywords = ''
+      this.keywords = "";
       $(".hospital_tag").slideToggle();
       $(".hospital_list").slideUp();
     },
     //输入框输入事件
     handleInput(value) {
-      this.currentTagStatus = ''  //输入框输入时清空筛选标签
+      this.currentTagStatus = ""; //输入框输入时清空筛选标签
       $(".hospital_tag").slideUp();
-      this.getSearchResult()
+      this.getSearchResult();
     },
     //搜索医院结果
     getSearchResult() {
@@ -536,21 +616,22 @@ export default {
         console.log("开始搜索");
         let params = {
           key: this.keywords
-        }
-        this.noneHospitalList = false
-        this.$api.hospitalList(params)
+        };
+        this.noneHospitalList = false;
+        this.$api
+          .hospitalList(params)
           .then(res => {
             // console.log(res)
             if (res.code == 200) {
-              this.hospitalSearchList = res.hospital_lst
+              this.hospitalSearchList = res.hospital_lst;
             } else if (res.code == 9000) {
-              this.hospitalSearchList = []
-              this.noneHospitalList = true
+              this.hospitalSearchList = [];
+              this.noneHospitalList = true;
             }
           })
           .catch(error => {
-            console.log(error)
-          })
+            console.log(error);
+          });
         $(".hospital_list").slideDown();
       } else {
         $(".hospital_list").slideUp();
@@ -560,53 +641,54 @@ export default {
     positionHospital(item) {
       //点击搜索出的医院列表
       // console.log(item)
-      this.center.lng = item.hospital_longtude
-      this.center.lat = item.hospital_latitude
-      this.inputHidden()
-      this.hosSingleData = {}
+      this.center.lng = item.hospital_longtude;
+      this.center.lat = item.hospital_latitude;
+      this.inputHidden();
+      this.hosSingleData = {};
     },
     //标签筛选
     submitTag() {
       switch (this.activeTag) {
-        case '空白':
-          this.currentTagStatus = 3
+        case "空白":
+          this.currentTagStatus = 3;
           break;
-        case '开发中':
-          this.currentTagStatus = 4
+        case "开发中":
+          this.currentTagStatus = 4;
           break;
-        case '已开发':
-          this.currentTagStatus = 1
+        case "已开发":
+          this.currentTagStatus = 1;
           break;
-        case '不可开发':
-          this.currentTagStatus = 2
+        case "不可开发":
+          this.currentTagStatus = 2;
           break;
-        case '警告':
-          this.currentTagStatus = 5
+        case "警告":
+          this.currentTagStatus = 5;
           break;
         default:
           break;
       }
-      this.inputHidden()
+      this.inputHidden();
       // console.log(this.activeTag)
       // console.log(this.currentTagStatus)
     },
     //弹框省市确认
     provinceConfirm(value) {
       // console.log(value)
-      this.provinceValue = value
-      this.provinceShow = false
+      this.provinceValue = value;
+      this.provinceShow = false;
     },
     //提交省数据
     provinceSubmit() {
-      console.log(this.provinceValue)
+      console.log(this.provinceValue);
       if (this.provinceValue[0].code) {
-        let params = { province_code: this.provinceValue[0].code }
-        this.$api.selectProvice(params)
+        let params = { province_code: this.provinceValue[0].code };
+        this.$api
+          .selectProvice(params)
           .then(res => {
-            console.log(res)
+            console.log(res);
             if (res.code == 200) {
               this.$toast.success("提交成功！");
-              this.reload()  //刷新当前页面，加载医院数据
+              this.reload(); //刷新当前页面，加载医院数据
             } else if (res.code == 9002) {
               this.$toast.fail("该省份没有医院信息");
             } else {
@@ -614,9 +696,9 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error)
-          })
-        this.dialogShow = false
+            console.log(error);
+          });
+        this.dialogShow = false;
       } else {
         this.$toast.fail("请选择您工作区所属省份/直辖市");
       }
@@ -624,10 +706,15 @@ export default {
     // 折叠医院详情面板收缩
     showContent(index) {
       // console.log($('.pull_cell:eq(index)'))
-      $(".pull_cell").each(function (index2) {
+      $(".pull_cell").each(function(index2) {
         if (index2 == index) {
-          $(this).children(".pull_cell_cont").slideToggle("fast");
-          $(this).siblings().children(".pull_cell_cont").slideUp("fast");
+          $(this)
+            .children(".pull_cell_cont")
+            .slideToggle("fast");
+          $(this)
+            .siblings()
+            .children(".pull_cell_cont")
+            .slideUp("fast");
         }
       });
     },
@@ -645,8 +732,7 @@ export default {
       if (MoveY < 0 && _this.hoDetailHeight === 0) {
         _this.hospitalDetailScrollHeight = `${MoveYAbs}px`;
       } else if (MoveY > 0 && _this.hoDetailHeight > 0) {
-        _this.hospitalDetailScrollHeight = `${_this.hoDetailHeight -
-          MoveYAbs}px`;
+        _this.hospitalDetailScrollHeight = `${_this.hoDetailHeight - MoveYAbs}px`;
       }
     },
     // 详情弹窗开始
@@ -677,24 +763,35 @@ export default {
           })
           .then(() => {
             console.log("前往完善信息！");
-            this.$router.push({ path: '/improvepersonalinfo' })
+            // this.$router.push({ path: '/improvepersonalinfo' })   //去完善信息
+            this.$router.push({
+              path: "/hospitalinfo",
+              query: {
+                data: this.hospitalRouteParams
+              }
+            }); //现在测试去医院详情签约
           })
           .catch(() => {
             console.log("取消完善信息！");
           });
       } else {
-        console.log("已完善信息")
-        this.$router.push({ path: '/hospitalinfo' })
+        console.log("已完善信息");
+        this.$router.push({
+          path: "/hospitalinfo",
+          query: {
+            data: this.hospitalRouteParams
+          }
+        });
       }
     },
 
     //点击搜索以外的地方隐藏搜索框
     showSetting() {
-      this.inputHidden()
+      this.inputHidden();
     },
     settingEvent(event) {
       event.stopPropagation(); //此区域不受上面方法的影响
-    },
+    }
   }
 };
 </script>
