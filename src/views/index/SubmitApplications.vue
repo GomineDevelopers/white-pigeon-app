@@ -15,7 +15,7 @@
         <van-row class="flex bgm_white padding_3 border_bom">
           <span class="title">完成时间<i>*</i></span>
           <span class="icon_right flex flex_1 flex_align_center">
-            <span class="flex_1 time_select">{{ date ? date : "请选择" }}</span>
+            <span class="flex_1 time_select">{{ time ? time : "请选择" }}</span>
             <van-icon name="arrow" @click="timeShow = true" />
           </span>
         </van-row>
@@ -83,15 +83,17 @@
   </van-row>
 </template>
 <script>
+import { timeFormat } from "@/js/public";
 export default {
   nama: "submitapplications",
   data() {
     return {
       productData: null, //接收路由传的数据
       sales: "",
-      date: "",
+      time: "",
       timeShow: false,
       timeOption: ["1个月", "2个月", "3个月", "4个月", "5个月", "6个月", "7个月", "8个月", "9个月"],
+      date: "", //完成时间
       message: "",
       hospitallTag: [
         "十分清楚竞品信息",
@@ -128,12 +130,16 @@ export default {
       console.log("提交申请data", this.productData);
     },
     timeConfirm(value) {
-      console.log(value);
+      // console.log(value);
       this.timeShow = false;
-      this.date = value;
+      this.time = value;
+
+      //计算完成时间  2019-11-29
+      let mouthNum = Number(value.replace(/[^0-9]/gi, ""));
       let nowDate = new Date();
-      let date = myDate.setMonth(myDate.getMonth() + 1);
-      console.log("date", date);
+      let date = nowDate.setMonth(nowDate.getMonth() + mouthNum);
+      this.date = timeFormat(nowDate);
+      console.log(typeof this.date);
     },
     chooseTag(tag) {
       // console.log(tag);
@@ -150,10 +156,28 @@ export default {
           hospital_know: this.message,
           commodity_know: this.message2
         };
+        this.$api
+          .hospitalApply(postData)
+          .then(res => {
+            console.log(res);
+            if (res.code == 200) {
+              this.$toast.success("提交成功！");
+              setTimeout(() => {
+                this.$router.push({ path: "/home/productapply" });
+              }, 2000);
+            } else {
+              this.$toast.fail(res.message);
+              setTimeout(() => {
+                this.$router.push({ path: "/" });
+              }, 2000);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
-        this.$toast.fail("请填写完必填信息");
+        this.$toast.fail("请填写必填信息");
       }
-      // this.$router.push({ path: "/approveindex" });
     }
   }
 };

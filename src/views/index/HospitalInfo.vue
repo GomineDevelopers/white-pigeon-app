@@ -25,22 +25,67 @@
           </span>
         </van-row>
       </van-row>
-      <van-row class="await_develop_title">待申请产品</van-row>
-      <van-row class="await_develop_product hospital_module">
-        <van-row class="await_develop_product_list">
-          <van-radio-group v-model="product">
-            <van-cell
-              v-for="(item, index) in hospitalData.product"
-              :key="index + 'po'"
-              :title="item.product_name + ' - ' + item.specification + ' ' + item.bidding_price"
-              clickable
-              @click="product = item.id"
-            >
-              <van-radio slot="right-icon" :name="item.id" />
-            </van-cell>
-          </van-radio-group>
+      <van-row v-if="hospitalData.awaitApplyProduct.length != 0">
+        <van-row class="await_develop_title">待申请产品</van-row>
+        <van-row class="await_develop_product hospital_module">
+          <van-row class="await_develop_product_list">
+            <van-radio-group v-model="product">
+              <van-cell
+                v-for="(item, index) in hospitalData.awaitApplyProduct"
+                :key="index + 'p'"
+                :title="item.product_name + '-' + item.specification + '  ¥' + item.bidding_price"
+                clickable
+                @click="product = item.id"
+              >
+                <van-radio slot="right-icon" :name="item.id" />
+              </van-cell>
+            </van-radio-group>
+          </van-row>
         </van-row>
       </van-row>
+
+      <!-- 已申请产品开始 -->
+      <van-row v-if="hospitalData.developmentProduct.length != 0">
+        <van-row class="await_develop_title">已申请产品</van-row>
+        <van-row class="already_develop_product hospital_module">
+          <van-row class="already_develop_title">
+            <van-col span="12" :class="isShow ? 'active' : ''" @click="isShow = !isShow"
+              >销量</van-col
+            >
+            <van-col span="12" :class="isShow ? '' : 'active'" @click="isShow = !isShow"
+              >价格</van-col
+            >
+          </van-row>
+          <van-row class="already_develop_content" v-show="isShow">
+            <van-row
+              v-for="(alreadyItem, index2) in hospitalData.developmentProduct"
+              :key="index2 + 'al'"
+              >{{
+                alreadyItem.product_name +
+                  "-" +
+                  alreadyItem.specification +
+                  "  ¥" +
+                  alreadyItem.bidding_price
+              }}</van-row
+            >
+            <!-- <van-row>磺胺间二甲氧嘧啶-1246盒 ¥23.89</van-row> -->
+          </van-row>
+          <van-row class="already_develop_content" v-show="!isShow">
+            <van-row
+              v-for="(alreadyItem, index2) in hospitalData.developmentProduct"
+              :key="index2 + 'pr'"
+              >{{
+                alreadyItem.product_name +
+                  "-" +
+                  alreadyItem.specification +
+                  "  ¥" +
+                  alreadyItem.bidding_price
+              }}</van-row
+            >
+          </van-row>
+        </van-row>
+      </van-row>
+      <!-- 已申请产品结束 -->
       <van-row class="public_btn">
         <button @click="submitApplications">确&nbsp;定</button>
       </van-row>
@@ -52,6 +97,7 @@ export default {
   name: "hospitalinfo",
   data() {
     return {
+      isShow: true,
       product: "",
       hospitalData: null
     };
@@ -230,6 +276,24 @@ export default {
   text-align: left;
   padding: 0.5rem 0.4375rem;
   border-radius: 0.375rem;
+}
+.already_develop_product {
+  font-size: 0.625rem;
+  text-align: left;
+}
+.already_develop_title {
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 0.5rem 0rem;
+}
+.already_develop_title .active.van-col {
+  color: #3399ff;
+}
+.already_develop_title .van-col:nth-child(1) {
+  border-right: 1px solid #eee;
+}
+.already_develop_content .van-row {
+  padding: 0.5rem 0.4375rem;
 }
 </style>
 <style>

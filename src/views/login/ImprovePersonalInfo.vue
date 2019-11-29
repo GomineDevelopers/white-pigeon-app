@@ -40,11 +40,11 @@
         <van-row>身份证照片</van-row>
         <van-row class="IDcard_upload flex">
           <van-uploader class="IDcard flex flex_align_center" :after-read="IDcardFront">
-              <img :src="IDcardurl1" class="IDcardimg" v-show="IDcardurl1" />
-              <img src="../../assets/image/idcard1.png" v-show="!IDcardurl1" />
+            <img :src="IDcardurl1" class="IDcardimg" v-show="IDcardurl1" />
+            <img src="../../assets/image/idcard1.png" v-show="!IDcardurl1" />
           </van-uploader>
           <van-uploader class="IDcard flex flex_align_center" :after-read="IDcardReverse">
-              <img :src="IDcardurl2" class="IDcardimg" v-show="IDcardurl2" />
+            <img :src="IDcardurl2" class="IDcardimg" v-show="IDcardurl2" />
             <img src="../../assets/image/idcard2.png" v-show="!IDcardurl2" />
           </van-uploader>
         </van-row>
@@ -64,14 +64,19 @@
     <!-- 身份证时间选择 -->
     <transition name="van-slide-up">
       <van-row class="area_option" v-show="IDdateShow">
-        <van-datetime-picker v-model="currentDate" type="date" @confirm="dateConfirmFn" @cancel="IDdateShow = false" />
+        <van-datetime-picker
+          v-model="currentDate"
+          type="date"
+          @confirm="dateConfirmFn"
+          @cancel="IDdateShow = false"
+        />
       </van-row>
     </transition>
   </van-row>
 </template>
 <script>
 // import AreaList from "@/js/area";
-import {upload} from "@/js/upload";
+import { upload } from "@/js/upload";
 
 export default {
   name: "improvepersonalinfo",
@@ -88,7 +93,7 @@ export default {
       IDdateValue: "",
       IDaddress: "",
       IDcardurl1: "",
-      IDcardurl2: "",
+      IDcardurl2: ""
     };
   },
   created() {
@@ -131,15 +136,15 @@ export default {
     },
     // 上传身份证正面
     IDcardFront(file) {
-      upload(file,0).then(res => {
+      upload(file, 0).then(res => {
         this.IDcardurl1 = res;
-      })
+      });
     },
     // 上传身份证反面
     IDcardReverse(file) {
-      upload(file,0).then(res => {
+      upload(file, 0).then(res => {
         this.IDcardurl2 = res;
-      })
+      });
     },
 
     timeFormat(time) {
@@ -152,27 +157,27 @@ export default {
     // 提交数据
     submitInfo() {
       let _this = this;
-      if (!_this.userName){
-          _this.$notify('姓名不能为空');
-          return;
+      if (!_this.userName) {
+        _this.$notify("姓名不能为空");
+        return;
       } else if (!_this.IDnumber) {
-          _this.$notify('身份证号不能为空');
-          return;
+        _this.$notify("身份证号不能为空");
+        return;
       } else if (_this.IDnumber.length < 18) {
-          _this.$notify('身份证号位数错误');
-          return;
+        _this.$notify("身份证号位数错误");
+        return;
       } else if (!_this.IDaddress) {
-          _this.$notify('证件地址不能为空');
-          return;
-      }  else if (!_this.IDdateValue) {
-          _this.$notify('证件有效期不能为空');
-          return;
+        _this.$notify("证件地址不能为空");
+        return;
+      } else if (!_this.IDdateValue) {
+        _this.$notify("证件有效期不能为空");
+        return;
       } else if (!_this.IDcardurl1) {
-          _this.$notify('身份证人像面不能为空');
-          return;
+        _this.$notify("身份证人像面不能为空");
+        return;
       } else if (!_this.IDcardurl2) {
-          _this.$notify('身份证国徽面不能为空');
-          return;
+        _this.$notify("身份证国徽面不能为空");
+        return;
       }
       let data = {
         username: _this.userName,
@@ -197,25 +202,26 @@ export default {
     },
     addData(data) {
       let _this = this;
-      _this.$api.completeUserInfo(data)
-      .then(res => {
-        if (res.code === 200){
-          _this.$toast.success(res.message);
-          _this.$router.push({ path: "/home" });
-        } else {
+      _this.$api
+        .completeUserInfo(data)
+        .then(res => {
+          if (res.code === 200) {
+            _this.$toast.success(res.message);
+            _this.$router.push({ path: "/" });
+          } else {
+            _this.$toast.fail(res.message);
+          }
+        })
+        .catch(err => {
           _this.$toast.fail(res.message);
-        }
-      })
-      .catch(err => {
-        _this.$toast.fail(res.message);
-      })
+        });
     }
   }
 };
 </script>
 <style>
-.IDcard .van-uploader__wrapper{
-  height:100%;
+.IDcard .van-uploader__wrapper {
+  height: 100%;
 }
 </style>
 <style scoped>
