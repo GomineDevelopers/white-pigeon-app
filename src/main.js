@@ -10,7 +10,9 @@ import jquery from "jquery";
 import "@/js/rem";
 import "@/js/vant.js";
 import "@/css/public.css";
+import { List } from 'vant';
 
+Vue.use(List);
 Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: "4vWwiDYUhYY3S5uLoPbZqUEz"

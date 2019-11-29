@@ -3,76 +3,74 @@
     <van-row class="top_nav_bar nav_bgm">
       <van-nav-bar title="审批" left-arrow @click-left="onBack()" />
     </van-row>
-    <van-row class="main_body height_auto">
+    <van-row class="tabs flex">
       <van-row class="approve_nav flex">
-        <span :class="active ? 'active':''" @click="switchOption">产品</span>
-        <span :class="active ? '':'active'" @click="switchOption">医生</span>
-      </van-row>
-      <van-row class="approve_content">
-        <div class="approve_list" v-show="active">
-          <div
-            class="approve_item flex justify_between"
-            v-for="(item,index) in productList"
-            :key="index+'a'"
-            @click="getDetail"
-          >
-            <div class="approve_item_detail">
-              <ul>
-                <li>{{item.title}}</li>
-                <li class="flex justify_start">
-                  <span>医院名：</span>
-                  <span>{{item.hospitalName}}</span>
-                </li>
-                <li class="flex justify_start">
-                  <span>承诺销量：</span>
-                  <span>{{item.sales}}</span>
-                </li>
-                <li class="flex justify_start">
-                  <span>申请时间：</span>
-                  <span>{{item.approveDate}}</span>
-                </li>
-              </ul>
-            </div>
-            <div class="approve_state flex">
-              <img v-if="item.approveState == 'await'" src="@/assets/image/approve.png" />
-              <img v-if="item.approveState == 'succeed'" src="@/assets/image/approve_pass.png" />
-              <img v-if="item.approveState == 'notPass'" src="@/assets/image/approve_no.png" />
-            </div>
-          </div>
-        </div>
-        <div class="approve_list" v-show="!active">
-          <div
-            class="approve_item flex justify_between"
-            v-for="(item,index) in hospitalList"
-            :key="index+'b'"
-            @click="getDoctorDetail"
-          >
-            <div class="approve_item_detail">
-              <ul>
-                <li>{{item.title}}</li>
-                <li class="flex justify_start">
-                  <span>医院名：</span>
-                  <span>{{item.hospitalName}}</span>
-                </li>
-                <li class="flex justify_start">
-                  <span>医生：</span>
-                  <span>{{item.doctor}}</span>
-                </li>
-                <li class="flex justify_start">
-                  <span>申请时间：</span>
-                  <span>{{item.approveDate}}</span>
-                </li>
-              </ul>
-            </div>
-            <div class="approve_state flex">
-              <img v-if="item.approveState == 'await'" src="@/assets/image/approve.png" />
-              <img v-if="item.approveState == 'succeed'" src="@/assets/image/approve_pass.png" />
-              <img v-if="item.approveState == 'notPass'" src="@/assets/image/approve_no.png" />
-            </div>
-          </div>
-        </div>
+        <span :class="active == 0 ? 'active':''" @click="switchOption">产品</span>
+        <span :class="active == 1 ? 'active':''" @click="switchOption">医生</span>
       </van-row>
     </van-row>
+    <van-list class="approve_list" v-show="active == 0" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getProductData" ref="proList">
+      <div
+        class="approve_item flex justify_between"
+        v-for="(item,index) in productList"
+        :key="index+'a'"
+        @click="getDetail"
+      >
+        <div class="approve_item_detail">
+          <ul>
+            <li>{{item.title}}</li>
+            <li class="flex justify_start">
+              <span>医院名：</span>
+              <span>{{item.hospitalName}}</span>
+            </li>
+            <li class="flex justify_start">
+              <span>承诺销量：</span>
+              <span>{{item.sales}}</span>
+            </li>
+            <li class="flex justify_start">
+              <span>申请时间：</span>
+              <span>{{item.approveDate}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="approve_state flex">
+          <img v-if="item.approveState == 'await'" src="@/assets/image/approve.png" />
+          <img v-if="item.approveState == 'succeed'" src="@/assets/image/approve_pass.png" />
+          <img v-if="item.approveState == 'notPass'" src="@/assets/image/approve_no.png" />
+        </div>
+      </div>
+    </van-list>
+    <van-list class="approve_list" v-show="active == 1" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getHospitalData" ref="hosList">
+      <div
+        class="approve_item flex justify_between"
+        v-for="(item,index) in hospitalList"
+        :key="index+'b'"
+        @click="getDoctorDetail"
+      >
+        <div class="approve_item_detail">
+          <ul>
+            <li>{{item.title}}</li>
+            <li class="flex justify_start">
+              <span>医院名：</span>
+              <span>{{item.hospitalName}}</span>
+            </li>
+            <li class="flex justify_start">
+              <span>医生：</span>
+              <span>{{item.doctor}}</span>
+            </li>
+            <li class="flex justify_start">
+              <span>申请时间：</span>
+              <span>{{item.approveDate}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="approve_state flex">
+          <img v-if="item.approveState == 'await'" src="@/assets/image/approve.png" />
+          <img v-if="item.approveState == 'succeed'" src="@/assets/image/approve_pass.png" />
+          <img v-if="item.approveState == 'notPass'" src="@/assets/image/approve_no.png" />
+        </div>
+      </div>
+    </van-list>
   </van-row>
 </template>
 <script>
@@ -80,90 +78,11 @@ export default {
   name: "approveindex",
   data() {
     return {
-      active: true,
-      //产品
-      productList: [
-        {
-          title: "XXXX提交的产品申请",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "succeed"
-        },
-        {
-          title: "XXXX提交的产品申请",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "await"
-        },
-        {
-          title: "XXXX提交的产品申请",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "notPass"
-        },
-        {
-          title: "XXXX提交的产品申请",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "await"
-        },
-        {
-          title: "XXXX提交的产品申请",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "notPass"
-        }
-      ],
-      //医生
-      hospitalList: [
-        {
-          title: "XXXX提交的医生申请",
-          hospitalName: "上海长海医院",
-          doctor: "张XX",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "succeed"
-        },
-        {
-          title: "XXXX提交的医生申请",
-          hospitalName: "上海长海医院",
-          doctor: "张XX",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "await"
-        },
-        {
-          title: "XXXX提交的医生申请",
-          hospitalName: "上海长海医院",
-          doctor: "张XX",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "notPass"
-        },
-        {
-          title: "XXXX提交的医生申请",
-          hospitalName: "上海长海医院",
-          doctor: "张XX",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "await"
-        },
-        {
-          title: "XXXX提交的医生申请",
-          hospitalName: "上海长海医院",
-          doctor: "张XX",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "notPass"
-        },
-        {
-          title: "XXXX提交的医生申请",
-          hospitalName: "上海长海医院",
-          doctor: "张XX",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "await"
-        }
-      ]
+      active: 0,
+      loading: false,
+      finished: false,
+      productList: [], //产品审批数据
+      hospitalList: [] //医生审批数据
     };
   },
   created() {
@@ -180,11 +99,62 @@ export default {
     }
   },
   methods: {
+    // 获取产品审批数据
+    getProductData() {
+      setTimeout(() => {
+        for (let i = 0; i < 10; i++) {
+          this.productList.push({
+          title: "XXXX提交的产品申请" + i,
+          hospitalName: "上海长海医院",
+          sales: "产品1 - 3321/月",
+          approveDate: "2019.10.15 15:32:32",
+          approveState: "succeed"
+        });
+        }
+        // 加载状态结束
+        this.loading = false;
+
+        // 数据全部加载完成
+        if (this.productList.length >= 40) {
+          this.finished = true;
+        }
+      }, 500);
+    },
+    // 获取医生审批数据
+    getHospitalData() {
+      setTimeout(() => {
+        for (let i = 0; i < 10; i++) {
+            this.hospitalList.push({
+            title: "XXXX提交的医生申请" + i,
+            hospitalName: "上海长海医院",
+            doctor: "张XX",
+            approveDate: "2019.10.15 15:32:32",
+            approveState: "succeed"
+          })
+        }
+        // 加载状态结束
+        this.loading = false;
+
+        // 数据全部加载完成
+        if (this.hospitalList.length >= 40) {
+          this.finished = true;
+        }
+      }, 500);
+    },
     onBack() {
       history.back();
     },
     switchOption() {
-      this.active = !this.active;
+      if (this.active == 0) {
+        this.active = 1;
+        if (!this.hospitalList.length) {
+          this.getHospitalData();
+        }
+      } else {
+        
+        this.active = 0;
+        
+      }
     },
     getDetail() {
       this.$router.push({ path: "/hospitalapprove" });
@@ -195,10 +165,23 @@ export default {
   }
 };
 </script>
+<style>
+.approve_list {
+  padding-top: 120px;
+  padding-left: .8rem;
+  padding-right: .8rem;
+}
+</style>
 <style scoped>
-.main_body {
-  height: 85vh;
-  overflow: hidden;
+.tabs{
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  background: #fff;
 }
 .approve_nav {
   height: 1.55rem;
