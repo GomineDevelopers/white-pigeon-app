@@ -36,8 +36,6 @@
           <van-icon name="arrow" @click="IDdateShow = true" />
         </van-row>
       </van-row>
-      {{ "拍照:" + carm }}
-      {{ "相册:" + gall }}
       <van-row v-for="(item,index) in entry" :key="index">
         {{'e   '+item}}
         <van-row v-if="typeof(item) == Object">
@@ -47,14 +45,22 @@
       <van-row class="info_module">
         <van-row>身份证照片</van-row>
         <van-row class="IDcard_upload flex">
-          <van-row class="IDcard flex flex_align_center" @click="IDcardUpload1">
+          <!-- <van-row class="IDcard flex flex_align_center" @click="IDcardUpload1">
             <img :src="IDcardurl1" class="IDcardimg" v-show="IDcardurl1" />
             <img src="../../assets/image/idcard1.png" v-show="!IDcardurl1" />
-          </van-row>
-          <van-row class="IDcard flex flex_align_center" @click="IDcardUpload2">
+          </van-row>-->
+          <van-uploader class="IDcard flex flex_align_center" :before-read="beforeRead" :after-read="IDcardFront" upload-text="上传中">
+              <img :src="IDcardurl1" class="IDcardimg" v-show="IDcardurl1" />
+              <img src="../../assets/image/idcard1.png" v-show="!IDcardurl1" />
+          </van-uploader>
+          <van-uploader class="IDcard flex flex_align_center" :before-read="beforeRead" :after-read="IDcardReverse">
+              <img :src="IDcardurl2" class="IDcardimg" v-show="IDcardurl2" />
+            <img src="../../assets/image/idcard2.png" v-show="!IDcardurl2" />
+          </van-uploader>
+          <!--<van-row class="IDcard flex flex_align_center" @click="IDcardUpload2">
             <img :src="IDcardurl2" class="IDcardimg" v-show="IDcardurl2" />
             <img src="../../assets/image/idcard2.png" v-show="!IDcardurl2" />
-          </van-row>
+          </van-row>-->
           <!-- <van-col span="12">
             <van-uploader :after-read="afterRead" />
           </van-col>
@@ -93,8 +99,9 @@
   </van-row>
 </template>
 <script>
-import * as qiniu from "qiniu-js";
 import AreaList from "@/js/area";
+import {upload} from "@/js/upload";
+
 export default {
   name: "improvepersonalinfo",
   data() {
@@ -158,7 +165,26 @@ export default {
       console.log(this.IDdateValue);
       this.IDdateShow = false;
     },
-
+    // 上传前检测是否是图片格式
+    beforeRead(file) {
+      // if (file.type !== 'image/jpeg') {
+      //   alert('请上传 jpg 格式图片');
+      //   return false;
+      // }
+      return true;
+    },
+    // 上传身份证正面
+    IDcardFront(file) {
+      upload(file,0).then(res => {
+        this.IDcardurl1 = res;
+      })
+    },
+    // 上传身份证反面
+    IDcardReverse(file) {
+      upload(file,1).then(res => {
+        this.IDcardurl2 = res;
+      })
+    },
     IDcardUpload1() {
       let vm = this;
       vm.photographShow = true;
@@ -250,44 +276,7 @@ export default {
         { resolution: res, format: fmt }
       );
     },
-    // 上传图片到七牛云
-    uploadToQiniuyun(file) {
-      let that = this;
-      const config = {
-        useCdnDomain: true,
-        region: qiniu.region.z2
-      };
-      let api = "http://xbg.zidata.cn/";
-      let token =
-        "wOmPSnAO6hOEzRY6p0Dz8KMF8suRWK1LnBYYQrEV:vIvBzye9M30h7vavuNJrCrpd9_U=:eyJzY29wZSI6ImdvbWluZTEyMyIsImRlYWRsaW5lIjoxNTc0ODQzMjYyfQ==";
-      let fileName = file.name;
-      let putExtra = {
-        fname: "",
-        params: {},
-        mimeType: null
-      };
-      const observable = qiniu.upload(file, fileName, token, putExtra, config);
-      observable.subscribe(
-        res => {
-          console.log(res.total);
-          that.value = Math.floor(res.total.percent);
-        },
-        err => {
-          switch (err.code) {
-            case 401:
-              alert("图片上传失败");
-              break;
-            default:
-              alert(err.message);
-              break;
-          }
-        },
-        res => {
-          console.log(res);
-          that.imgSrc = `${api}${res.key}`;
-        }
-      );
-    },
+    
     submitInfo() {
       let vm = this;
       this.$Dialog
@@ -309,6 +298,11 @@ export default {
   }
 };
 </script>
+<style>
+.IDcard .van-uploader__wrapper{
+  height:100%;
+}
+</style>
 <style scoped>
 .info_module {
   font-size: 0.6875rem;
@@ -365,9 +359,10 @@ export default {
   height: 5.3rem;
   box-shadow: 0rem 0rem 0.3125rem #ccc;
   justify-content: center;
+  overflow: hidden;
 }
 .IDcard img {
-  width: 90%;
+  width: 100%;
 }
 .IDcard:nth-child(1) {
   margin-right: 0.5rem !important;
