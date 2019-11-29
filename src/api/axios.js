@@ -16,6 +16,7 @@ let api = {
   hospitalNotDevelop: params => post("hospitalManager/hospitalNotDevelop", params), //不可开发医院
   hospitalDevelopment: params => post("hospitalManager/hospitalDevelopment", params), //开发中医院
   hospitalDevelopd: params => post("hospitalManager/hospitalDevelopd", params), //已开发医院
-  hospitalGetProductName: params => post("hospitalManager/hospitalGetProductName", params) //已开发医院
+  hospitalGetProductName: params => post("hospitalManager/hospitalGetProductName", params), //获取产品名称
+  completeUserInfo: params => post("membercreate/completeUser", params) //完善用户信息
 };
 export default api;
