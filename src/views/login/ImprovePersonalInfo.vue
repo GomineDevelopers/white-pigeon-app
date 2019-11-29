@@ -49,12 +49,13 @@
             <img :src="IDcardurl1" class="IDcardimg" v-show="IDcardurl1" />
             <img src="../../assets/image/idcard1.png" v-show="!IDcardurl1" />
           </van-row>-->
-          <van-uploader class="IDcard flex flex_align_center" :after-read="afterRead" upload-text="上传中">
+          <van-uploader class="IDcard flex flex_align_center" :before-read="beforeRead" :after-read="IDcardFront" upload-text="上传中">
               <img :src="IDcardurl1" class="IDcardimg" v-show="IDcardurl1" />
               <img src="../../assets/image/idcard1.png" v-show="!IDcardurl1" />
           </van-uploader>
-          <van-uploader class="IDcard flex flex_align_center" >
-              <img src="../../assets/image/idcard2.png" />
+          <van-uploader class="IDcard flex flex_align_center" :before-read="beforeRead" :after-read="IDcardReverse">
+              <img :src="IDcardurl2" class="IDcardimg" v-show="IDcardurl2" />
+            <img src="../../assets/image/idcard2.png" v-show="!IDcardurl2" />
           </van-uploader>
           <!--<van-row class="IDcard flex flex_align_center" @click="IDcardUpload2">
             <img :src="IDcardurl2" class="IDcardimg" v-show="IDcardurl2" />
@@ -98,10 +99,9 @@
   </van-row>
 </template>
 <script>
-import * as qiniu from "qiniu-js";
 import AreaList from "@/js/area";
 import {upload} from "@/js/upload";
-upload()
+
 export default {
   name: "improvepersonalinfo",
   data() {
@@ -165,10 +165,25 @@ export default {
       console.log(this.IDdateValue);
       this.IDdateShow = false;
     },
-    afterRead(e) {
-      console.log(e);
-      console.log(file['file'])
-      // this.uploadToQiniuyun(file['file']);
+    // 上传前检测是否是图片格式
+    beforeRead(file) {
+      // if (file.type !== 'image/jpeg') {
+      //   alert('请上传 jpg 格式图片');
+      //   return false;
+      // }
+      return true;
+    },
+    // 上传身份证正面
+    IDcardFront(file) {
+      upload(file,0).then(res => {
+        this.IDcardurl1 = res;
+      })
+    },
+    // 上传身份证反面
+    IDcardReverse(file) {
+      upload(file,1).then(res => {
+        this.IDcardurl2 = res;
+      })
     },
     IDcardUpload1() {
       let vm = this;
@@ -261,44 +276,7 @@ export default {
         { resolution: res, format: fmt }
       );
     },
-    // 上传图片到七牛云
-    uploadToQiniuyun(file) {
-      let that = this;
-      const config = {
-        useCdnDomain: true,
-        region: qiniu.region.z2
-      };
-      let api = "http://xbg.zidata.cn/";
-      let token =
-        "wOmPSnAO6hOEzRY6p0Dz8KMF8suRWK1LnBYYQrEV:wCg-4JzXbbIPbgH9PUgbakPuC2o=:eyJzY29wZSI6ImdvbWluZTEyMyIsImRlYWRsaW5lIjoxNTc0OTM3Nzg5fQ==";
-      let fileName = file.name;
-      let putExtra = {
-        fname: "",
-        params: {},
-        mimeType: null
-      };
-      const observable = qiniu.upload(file, fileName, token, putExtra, config);
-      observable.subscribe(
-        res => {
-          console.log(res.total);
-          that.value = Math.floor(res.total.percent);
-        },
-        err => {
-          switch (err.code) {
-            case 401:
-              alert("上传失败");
-              break;
-            default:
-              alert(err.message);
-              break;
-          }
-        },
-        res => {
-          console.log(res);
-          that.IDcardurl1 = `${api}${res.key}`;
-        }
-      );
-    },
+    
     submitInfo() {
       let vm = this;
       this.$Dialog
@@ -320,6 +298,11 @@ export default {
   }
 };
 </script>
+<style>
+.IDcard .van-uploader__wrapper{
+  height:100%;
+}
+</style>
 <style scoped>
 .info_module {
   font-size: 0.6875rem;
