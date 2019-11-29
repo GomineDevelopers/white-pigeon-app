@@ -5,23 +5,23 @@
     </van-row>
     <van-row class="main_body">
       <van-row class="applications_info">
-        <van-row class="drug_name bgm_white">乌本美司片</van-row>
-        <van-row class="flex bgm_white padding_3 border_bom">
-          <span class="title">承诺销量</span>
+        <van-row class="drug_name bgm_white">{{ productData.productName }}</van-row>
+        <van-row class="flex flex_align_center bgm_white padding_3 border_bom">
+          <span class="title">承诺销量<i>*</i></span>
           <span class="flex_1 sales_input">
-            <van-field v-model="sales" type="number" placeholder="请输入..." />
+            <van-field v-model="sales" type="number" placeholder="请输入" />
           </span>
         </van-row>
         <van-row class="flex bgm_white padding_3 border_bom">
-          <span class="title">完成时间</span>
+          <span class="title">完成时间<i>*</i></span>
           <span class="icon_right flex flex_1 flex_align_center">
-            <span class="flex_1 time_select">{{ time ? time : "请选择" }}</span>
+            <span class="flex_1 time_select">{{ date ? date : "请选择" }}</span>
             <van-icon name="arrow" @click="timeShow = true" />
           </span>
         </van-row>
         <van-row class="know_more padding_3">
           <van-row class="flex flex_align_center competing_goods">
-            <span class="title2">医院了解</span>
+            <span class="title2">医院了解<i>*</i></span>
             <van-icon name="question" />
           </van-row>
           <van-row class="bgm_white">
@@ -36,10 +36,10 @@
           </van-row>
           <van-row class="tag_edit flex justify_between">
             <span class="flex_1">快捷标签</span>
-            <span>编辑</span>
+            <!-- <span>编辑</span> -->
           </van-row>
           <van-row class="hospitall_tag flex">
-            <span v-for="(tag, index) in hospitallTag" :key="index + 'c'">{{
+            <span v-for="(tag, index) in hospitallTag" :key="index + 'c'" @click="chooseTag(tag)">{{
               tag
             }}</span>
           </van-row>
@@ -87,28 +87,19 @@ export default {
   nama: "submitapplications",
   data() {
     return {
+      productData: null, //接收路由传的数据
       sales: "",
-      time: "",
+      date: "",
       timeShow: false,
-      timeOption: [
-        "1个月",
-        "2个月",
-        "3个月",
-        "4个月",
-        "5个月",
-        "6个月",
-        "7个月",
-        "8个月",
-        "9个月"
-      ],
+      timeOption: ["1个月", "2个月", "3个月", "4个月", "5个月", "6个月", "7个月", "8个月", "9个月"],
       message: "",
       hospitallTag: [
-        "三甲医院",
-        "公立医院",
-        "综合医院",
-        "快捷标签1",
-        "快捷标签2",
-        "快捷标签3"
+        "十分清楚竞品信息",
+        "十分清楚此医院适用科室信息",
+        "十分清楚此医院重点医生信息",
+        "可快速进药",
+        "开发成功后，用量较大",
+        "可长期进药"
       ],
       message2: ""
     };
@@ -125,37 +116,72 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.getRouterData();
   },
   methods: {
     onBack() {
       history.back();
     },
+    //接收路由数据
+    getRouterData() {
+      this.productData = this.$route.query.data;
+      console.log("提交申请data", this.productData);
+    },
     timeConfirm(value) {
       console.log(value);
       this.timeShow = false;
-      this.time = value;
+      this.date = value;
+      let nowDate = new Date();
+      let date = myDate.setMonth(myDate.getMonth() + 1);
+      console.log("date", date);
+    },
+    chooseTag(tag) {
+      // console.log(tag);
+      this.message += tag + ",";
     },
     goApproveindex() {
-      this.$router.push({ path: "/approveindex" });
+      if (this.sales && this.time && this.message) {
+        console.log("准备提交申请");
+        let postData = {
+          hospital_id: this.productData.hospitalId,
+          product_id: this.productData.productId,
+          promise_sales: this.sales,
+          complete_time: this.date,
+          hospital_know: this.message,
+          commodity_know: this.message2
+        };
+      } else {
+        this.$toast.fail("请填写完必填信息");
+      }
+      // this.$router.push({ path: "/approveindex" });
     }
   }
 };
 </script>
 <style>
 .sales_input .van-cell {
-  font-size: 0.75rem !important;
+  font-size: 0.625rem !important;
 }
 .padding_3 .van-icon {
   color: #d2d7de;
   font-size: 0.75rem;
 }
+.submitapplications .van-field__control {
+  color: #969799;
+}
 .submitapplications textarea.van-field__control {
   height: 6.25rem !important;
   padding: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.625rem;
 }
 </style>
 <style scoped>
+.submitapplications .title i,
+.submitapplications .title2 i {
+  font-style: normal;
+  color: red;
+  margin-left: 0.2rem;
+}
 .applications_info {
   text-align: left;
   background: #fafafa;
@@ -166,24 +192,25 @@ export default {
   background: #fff;
 }
 .drug_name {
-  font-size: 0.875rem;
-  /* font-weight: bold; */
-  padding: 0.625rem 0.3rem 0.2rem 0.3rem;
+  font-size: 0.75rem;
+  color: #000;
+  padding: 0.625rem 0.5rem 0rem 0.5rem;
+  border-radius: 0.1875rem;
 }
 .padding_3 {
-  padding: 0.5rem 0.3rem;
+  padding: 0.5rem;
 }
 .title,
 .title2 {
   white-space: nowrap;
-  /* font-weight: bold; */
   margin-right: 0.375rem;
+  font-size: 0.625rem;
 }
 .van-cell {
   padding: 0rem;
 }
 .time_select {
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   color: #969799;
 }
 .border_bom {

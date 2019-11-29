@@ -1,7 +1,4 @@
-import {
-  get,
-  post
-} from "./http";
+import { get, post } from "./http";
 let api = {
   userInfo: params => post("/membercreate/user", params), //用户信息
   register: params => post("/membercreate/createMember", params), //注册
@@ -19,5 +16,6 @@ let api = {
   hospitalNotDevelop: params => post("hospitalManager/hospitalNotDevelop", params), //不可开发医院
   hospitalDevelopment: params => post("hospitalManager/hospitalDevelopment", params), //开发中医院
   hospitalDevelopd: params => post("hospitalManager/hospitalDevelopd", params), //已开发医院
+  hospitalGetProductName: params => post("hospitalManager/hospitalGetProductName", params) //已开发医院
 };
 export default api;

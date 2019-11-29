@@ -77,11 +77,40 @@ export default {
     getRouterData() {
       // 只是改了query，其他都不变
       this.hospitalData = this.$route.query.data;
-      console.log("data", this.hospitalData);
+      console.log("医院详情data", this.hospitalData);
     },
     submitApplications() {
-      // this.$router.push({ path: "/submitapplications" });
-      console.log("product", this.product);
+      if (this.product) {
+        //获取产品名称
+        let productId = { product_id: this.product };
+        this.$api
+          .hospitalGetProductName(productId)
+          .then(res => {
+            // console.log(res);
+            if (res.code == 200) {
+              // this.productName = res.product_info.product_name;
+              let paramsData = {
+                hospitalId: this.hospitalData.infomation.hospital_id,
+                productId: this.product,
+                productName: res.product_info.product_name
+              };
+              // console.log("data", paramsData);
+              this.$router.push({
+                path: "/submitapplications",
+                query: {
+                  data: paramsData
+                }
+              });
+            } else {
+              this.$toast.fail(res.message);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else {
+        this.$toast.fail("请选择产品！");
+      }
     },
     //电话功能
     call(mobile) {
@@ -169,6 +198,9 @@ export default {
 }
 .hospital_adress span:nth-child(1) {
   padding-right: 0.5rem;
+  font-size: 0.625rem;
+  flex: 1;
+  text-align: left;
 }
 .hospital_adress span:nth-child(2) i {
   font-style: normal;

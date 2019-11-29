@@ -533,7 +533,8 @@ export default {
                 hospital_type: setHospitalLevel(hospitolContent.hospital_level),
                 hospital_level: setHospitalType(hospitolContent.hospital_type),
                 hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
-                hospital_mobile: hospitolContent.hospital_mobile
+                hospital_mobile: hospitolContent.hospital_mobile,
+                hospital_id: hospitolContent.id
               };
               this.hospitalFoldData = res.product_data;
 
