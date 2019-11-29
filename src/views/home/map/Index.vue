@@ -21,7 +21,7 @@
               <span>{{ hospitalItem.hospital_address }}</span>
             </li>
           </ul>
-          <van-row class="none_hospital_data" v-if="hospitalSearchList.length == 0">无数据</van-row>
+          <van-row class="none_hospital_data" v-if="noneHospitalList">无数据</van-row>
         </van-row>
       </transition>
       <van-row class="hospital_tag">
@@ -319,6 +319,7 @@ export default {
         //   address: "上海市南汇区惠南镇东门大街339号"
         // }
       ],
+      noneHospitalList: false,  //无数据的展示
       activeTag: '',
       currentTagStatus: '',  //筛选医院标签
       hospital_tag: ["空白", "开发中", "已开发", "不可开发", "警告"],
@@ -512,6 +513,7 @@ export default {
     inputHidden() {
       this.inputShow = false;
       this.keywords = "";
+      // this.currentTagStatus = ''
       $(".search_content").css("background", "transparent");
       $(".hospital_tag").hide();
       $(".hospital_list").hide();
@@ -524,6 +526,7 @@ export default {
     },
     //输入框输入事件
     handleInput(value) {
+      this.currentTagStatus = ''  //输入框输入时清空筛选标签
       $(".hospital_tag").slideUp();
       this.getSearchResult()
     },
@@ -534,11 +537,15 @@ export default {
         let params = {
           key: this.keywords
         }
+        this.noneHospitalList = false
         this.$api.hospitalList(params)
           .then(res => {
-            console.log(res)
+            // console.log(res)
             if (res.code == 200) {
               this.hospitalSearchList = res.hospital_lst
+            } else if (res.code == 9000) {
+              this.hospitalSearchList = []
+              this.noneHospitalList = true
             }
           })
           .catch(error => {
@@ -580,8 +587,8 @@ export default {
           break;
       }
       this.inputHidden()
-      console.log(this.activeTag)
-      console.log(this.currentTagStatus)
+      // console.log(this.activeTag)
+      // console.log(this.currentTagStatus)
     },
     //弹框省市确认
     provinceConfirm(value) {
