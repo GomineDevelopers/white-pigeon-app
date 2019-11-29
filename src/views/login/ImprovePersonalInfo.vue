@@ -4,13 +4,13 @@
       <van-nav-bar title="完善信息" />
     </van-row>
     <van-row class="main_body">
-      <van-row class="info_module">
+      <!--<van-row class="info_module">
         <van-row>所属城市</van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex"  @click="areaListShow = true">
           <span>{{ areaValue ? areaValue : "请选择业务所属省市" }}</span>
-          <van-icon name="arrow" @click="areaListShow = true" />
+          <van-icon name="arrow" />
         </van-row>
-      </van-row>
+      </van-row>-->
       <van-row class="info_module">
         <van-row>姓名</van-row>
         <van-row>
@@ -20,7 +20,7 @@
       <van-row class="info_module">
         <van-row>身份证号</van-row>
         <van-row>
-          <van-field v-model="IDnumber" placeholder="请输入身份证号号码" />
+          <van-field v-model="IDnumber" maxlength="18" placeholder="请输入身份证号号码" />
         </van-row>
       </van-row>
       <van-row class="info_module">
@@ -31,42 +31,22 @@
       </van-row>
       <van-row class="info_module">
         <van-row>证件有效期</van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="IDdateShow = true">
           <span>{{ IDdateValue ? IDdateValue : "请选择身份证有效期" }}</span>
-          <van-icon name="arrow" @click="IDdateShow = true" />
-        </van-row>
-      </van-row>
-      <van-row v-for="(item,index) in entry" :key="index">
-        {{'e   '+item}}
-        <van-row v-if="typeof(item) == Object">
-          <van-row v-for="(item2,index2) in item" :key="index2+'s'">{{'e2   '+item2}}</van-row>
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
         <van-row>身份证照片</van-row>
         <van-row class="IDcard_upload flex">
-          <!-- <van-row class="IDcard flex flex_align_center" @click="IDcardUpload1">
-            <img :src="IDcardurl1" class="IDcardimg" v-show="IDcardurl1" />
-            <img src="../../assets/image/idcard1.png" v-show="!IDcardurl1" />
-          </van-row>-->
-          <van-uploader class="IDcard flex flex_align_center" :before-read="beforeRead" :after-read="IDcardFront" upload-text="上传中">
+          <van-uploader class="IDcard flex flex_align_center" :after-read="IDcardFront">
               <img :src="IDcardurl1" class="IDcardimg" v-show="IDcardurl1" />
               <img src="../../assets/image/idcard1.png" v-show="!IDcardurl1" />
           </van-uploader>
-          <van-uploader class="IDcard flex flex_align_center" :before-read="beforeRead" :after-read="IDcardReverse">
+          <van-uploader class="IDcard flex flex_align_center" :after-read="IDcardReverse">
               <img :src="IDcardurl2" class="IDcardimg" v-show="IDcardurl2" />
             <img src="../../assets/image/idcard2.png" v-show="!IDcardurl2" />
           </van-uploader>
-          <!--<van-row class="IDcard flex flex_align_center" @click="IDcardUpload2">
-            <img :src="IDcardurl2" class="IDcardimg" v-show="IDcardurl2" />
-            <img src="../../assets/image/idcard2.png" v-show="!IDcardurl2" />
-          </van-row>-->
-          <!-- <van-col span="12">
-            <van-uploader :after-read="afterRead" />
-          </van-col>
-          <van-col span="12">
-            <van-uploader :after-read="afterRead" />
-          </van-col>-->
         </van-row>
       </van-row>
       <van-row class="submit_btn" @click="submitInfo">
@@ -75,11 +55,11 @@
     </van-row>
     <!-- 省市区选择 -->
     <!-- 上滑进入 -->
-    <transition name="van-slide-up">
+    <!--<transition name="van-slide-up">
       <van-row class="area_option" v-show="areaListShow">
         <van-area :area-list="areaList" @confirm="areaConfirmFn" @cancel="areaListShow = false" />
       </van-row>
-    </transition>
+    </transition>-->
 
     <!-- 身份证时间选择 -->
     <transition name="van-slide-up">
@@ -87,42 +67,28 @@
         <van-datetime-picker v-model="currentDate" type="date" @confirm="dateConfirmFn" @cancel="IDdateShow = false" />
       </van-row>
     </transition>
-
-    <!-- 照片选取 -->
-    <van-row class="showOption">
-      <transition name="van-slide-up">
-        <van-row v-show="photographShow">
-          <van-picker show-toolbar :columns="photographOption" @cancel="photographShow = false" @confirm="photographConfirm" />
-        </van-row>
-      </transition>
-    </van-row>
   </van-row>
 </template>
 <script>
-import AreaList from "@/js/area";
+// import AreaList from "@/js/area";
 import {upload} from "@/js/upload";
 
 export default {
   name: "improvepersonalinfo",
   data() {
     return {
-      areaList: AreaList, // 指定数据源
-      areaListShow: false,
+      // areaList: AreaList, // 指定数据源
+      // areaListShow: false,
+      // areaValue: "",
       IDdateShow: false,
-      photographShow: false,
       currentDate: new Date(),
-      photographOption: ["拍照", "从相册选取"],
       IDcardFlag: null,
       userName: "",
-      areaValue: "",
       IDnumber: "",
       IDdateValue: "",
       IDaddress: "",
       IDcardurl1: "",
       IDcardurl2: "",
-      carm: null,
-      gall: null,
-      entry: null
     };
   },
   created() {
@@ -140,38 +106,28 @@ export default {
   },
   methods: {
     //地区选择确认
-    areaConfirmFn(event) {
-      this.show = false;
-      let arr, SelectProvinceName, SelectCityName, SelectCountyName;
-      arr = event;
-      SelectProvinceName = arr[0].name; // 省
-      SelectCityName = arr[1].name; // 市
-      SelectCountyName = arr[2].name; // 区
-      this.areaValue =
-        SelectProvinceName + " / " + SelectCityName + " / " + SelectCountyName;
-      this.areaListShow = false;
-      console.log(
-        "点击了确定按钮",
-        SelectProvinceName,
-        SelectCityName,
-        SelectCountyName
-      );
-    },
+    // areaConfirmFn(event) {
+    //   this.show = false;
+    //   let arr, SelectProvinceName, SelectCityName, SelectCountyName;
+    //   arr = event;
+    //   SelectProvinceName = arr[0].name; // 省
+    //   SelectCityName = arr[1].name; // 市
+    //   SelectCountyName = arr[2].name; // 区
+    //   this.areaValue =
+    //     SelectProvinceName + " / " + SelectCityName + " / " + SelectCountyName;
+    //   this.areaListShow = false;
+    //   console.log(
+    //     "点击了确定按钮",
+    //     SelectProvinceName,
+    //     SelectCityName,
+    //     SelectCountyName
+    //   );
+    // },
 
     //日期选择确定
     dateConfirmFn(event) {
-      console.log(event);
       this.IDdateValue = this.timeFormat(event);
-      console.log(this.IDdateValue);
       this.IDdateShow = false;
-    },
-    // 上传前检测是否是图片格式
-    beforeRead(file) {
-      // if (file.type !== 'image/jpeg') {
-      //   alert('请上传 jpg 格式图片');
-      //   return false;
-      // }
-      return true;
     },
     // 上传身份证正面
     IDcardFront(file) {
@@ -181,30 +137,9 @@ export default {
     },
     // 上传身份证反面
     IDcardReverse(file) {
-      upload(file,1).then(res => {
+      upload(file,0).then(res => {
         this.IDcardurl2 = res;
       })
-    },
-    IDcardUpload1() {
-      let vm = this;
-      vm.photographShow = true;
-      vm.IDcardFlag = 1; //设置标示，当前为身份证正面
-    },
-    IDcardUpload2() {
-      let vm = this;
-      vm.photographShow = true;
-      vm.IDcardFlag = 2; //设置标示，当前为身份证反面
-    },
-    photographConfirm(value, index) {
-      let vm = this;
-      vm.photographShow = false;
-      console.log(index);
-      if (index == 0) {
-        vm.captureImage();
-      }
-      if (index == 1) {
-        vm.galleryImg();
-      }
     },
 
     timeFormat(time) {
@@ -212,88 +147,68 @@ export default {
       let year = time.getFullYear();
       let month = time.getMonth() + 1;
       let day = time.getDate();
-      return year + "年" + month + "月" + day + "日";
+      return year + "-" + month + "-" + day;
     },
-
-    // 从相册中选取图片
-    galleryImg() {
-      let This = this;
-      console.log("从相册中选择图片:");
-      plus.gallery.pick(
-        function (path) {
-          This.gall = path;
-          //从相册中选择图片
-          //通过This.IDcardFlag判断当前是身份证是正面还是反面
-          if (This.IDcardFlag === 1) {
-            This.IDcardurl1 = path;
-          } else if (This.IDcardFlag === 2) {
-            This.IDcardurl2 = path;
-          }
-          // This.IDcardurl1 = path;
-          // alert(path);
-        },
-        function (e) {
-          //取消选择图片
-          console.log("取消选择图片");
-        },
-        { filter: "image" }
-      );
-    },
-
-    captureImage() {
-      let This = this;
-      var cmr = plus.camera.getCamera();
-      var res = cmr.supportedImageResolutions[0];
-      var fmt = cmr.supportedImageFormats[0];
-      // var imgFile1res = res
-      // var imgFile2 = res
-      // console.log("cmr", cmr)
-      // console.log("Resolution: " + res + ", Format: " + fmt);
-      cmr.captureImage(
-        function (path) {
-          //处理拍摄照片的路径，在页面展示
-          plus.io.resolveLocalFileSystemURL(
-            path,
-            function (entry) {
-              This.entry = entry;
-              console.log(typeof (entry))
-              //通过This.IDcardFlag判断当前是身份证是正面还是反面
-              if (This.IDcardFlag === 1) {
-                This.IDcardurl1 = entry.fullPath;
-              } else if (This.IDcardFlag === 2) {
-                This.IDcardurl2 = entry.fullPath;
-              }
-              // alert("真实路径："+entry.fullPath);
-            },
-            function (e) {
-              alert(e.message);
-            }
-          );
-        },
-        function (error) {
-          alert("拍摄失败: " + error.message);
-        },
-        { resolution: res, format: fmt }
-      );
-    },
-    
+    // 提交数据
     submitInfo() {
-      let vm = this;
-      this.$Dialog
+      let _this = this;
+      if (!_this.userName){
+          _this.$notify('姓名不能为空');
+          return;
+      } else if (!_this.IDnumber) {
+          _this.$notify('身份证号不能为空');
+          return;
+      } else if (_this.IDnumber.length < 18) {
+          _this.$notify('身份证号位数错误');
+          return;
+      } else if (!_this.IDaddress) {
+          _this.$notify('证件地址不能为空');
+          return;
+      }  else if (!_this.IDdateValue) {
+          _this.$notify('证件有效期不能为空');
+          return;
+      } else if (!_this.IDcardurl1) {
+          _this.$notify('身份证人像面不能为空');
+          return;
+      } else if (!_this.IDcardurl2) {
+          _this.$notify('身份证国徽面不能为空');
+          return;
+      }
+      let data = {
+        username: _this.userName,
+        idcard: _this.IDnumber,
+        id_address: _this.IDaddress,
+        id_effect_time: _this.IDdateValue,
+        id_front_img: _this.IDcardurl1,
+        id_back_img: _this.IDcardurl2
+      };
+      _this.$dialog
         .confirm({
           message: "请确定您填写的姓名与注册 手机号姓名一致。",
           confirmButtonText: "确认", //改变确认按钮上显示的文字
           cancelButtonText: "修改" //改变取消按钮上显示的文字
         })
         .then(() => {
-          // on confirm
-          console.log("已确认信息无误！");
-          vm.$router.push({ path: "/home" });
+          _this.addData(data);
         })
         .catch(() => {
-          // on cancel
           console.log("返回修改信息！");
         });
+    },
+    addData(data) {
+      let _this = this;
+      _this.$api.completeUserInfo(data)
+      .then(res => {
+        if (res.code === 200){
+          _this.$toast.success(res.message);
+          _this.$router.push({ path: "/home" });
+        } else {
+          _this.$toast.fail(res.message);
+        }
+      })
+      .catch(err => {
+        _this.$toast.fail(res.message);
+      })
     }
   }
 };
@@ -370,11 +285,5 @@ export default {
 .IDcard .IDcardimg {
   width: 100%;
   height: 100%;
-}
-.showOption {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  left: 0;
 }
 </style>

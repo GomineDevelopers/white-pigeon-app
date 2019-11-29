@@ -574,7 +574,9 @@ export default {
                 console.log(error);
               });
           }
-          if (res.user.is_complete == 2) {
+          if (res.user.is_complete == 1) {
+            this.isComplete = true;
+          } else if (res.user.is_complete == 2) {
             this.isComplete = false;
           }
           // console.log("用户信息", res);
@@ -753,6 +755,7 @@ export default {
     },
     //点击申请医院
     applyForHospital() {
+      
       if (!this.isComplete) {
         // console.log("未完善信息")
         this.$Dialog
@@ -762,20 +765,12 @@ export default {
             cancelButtonText: "取消" //改变取消按钮上显示的文字
           })
           .then(() => {
-            console.log("前往完善信息！");
-            // this.$router.push({ path: '/improvepersonalinfo' })   //去完善信息
-            this.$router.push({
-              path: "/hospitalinfo",
-              query: {
-                data: this.hospitalRouteParams
-              }
-            }); //现在测试去医院详情签约
+            this.$router.push({ path: '/improvepersonalinfo' })   //去完善信息
           })
           .catch(() => {
             console.log("取消完善信息！");
           });
       } else {
-        console.log("已完善信息");
         this.$router.push({
           path: "/hospitalinfo",
           query: {
