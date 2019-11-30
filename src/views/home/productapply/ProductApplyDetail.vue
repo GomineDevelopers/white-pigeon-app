@@ -5,31 +5,29 @@
     </van-row>
     <van-row class="main_body">
       <van-row class="approve_detail">
-        <van-row class="approve_product_name">头孢丙烯分散片</van-row>
+        <van-row class="approve_product_name">{{ detailContent.product_name }}</van-row>
         <ul>
           <li class="flex_li">
             <span>申请医院：</span>
-            <span>上海长海医院</span>
+            <span>{{ detailContent.hospital_name }}</span>
           </li>
           <li class="flex_li">
             <span>承诺销量：</span>
-            <span>产品1 - 2153/月</span>
+            <span>{{ detailContent.product_name }} - {{ detailContent.promise_sales }}</span>
           </li>
           <li class="flex_li">
             <span>达成时间：</span>
-            <span>2019.10.15 15:32:32</span>
+            <span>{{ detailContent.complete_time }}</span>
           </li>
           <li>
             <span>医院了解：</span>
             <br />
-            <span class="know_detail">对医院基本情况的了解基本情况的了解基本情况的了解基本情况的了解基本情况的了解基本情况的了解基本情况的了解基本情况的了解</span>
+            <span class="know_detail">{{ detailContent.hospital_know }}</span>
           </li>
           <li>
             <span>竞品了解：</span>
             <br />
-            <span
-              class="know_detail"
-            >对医院竟品情况的了解竟品情况的了解竟品情况的了解竟品情况的了解竟品情况的了解竟品情况的了解竟品情况的了解竟品情况的了解竟品情况的了解竟品情况的了解</span>
+            <span class="know_detail">{{ detailContent.commodity_know }}</span>
           </li>
         </ul>
       </van-row>
@@ -40,7 +38,16 @@
 export default {
   name: "productapplydetail",
   data() {
-    return {};
+    return {
+      detailContent: {
+        product_name: "",
+        hospital_name: "",
+        promise_sales: "",
+        complete_time: "",
+        hospital_know: "",
+        commodity_know: ""
+      }
+    };
   },
   created() {
     // H5 plus事件处理
@@ -54,8 +61,24 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.getDetailData();
   },
   methods: {
+    getDetailData() {
+      // 获取id
+      let params = { hospital_product_id: this.$route.query.id };
+      this.$api
+        .hospitalManagerDetail(params)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            this.detailContent = res.hospital_product_detail;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     onBack() {
       history.back();
     }
@@ -65,7 +88,8 @@ export default {
 <style scoped>
 .approve_product_name {
   text-align: left;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
+  color: #000;
   /* font-weight: bold; */
 }
 .approve_detail ul li {

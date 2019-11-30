@@ -10,6 +10,7 @@ let api = {
   question: params => post("/membercreate/question", params), //答题
   referraCode: params => post("/membercreate/referraCode", params), //推荐码
   selectProvice: params => post("/membercreate/selectProvice", params), //用户选择省
+  completeUserInfo: params => post("membercreate/completeUser", params), //完善用户信息
   hospitalinit: params => post("hospitalManager/hospitalinit", params), //用户所在地区的医院信息
   hospitalList: params => post("hospitalManager/hospitalList", params), //医院搜索
   hospitalBlank: params => post("hospitalManager/hospitalBlank", params), //空白医院
@@ -17,7 +18,10 @@ let api = {
   hospitalDevelopment: params => post("hospitalManager/hospitalDevelopment", params), //开发中医院
   hospitalDevelopd: params => post("hospitalManager/hospitalDevelopd", params), //已开发医院
   hospitalGetProductName: params => post("hospitalManager/hospitalGetProductName", params), //获取产品名称
-  completeUserInfo: params => post("membercreate/completeUser", params), //完善用户信息
-  hospitalApply: params => post("hospitalManager/hospitalApply", params) //提交申请
+  hospitalApply: params => post("hospitalManager/hospitalApply", params), //空白医院提交申请
+  hospitalDevelopmentApply: params => post("hospitalManager/hospitalDevelopmentApply", params), //开发中医院提交申请
+  hospitalDevelopdApply: params => post("hospitalManager/hospitalDevelopdApply", params), //已开发医院提交申请
+  hospitalManagerList: params => post("hospitalManager/hospitalManagerList", params), //申请列表页
+  hospitalManagerDetail: params => post("hospitalManager/hospitalManagerDetail", params) //申请列表页
 };
 export default api;

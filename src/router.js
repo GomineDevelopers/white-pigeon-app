@@ -7,65 +7,40 @@ Vue.use(Router);
 export default new Router({
   // base: './',
   // mode: "history",
-  routes: [{
+  routes: [
+    {
       path: "/",
       name: "home",
       component: Home,
-      children: [{
+      children: [
+        {
           path: "/",
           name: "index",
-          component: () =>
-            import( /* webpackChunkName: "home" */ "./views/home/map/Index.vue"),
+          component: () => import(/* webpackChunkName: "home" */ "./views/home/map/Index.vue")
         },
-        // {
-        //   path: "/home/index2",
-        //   name: "index2",
-        //   component: () =>
-        //     import( /* webpackChunkName: "home" */ "./views//home/map/Index2.vue")
-        // },
-        // {
-        //   path: "/home/index3",
-        //   name: "index3",
-        //   component: () =>
-        //     import( /* webpackChunkName: "home" */ "./views//home/map/Index3.vue")
-        // },
-        // {
-        //   path: "/home/children",
-        //   name: "children",
-        //   component: () =>
-        //     import( /* webpackChunkName: "home" */ "./views//home/map/Children.vue")
-        // },
-        // {
-        //   path: "/home/children2",
-        //   name: "children2",
-        //   component: () =>
-        //     import( /* webpackChunkName: "home" */ "./views//home/map/Children2.vue")
-        // },
         {
           path: "/home/visit",
           name: "visit",
-          component: () =>
-            import( /* webpackChunkName: "home" */ "./views/home/visit/Visit.vue")
+          component: () => import(/* webpackChunkName: "home" */ "./views/home/visit/Visit.vue")
         },
         {
           path: "/home/productapply",
           name: "productapply",
           component: () =>
-            import( /* webpackChunkName: "home" */ "./views/home/productapply/ProductApply.vue")
+            import(/* webpackChunkName: "home" */ "./views/home/productapply/ProductApply.vue")
         },
         {
           path: "/home/integral",
           name: "integral",
           component: () =>
-            import( /* webpackChunkName: "home" */ "./views/home/integral/Integral.vue")
-        },
+            import(/* webpackChunkName: "home" */ "./views/home/integral/Integral.vue")
+        }
       ]
     },
     {
       path: "/visitrecord",
       name: "visitrecord",
-      component: () =>
-        import( /* webpackChunkName: "visit" */ "./views/visit/VisitRecord.vue"),
+      component: () => import(/* webpackChunkName: "visit" */ "./views/visit/VisitRecord.vue"),
       meta: {
         title: "拜访记录",
         requiresAuth: true
@@ -74,32 +49,28 @@ export default new Router({
     {
       path: "/visitdetailedit",
       name: "visitdetailedit",
-      component: () =>
-        import( /* webpackChunkName: "visit" */ "./views/visit/VisitDetailEdit.vue")
+      component: () => import(/* webpackChunkName: "visit" */ "./views/visit/VisitDetailEdit.vue")
     },
     {
       path: "/visitdetailcontent",
       name: "visitdetailcontent",
       component: () =>
-        import( /* webpackChunkName: "visit" */ "./views/visit/VisitDetailContent.vue")
+        import(/* webpackChunkName: "visit" */ "./views/visit/VisitDetailContent.vue")
     },
     {
       path: "/newvisit",
       name: "newvisit",
-      component: () =>
-        import( /* webpackChunkName: "visit" */ "./views/visit/NewVisit.vue")
+      component: () => import(/* webpackChunkName: "visit" */ "./views/visit/NewVisit.vue")
     },
     {
       path: "/mettingrecord",
       name: "mettingrecord",
-      component: () =>
-        import( /* webpackChunkName: "metting" */ "./views/metting/MettingRecord.vue")
+      component: () => import(/* webpackChunkName: "metting" */ "./views/metting/MettingRecord.vue")
     },
     {
       path: "/newmetting",
       name: "newmetting",
-      component: () =>
-        import( /* webpackChunkName: "metting" */ "./views/metting/NewMetting.vue"),
+      component: () => import(/* webpackChunkName: "metting" */ "./views/metting/NewMetting.vue"),
       meta: {
         title: "新建会议",
         requiresAuth: true
@@ -109,13 +80,13 @@ export default new Router({
       path: "/mettingdetailcontent",
       name: "mettingdetailcontent",
       component: () =>
-        import( /* webpackChunkName: "metting" */ "./views/metting/MettingDetailContent.vue")
+        import(/* webpackChunkName: "metting" */ "./views/metting/MettingDetailContent.vue")
     },
     {
       path: "/mettingdetailedit",
       name: "mettingdetailedit",
       component: () =>
-        import( /* webpackChunkName: "metting" */ "./views/metting/MettingDetailEdit.vue"),
+        import(/* webpackChunkName: "metting" */ "./views/metting/MettingDetailEdit.vue"),
       meta: {
         title: "编辑会议",
         requiresAuth: true
@@ -124,14 +95,13 @@ export default new Router({
     {
       path: "/notify",
       name: "notify",
-      component: () =>
-        import( /* webpackChunkName: "notify" */ "./views/notify/Notify.vue")
+      component: () => import(/* webpackChunkName: "notify" */ "./views/notify/Notify.vue")
     },
     {
       path: "/productapplydetail",
       name: "productapplydetail",
       component: () =>
-        import( /* webpackChunkName: "home" */ "./views/home/productapply/ProductApplyDetail.vue")
+        import(/* webpackChunkName: "home" */ "./views/home/productapply/ProductApplyDetail.vue")
     },
     {
       path: "/loginpassword",
@@ -145,8 +115,7 @@ export default new Router({
     {
       path: "/loginsms",
       name: "loginsms",
-      component: () =>
-        import( /* webpackChunkName: "login" */ "./views/login/LoginSMS.vue")
+      component: () => import(/* webpackChunkName: "login" */ "./views/login/LoginSMS.vue")
     },
     {
       path: "/changepassword",
@@ -223,8 +192,7 @@ export default new Router({
     {
       path: "/hospitalinfo",
       name: "hospitalinfo",
-      component: () =>
-        import( /* webpackChunkName: "index" */ "./views/index/HospitalInfo.vue")
+      component: () => import(/* webpackChunkName: "index" */ "./views/index/HospitalInfo.vue")
     },
     {
       path: "/submitapplications",
@@ -238,8 +206,7 @@ export default new Router({
     {
       path: "/signcontract",
       name: "signcontract",
-      component: () =>
-        import( /* webpackChunkName: "index" */ "./views/index/SignContract.vue")
+      component: () => import(/* webpackChunkName: "index" */ "./views/index/SignContract.vue")
     },
     {
       path: "/bankcard",
@@ -339,6 +306,6 @@ export default new Router({
           /* webpackChunkName: "userinfo" */
           "./views/userinfo/UserInfoDetail.vue"
         )
-    },
+    }
   ]
 });

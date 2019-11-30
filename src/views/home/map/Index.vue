@@ -39,7 +39,7 @@
           >
         </van-row>
         <van-row class="tag_btn flex">
-          <button @click="activeTag = ''">重置</button>
+          <button @click="reset">重置</button>
           <button @click="submitTag">确定</button>
         </van-row>
       </van-row>
@@ -217,12 +217,15 @@
 
       <!-- 拉出详情 start -->
       <div class="hospital_pull_detail" v-show="visitShow == 2">
-        <div class="no_develop">您暂时无法开发此医院</div>
+        <div class="hospital_pull_cont">
+          <span class="pull_cont_notice">对不起，此医院产品已被申请完，您暂时无法申请！</span>
+        </div>
       </div>
       <div
         class="hospital_pull_detail"
         :style="{ height: hospitalDetailScrollHeight }"
         ref="hoDetailHeight"
+        v-show="visitShow != 2"
       >
         <div class="hospital_pull_cont">
           <ul>
@@ -510,8 +513,9 @@ export default {
     },
     //点击医院获取详细信息
     clickHandler(data) {
-      this.hosSingleData = {};
-      this.hospitalFoldData = [];
+      console.log(data);
+      this.hosSingleData = {}; //数据初始化
+      this.hospitalFoldData = []; //
       // console.log(data);
       //设置当前定位点
       this.visitShow = data.hospital_status;
@@ -520,18 +524,65 @@ export default {
       let status = data.hospital_status; // 1-已开发  2-不可开发  3-空白医院  4-开发中
       let params = { hospital_id: data.id };
       if (status == 1) {
+        this.$api
+          .hospitalDevelopd(params)
+          .then(res => {
+            console.log(res);
+            let hospitolContent = res.hospital_data;
+            this.hosSingleData = {
+              content: hospitolContent.hospital_name,
+              address: hospitolContent.detail_address,
+              status: status,
+              hospital_type: setHospitalLevel(hospitolContent.hospital_level),
+              hospital_level: setHospitalType(hospitolContent.hospital_type),
+              hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
+              hospital_mobile: hospitolContent.hospital_mobile,
+              hospital_id: hospitolContent.id
+            };
+            this.hospitalFoldData.push(...res.developd_data);
+            this.hospitalFoldData.push(...res.development_no_apply_data);
+
+            this.hospitalRouteParams = {
+              infomation: this.hosSingleData,
+              awaitApplyProduct: res.development_no_apply_data,
+              developmentProduct: res.developd_data
+            };
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else if (status == 2) {
+        this.$api
+          .hospitalNotDevelop(params)
+          .then(res => {
+            console.log(res);
+            let hospitolContent = res.hospital_data;
+            this.hosSingleData = {
+              content: hospitolContent.hospital_name,
+              address: hospitolContent.detail_address,
+              status: status,
+              hospital_type: setHospitalLevel(hospitolContent.hospital_level),
+              hospital_level: setHospitalType(hospitolContent.hospital_type),
+              hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
+              hospital_mobile: hospitolContent.hospital_mobile,
+              hospital_id: hospitolContent.id
+            };
+            this.hospitalFoldData = [];
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else if (status == 3) {
         this.$api
           .hospitalBlank(params)
           .then(res => {
-            // console.log(res);
+            console.log(res);
             if (res.code == 200) {
               let hospitolContent = res.hospital_data;
               this.hosSingleData = {
                 content: hospitolContent.hospital_name,
                 address: hospitolContent.detail_address,
-                status: hospitolContent.status,
+                status: status,
                 hospital_type: setHospitalLevel(hospitolContent.hospital_level),
                 hospital_level: setHospitalType(hospitolContent.hospital_type),
                 hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
@@ -555,12 +606,12 @@ export default {
         this.$api
           .hospitalDevelopment(params)
           .then(res => {
-            console.log(res);
+            // console.log(res);
             let hospitolContent = res.hospital_data;
             this.hosSingleData = {
               content: hospitolContent.hospital_name,
               address: hospitolContent.detail_address,
-              status: hospitolContent.status,
+              status: status,
               hospital_type: setHospitalLevel(hospitolContent.hospital_level),
               hospital_level: setHospitalType(hospitolContent.hospital_type),
               hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
@@ -587,7 +638,7 @@ export default {
       this.$api
         .userInfo()
         .then(res => {
-          // console.log(res)
+          console.log(res);
           //判断用户是否有工作地城市信息
           if (res.user.province_code == null || res.user.province_code == "") {
             this.dialogShow = true;
@@ -637,6 +688,11 @@ export default {
       this.keywords = "";
       $(".hospital_tag").slideToggle();
       $(".hospital_list").slideUp();
+    },
+    reset() {
+      this.activeTag = "";
+      this.currentTagStatus = "";
+      this.inputHidden();
     },
     //输入框输入事件
     handleInput(value) {
@@ -989,6 +1045,18 @@ export default {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
+.pull_cont_notice {
+  color: #a8aec1;
+  font-size: 0.75rem;
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: -webkit-inline-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .hospital_pull_cont ul {
   border-radius: 5px;
   border: 1px solid #e6e6e6;
@@ -1015,7 +1083,6 @@ export default {
   display: none;
   padding: 12px 20px;
 }
-
 .pull_cell_cont >>> p {
   margin: 0 0 6px;
   font-size: 0.5625rem;

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from "vue";
 import {
   Button,
   Cell,
@@ -19,28 +19,30 @@ import {
   Picker,
   Popup,
   Notify,
-  Toast
-} from 'vant'
+  Toast,
+  List
+} from "vant";
 
-Vue.use(Button)
-Vue.use(Cell)
-Vue.use(CellGroup)
-Vue.use(Icon)
-Vue.use(Tabbar)
-Vue.use(TabbarItem)
-Vue.use(Row)
-Vue.use(Col)
-Vue.use(NavBar)
-Vue.use(Field)
-Vue.use(Area)
-Vue.use(DatetimePicker)
-Vue.use(Uploader)
-Vue.use(Dialog)
-Vue.use(RadioGroup)
-Vue.use(Radio)
-Vue.use(Picker)
-Vue.use(Popup)
-Vue.use(Notify)
-Vue.use(Toast)
+Vue.use(Button);
+Vue.use(Cell);
+Vue.use(CellGroup);
+Vue.use(Icon);
+Vue.use(Tabbar);
+Vue.use(TabbarItem);
+Vue.use(Row);
+Vue.use(Col);
+Vue.use(NavBar);
+Vue.use(Field);
+Vue.use(Area);
+Vue.use(DatetimePicker);
+Vue.use(Uploader);
+Vue.use(Dialog);
+Vue.use(RadioGroup);
+Vue.use(Radio);
+Vue.use(Picker);
+Vue.use(Popup);
+Vue.use(Notify);
+Vue.use(Toast);
+Vue.use(List);
 
-Vue.prototype.$Dialog = Dialog
+Vue.prototype.$Dialog = Dialog;
