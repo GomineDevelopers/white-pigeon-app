@@ -22,6 +22,7 @@ let api = {
   hospitalDevelopmentApply: params => post("hospitalManager/hospitalDevelopmentApply", params), //开发中医院提交申请
   hospitalDevelopdApply: params => post("hospitalManager/hospitalDevelopdApply", params), //已开发医院提交申请
   hospitalManagerList: params => post("hospitalManager/hospitalManagerList", params), //申请列表页
+  hospitalApplyRecord: params => post("hospitalManager/hospitalApplyRecord", params), //申请记录数目
   hospitalManagerDetail: params => post("hospitalManager/hospitalManagerDetail", params) //申请列表页
 };
 export default api;

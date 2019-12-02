@@ -29,10 +29,10 @@ export default {
       navActive: 0,
       status: 4,
       navList: [
-        { name: "全部", num: "52", status: 4 },
-        { name: "审核中", num: "34", status: 3 },
-        { name: "未通过", num: "4", status: 2 },
-        { name: "已通过", num: "36", status: 1 }
+        { name: "全部", num: "-", status: 4 },
+        { name: "审核中", num: "-", status: 3 },
+        { name: "未通过", num: "-", status: 2 },
+        { name: "已通过", num: "-", status: 1 }
       ],
       approveList: [],
       //全部审核
@@ -75,14 +75,32 @@ export default {
       ]
     };
   },
-  mounted() {},
+  created() {
+    this.hospitalApplyRecord();
+  },
   methods: {
     navHandle(index, status) {
       this.navActive = index;
       this.status = status;
     },
-    getDetail() {
-      this.$router.push({ path: "/productapplydetail" });
+    //获取申请记录各分类条数
+    hospitalApplyRecord() {
+      this.$api
+        .hospitalApplyRecord()
+        .then(res => {
+          if (res.code == 200) {
+            this.navList[0].num = res.apply_record_num;
+            this.navList[1].num = res.review_apply_record_num;
+            this.navList[2].num = res.refuse_apply_record_num;
+            this.navList[3].num = res.pass_apply_record_num;
+          } else {
+            this.$toast.fail("");
+          }
+          console.log(res);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

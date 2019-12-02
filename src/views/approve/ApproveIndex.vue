@@ -1,35 +1,44 @@
 <template>
   <van-row class="approve">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="审批" left-arrow @click-left="onBack()" />
+      <van-nav-bar v-if="role == 2" title="审批" left-arrow @click-left="onBack()" />
+      <van-nav-bar v-if="role == 1" title="经理审批" left-arrow @click-left="logOut()" />
     </van-row>
     <van-row class="tabs flex">
       <van-row class="approve_nav flex">
-        <span :class="active == 0 ? 'active':''" @click="switchOption">产品</span>
-        <span :class="active == 1 ? 'active':''" @click="switchOption">医生</span>
+        <span :class="active == 0 ? 'active' : ''" @click="switchOption">产品</span>
+        <span :class="active == 1 ? 'active' : ''" @click="switchOption">医生</span>
       </van-row>
     </van-row>
-    <van-list class="approve_list" v-show="active == 0" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getProductData" ref="proList">
+    <van-list
+      class="approve_list"
+      v-show="active == 0"
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="getProductData"
+      ref="proList"
+    >
       <div
         class="approve_item flex justify_between"
-        v-for="(item,index) in productList"
-        :key="index+'a'"
+        v-for="(item, index) in productList"
+        :key="index + 'a'"
         @click="getDetail"
       >
         <div class="approve_item_detail">
           <ul>
-            <li>{{item.title}}</li>
+            <li>{{ item.title }}</li>
             <li class="flex justify_start">
               <span>医院名：</span>
-              <span>{{item.hospitalName}}</span>
+              <span>{{ item.hospitalName }}</span>
             </li>
             <li class="flex justify_start">
               <span>承诺销量：</span>
-              <span>{{item.sales}}</span>
+              <span>{{ item.sales }}</span>
             </li>
             <li class="flex justify_start">
               <span>申请时间：</span>
-              <span>{{item.approveDate}}</span>
+              <span>{{ item.approveDate }}</span>
             </li>
           </ul>
         </div>
@@ -40,27 +49,35 @@
         </div>
       </div>
     </van-list>
-    <van-list class="approve_list" v-show="active == 1" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getHospitalData" ref="hosList">
+    <van-list
+      class="approve_list"
+      v-show="active == 1"
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="getHospitalData"
+      ref="hosList"
+    >
       <div
         class="approve_item flex justify_between"
-        v-for="(item,index) in hospitalList"
-        :key="index+'b'"
+        v-for="(item, index) in hospitalList"
+        :key="index + 'b'"
         @click="getDoctorDetail"
       >
         <div class="approve_item_detail">
           <ul>
-            <li>{{item.title}}</li>
+            <li>{{ item.title }}</li>
             <li class="flex justify_start">
               <span>医院名：</span>
-              <span>{{item.hospitalName}}</span>
+              <span>{{ item.hospitalName }}</span>
             </li>
             <li class="flex justify_start">
               <span>医生：</span>
-              <span>{{item.doctor}}</span>
+              <span>{{ item.doctor }}</span>
             </li>
             <li class="flex justify_start">
               <span>申请时间：</span>
-              <span>{{item.approveDate}}</span>
+              <span>{{ item.approveDate }}</span>
             </li>
           </ul>
         </div>
@@ -78,6 +95,7 @@ export default {
   name: "approveindex",
   data() {
     return {
+      role: "", //角色
       active: 0,
       loading: false,
       finished: false,
@@ -97,6 +115,8 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+
+    this.role = localStorage.getItem("role");
   },
   methods: {
     // 获取产品审批数据
@@ -104,12 +124,12 @@ export default {
       setTimeout(() => {
         for (let i = 0; i < 10; i++) {
           this.productList.push({
-          title: "XXXX提交的产品申请" + i,
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "succeed"
-        });
+            title: "XXXX提交的产品申请" + i,
+            hospitalName: "上海长海医院",
+            sales: "产品1 - 3321/月",
+            approveDate: "2019.10.15 15:32:32",
+            approveState: "succeed"
+          });
         }
         // 加载状态结束
         this.loading = false;
@@ -124,13 +144,13 @@ export default {
     getHospitalData() {
       setTimeout(() => {
         for (let i = 0; i < 10; i++) {
-            this.hospitalList.push({
+          this.hospitalList.push({
             title: "XXXX提交的医生申请" + i,
             hospitalName: "上海长海医院",
             doctor: "张XX",
             approveDate: "2019.10.15 15:32:32",
             approveState: "succeed"
-          })
+          });
         }
         // 加载状态结束
         this.loading = false;
@@ -144,6 +164,24 @@ export default {
     onBack() {
       history.back();
     },
+    //退出登录
+    logOut() {
+      this.$Dialog
+        .confirm({
+          message: "退出登录？",
+          confirmButtonText: "确定", //改变确认按钮上显示的文字
+          cancelButtonText: "取消" //改变取消按钮上显示的文字
+        })
+        .then(() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          this.$router.push({ path: "/loginpassword" });
+          console.log("退出登录");
+        })
+        .catch(() => {
+          console.log("取消退出登录！");
+        });
+    },
     switchOption() {
       if (this.active == 0) {
         this.active = 1;
@@ -151,9 +189,7 @@ export default {
           this.getHospitalData();
         }
       } else {
-        
         this.active = 0;
-        
       }
     },
     getDetail() {
@@ -168,12 +204,12 @@ export default {
 <style>
 .approve_list {
   padding-top: 120px;
-  padding-left: .8rem;
-  padding-right: .8rem;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
 }
 </style>
 <style scoped>
-.tabs{
+.tabs {
   position: fixed;
   top: 46px;
   left: 0;

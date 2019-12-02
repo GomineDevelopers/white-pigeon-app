@@ -30,10 +30,6 @@
             <router-link :to="{ path: '/register' }">新用户注册</router-link>
           </van-col>
         </van-row>
-        <van-row>res{{res}}</van-row>
-        <van-row>
-          error:{{error}}
-        </van-row>
       </van-row>
     </van-row>
   </van-row>
@@ -45,8 +41,8 @@ export default {
     return {
       phone: "",
       password: "",
-      error: '',
-      res: ''
+      error: "",
+      res: ""
     };
   },
   methods: {
@@ -74,21 +70,29 @@ export default {
         .loginPassword(postData)
         .then(res => {
           // console.log(res);
-          this.res = res
           if (res.code == 200) {
             this.$toast.success("登录成功！");
-            this.$store.commit('setToken', res.token)  //设置store中token
+            this.$store.commit("setToken", res.token); //设置store中token
             localStorage.setItem("token", res.token);
             this.$api
               .userInfo()
               .then(res => {
-                // console.log(res);
+                console.log(res);
                 // console.log(res.user.invite_code)
                 // console.log(res.user.identify_status)
-                if ((res.user.invite_code == null || res.user.invite_code == '') && res.user.identify_status != 1) {
-                  this.$router.push({ path: "/answer" });
+                if (res.user.is_regional_mangager == 1) {
+                  localStorage.setItem("role", 1); //本地存储区域经理的角色  1-经理  2-普通用户
+                  this.$router.push({ path: "/approveindex" });
                 } else {
-                  this.$router.push({ path: "/" });
+                  localStorage.setItem("role", 2);
+                  if (
+                    (res.user.invite_code == null || res.user.invite_code == "") &&
+                    res.user.identify_status != 1
+                  ) {
+                    this.$router.push({ path: "/answer" });
+                  } else {
+                    this.$router.push({ path: "/" });
+                  }
                 }
               })
               .catch(error => {
@@ -99,7 +103,6 @@ export default {
           }
         })
         .catch(error => {
-          this.error = error
           console.log(error);
         });
     }
@@ -107,5 +110,4 @@ export default {
 };
 </script>
 
-<style scpoed>
-</style>
+<style scpoed></style>
