@@ -93,6 +93,9 @@ export default {
       // console.log(temp);
     },
     goContract() {
+      if (this.name || this.bankCard || this.openingBankValue) {
+        console.log();
+      }
       this.$Dialog
         .confirm({
           message: "请确定提交信息是否正确，银行卡绑定是否与本人信息一致！",
