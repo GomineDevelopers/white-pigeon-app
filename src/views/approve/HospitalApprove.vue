@@ -8,19 +8,19 @@
         <ul>
           <li>
             <span>申请人：</span>
-            <span>XXX</span>
+            <span>{{detail.name}}</span>
           </li>
           <li>
             <span>医院：</span>
-            <span>上海长海医院</span>
+            <span>{{detail.hospital_name}}</span>
           </li>
           <li>
             <span>承诺销量：</span>
-            <span>产品1 - 2153/月</span>
+            <span>{{detail.product_name}} {{detail.promise_sales}}/月</span>
           </li>
           <li>
             <span>申请时间：</span>
-            <span>2019.10.15 15:32:32</span>
+            <span>{{detail.create_time}}</span>
           </li>
         </ul>
       </van-row>
@@ -34,8 +34,8 @@
       </span>
     </van-row>
     <van-row class="refuse_daio">
-      <van-dialog v-model="show" title="拒绝理由" show-cancel-button>
-        <van-field class="refuse_text" v-model="value" placeholder="请输入您的拒绝理由" />
+      <van-dialog v-model="show" title="拒绝理由" show-cancel-button :beforeClose = "changeBtn">
+        <van-field class="refuse_text" v-model="value" placeholder="请输入您的拒绝理由"  ref="refuse"/>
       </van-dialog>
     </van-row>
   </van-row>
@@ -46,7 +46,8 @@ export default {
   data() {
     return {
       show: false,
-      value: ""
+      value: "",
+      detail: {},
     };
   },
   created() {
@@ -61,16 +62,117 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.$toast.loading({
+      id: 0,
+      message: '数据加载中...',
+      forbidClick: true,
+      duration: 0,
+      loadingType: 'spinner'
+    })
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.id = this.$route.query.id;
+      this.getData();
+    })
   },
   methods: {
+    // 获取数据
+    getData() {
+      this.$api.regionProDetial({hospitl_product_id:this.id})
+      .then( res => {
+        if (res.code == 200) {
+            this.detail = res.regional_hospital_product_detail;
+        } else {
+          this.$dialog.alert({
+              message: res.message
+            });
+        };
+        this.$toast.clear();
+      })
+      .catch( err => {
+        console.log(err);
+        this.$toast.clear();
+      })
+    },
     onBack() {
       history.back();
     },
+     // 提交拒绝处理
     showRefuse() {
       this.show = true;
     },
+    // 提交通过处理
     pass() {
-      this.$router.push({ path: "/bankcard" });
+      this.$toast.loading({
+        id: 0,
+        message: '数据处理中...',
+        forbidClick: true,
+        duration: 0,
+        loadingType: 'spinner'
+      });
+      this.$api.regionProPass({hospital_product_id:this.id})
+      .then( res => {
+        if (res.code == 200) {
+            this.$toast('处理成功');
+            setTimeout(() => {
+              this.$router.replace('/approveindex');
+            },1000)
+        } else {
+          this.$dialog.alert({
+              message: res.message
+          }).then( () => {
+            this.$router.replace('/approveindex');
+          });
+        };
+        this.$toast.clear();
+      })
+      .catch( err => {
+        console.log(err);
+        this.$toast.clear();
+      })
+    },
+    // 拒绝理由弹出处理
+    changeBtn(action, done) {
+      if (action === 'confirm') {
+        if (!this.value) {
+          this.$toast('拒绝理由不能为空');
+          this.$refs.refuse.focus();
+          done(false);
+        } else {
+          this.submitRefuse(done);
+        }
+      } else {
+        done();
+      }
+    },
+
+    // 提交拒绝申请
+    submitRefuse(done) {
+      let data = {
+        hospital_product_id: this.id,
+        no_pass_reason: this.value
+      };
+      this.$api.regionProRefuse(data)
+      .then( res => {
+        done();
+        if (res.code == 200) {
+            this.$toast('提交成功');
+            setTimeout(() => {
+              this.$router.replace('/approveindex');
+            }, 1000)
+        } else {
+          this.$dialog.alert({
+              message: res.message
+          }).then( () => {
+            this.$router.replace('/approveindex');
+          });
+        };
+      })
+      .catch( err => {
+        console.log(err);
+        done();
+      })
     }
   }
 };

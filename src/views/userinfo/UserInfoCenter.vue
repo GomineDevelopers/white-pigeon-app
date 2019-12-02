@@ -9,9 +9,9 @@
         <van-row class="left_detail flex flex_1">
           <img src="https://img.yzcdn.cn/vant/cat.jpeg" />
           <van-row class="user_info">
-            <span class="user_name">徐尚</span>
+            <span class="user_name">{{user.name}}</span>
             <br />
-            <span class="user_detail">上海市-静安区</span>
+            <span class="user_detail">{{user.id_address}}</span>
           </van-row>
         </van-row>
         <van-row @click="goUserInfoDetail">
@@ -66,6 +66,7 @@ export default {
   data() {
     return {
       active: true,
+      user: {},
       hospitalList: [
         {
           name: "上海长海医院",
@@ -115,7 +116,32 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
   },
+  mounted() {
+    this.getUserInfo();
+  },
+  
   methods: {
+    // 获取用户信息
+    getUserInfo() {
+      this.$api
+        .userInfo()
+        .then(res => {
+          if (res.code == 200) {
+            this.user = res.user;
+            if (res.user.is_complete == 2){
+              this.$dialog.alert({
+                message: "您还未完善信息",
+                confirmButtonText: "完善信息"
+              }).then( () => {
+                this.$router.push('/improvepersonalinfo')
+              })
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     onBack() {
       history.back();
     },

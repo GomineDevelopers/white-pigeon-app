@@ -8,19 +8,19 @@
         <ul>
           <li>
             <span>申请人：</span>
-            <span>XXX</span>
+            <span>{{detail.user_name}}</span>
           </li>
           <li>
             <span>医院：</span>
-            <span>上海长海医院</span>
+            <span>{{detail.hospital_name}}</span>
           </li>
           <li>
             <span>医生：</span>
-            <span>张XX</span>
+            <span>{{detail.doctor_name}}</span>
           </li>
           <li>
             <span>申请时间：</span>
-            <span>2019.10.15 15:32:32</span>
+            <span>{{detail.create_time}}</span>
           </li>
         </ul>
       </van-row>
@@ -34,7 +34,7 @@
       </span>
     </van-row>
     <van-row class="refuse_daio">
-      <van-dialog v-model="show" title="拒绝理由" show-cancel-button>
+      <van-dialog v-model="show" title="拒绝理由" show-cancel-button :beforeClose = "changeBtn">
         <van-field class="refuse_text" v-model="value" placeholder="请输入您的拒绝理由" />
       </van-dialog>
     </van-row>
@@ -46,7 +46,8 @@ export default {
   data() {
     return {
       show: false,
-      value: ""
+      value: "",
+      detail: {}
     };
   },
   created() {
@@ -61,8 +62,38 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+  this.$toast.loading({
+      message: '数据加载中...',
+      forbidClick: true,
+      duration: 0,
+      loadingType: 'spinner'
+    })
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.id = this.$route.query.id;
+      this.getData();
+    })
   },
   methods: {
+    // 获取数据
+    getData() {
+      this.$api.regionDoctorDetail({doctor_id: this.id})
+      .then( res => {
+        if (res.code == 200) {
+            this.detail = res.regional_doctor_detail;
+        } else {
+          this.$dialog.alert({
+              message: res.message
+            });
+        };
+        this.$toast.clear();
+      })
+      .catch( err => {
+        console.log(err)
+        this.$toast.clear();
+      })
+    },
     onBack() {
       history.back();
     },
@@ -70,7 +101,76 @@ export default {
       this.show = true;
     },
     pass() {
-      this.$router.push({ path: "/bankcard" });
+      this.$toast.loading({
+        id: 0,
+        message: '数据处理中...',
+        forbidClick: true,
+        duration: 0,
+        loadingType: 'spinner'
+      });
+      this.$api.regionDoctorCheck({doctor_id:this.id,is_pass: 1})
+      .then( res => {
+        if (res.code == 200) {
+            this.$toast('处理成功');
+            setTimeout(() => {
+               this.$router.replace({path:'/approveindex', query: {active: 1}});
+            },1000)
+        } else {
+          this.$dialog.alert({
+              message: res.message
+          }).then( () => {
+           this.$router.replace({path:'/approveindex', query: {active: 1}});
+          });
+        };
+        this.$toast.clear();
+      })
+      .catch( err => {
+        console.log(err);
+        this.$toast.clear();
+      })
+    },
+     // 拒绝理由弹出处理
+    changeBtn(action, done) {
+      if (action === 'confirm') {
+        if (!this.value) {
+          this.$toast('拒绝理由不能为空');
+          this.$refs.refuse.focus();
+          done(false);
+        } else {
+          this.submitRefuse(done);
+        }
+      } else {
+        done();
+      }
+    },
+
+    // 提交拒绝申请
+    submitRefuse(done) {
+      let data = {
+        doctor_id: this.id,
+        is_pass: 2,
+        no_pass_reason: this.value
+      }
+      this.$api.regionDoctorCheck(data)
+      .then( res => {
+        done();
+        if (res.code == 200) {
+            this.$toast('提交成功');
+            setTimeout(() => {
+               this.$router.replace({path:'/approveindex', query: {active: 1}});
+            }, 1000)
+        } else {
+          this.$dialog.alert({
+              message: res.message
+          }).then( () => {
+             this.$router.replace({path:'/approveindex', query: {active: 1}});
+          });
+        };
+      })
+      .catch( err => {
+        console.log(err);
+        done();
+      })
     }
   }
 };

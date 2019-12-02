@@ -25,8 +25,11 @@ let api = {
   hospitalManagerDetail: params => post("hospitalManager/hospitalManagerDetail", params), //申请列表页
   regionApprove: params => post("/regionManager/regionApprove", params), //区域经理审核医院产品列表
   regionProDetial: params => post("/regionManager/regionHospitalProductDetail", params), //区域经理审核产品详情
+  regionProPass: params => post("/regionManager/regionHospitalProductSubmit", params), //区域经理审核产品通过
+  regionProRefuse: params => post("/regionManager/regionHospitalProductRefuse", params), //区域经理审核产品拒绝
   regionDoctorList: params => post("/regionManager/regionDoctorList", params), //区域经理审核医生列表
   regionDoctorDetail: params => post("/regionManager/regionDoctorDetail", params), //区域经理审核医生详情
+  regionDoctorCheck: params => post("/regionManager/regionDoctorCheck", params), //区域经理审核医生（通过&拒绝）
 
   hospitalApplyRecord: params => post("hospitalManager/hospitalApplyRecord", params), //申请记录数目
 };

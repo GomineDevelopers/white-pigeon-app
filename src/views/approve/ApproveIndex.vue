@@ -22,29 +22,29 @@
         class="approve_item flex justify_between"
         v-for="(item, index) in productList"
         :key="index + 'a'"
-        @click="getDetail"
+        @click="getDetail(item.id)"
       >
         <div class="approve_item_detail">
           <ul>
-            <li>{{ item.title }}</li>
+            <li>{{ item.name }}提交的产品申请</li>
             <li class="flex justify_start">
               <span>医院名：</span>
-              <span>{{ item.hospitalName }}</span>
+              <span>{{ item.hospital_name }}</span>
             </li>
             <li class="flex justify_start">
               <span>承诺销量：</span>
-              <span>{{ item.sales }}</span>
+              <span>{{ item.product_name }}  {{ item.promise_sales }}/月</span>
             </li>
             <li class="flex justify_start">
               <span>申请时间：</span>
-              <span>{{ item.approveDate }}</span>
+              <span>{{ item.create_time }}</span>
             </li>
           </ul>
         </div>
         <div class="approve_state flex">
-          <img v-if="item.approveState == 'await'" src="@/assets/image/approve.png" />
-          <img v-if="item.approveState == 'succeed'" src="@/assets/image/approve_pass.png" />
-          <img v-if="item.approveState == 'notPass'" src="@/assets/image/approve_no.png" />
+          <img v-if="item.status == 3" src="@/assets/image/approve.png" />
+          <img v-if="item.status == 1" src="@/assets/image/approve_pass.png" />
+          <img v-if="item.status == 2" src="@/assets/image/approve_no.png" />
         </div>
       </div>
     </van-list>
@@ -53,36 +53,36 @@
       v-show="active == 1"
       v-model="docLoading"
       :finished="docFinished"
-      finished-text="无更多的产品申请"
+      finished-text="无更多医院需要审核"
       @load="getHospitalData"
     >
       <div
         class="approve_item flex justify_between"
         v-for="(item, index) in hospitalList"
         :key="index + 'b'"
-        @click="getDoctorDetail"
+        @click="getDoctorDetail(item.doctor_id)"
       >
         <div class="approve_item_detail">
           <ul>
-            <li>{{ item.title }}</li>
+            <li>{{ item.user_name }}提交的医生申请</li>
             <li class="flex justify_start">
               <span>医院名：</span>
-              <span>{{ item.hospitalName }}</span>
+              <span>{{ item.hospital_name }}</span>
             </li>
             <li class="flex justify_start">
               <span>医生：</span>
-              <span>{{ item.doctor }}</span>
+              <span>{{ item.doctor_name }}</span>
             </li>
             <li class="flex justify_start">
               <span>申请时间：</span>
-              <span>{{ item.approveDate }}</span>
+              <span>{{ item.create_time }}</span>
             </li>
           </ul>
         </div>
         <div class="approve_state flex">
-          <img v-if="item.approveState == 'await'" src="@/assets/image/approve.png" />
-          <img v-if="item.approveState == 'succeed'" src="@/assets/image/approve_pass.png" />
-          <img v-if="item.approveState == 'notPass'" src="@/assets/image/approve_no.png" />
+          <img v-if="item.status == 3" src="@/assets/image/approve.png" />
+          <img v-if="item.status == 1" src="@/assets/image/approve_pass.png" />
+          <img v-if="item.status == 2" src="@/assets/image/approve_no.png" />
         </div>
       </div>
     </van-list>
@@ -94,12 +94,13 @@ export default {
   data() {
     return {
       role: "", //角色
-      active: 0,
-      proLoading: false,
-      docLoading: false,
-      proFinished: false,
-      docFinished: false,
-      page: 1,
+      active: 0, //选项状态 0: 产品， 1: 医生
+      proLoading: false, //产品数据是否继续加载
+      docLoading: false, //产品数据是否继续加载
+      proFinished: false, //产品数据是否加载完成
+      docFinished: false, //医生数据是否加载完成
+      proPage: 1, //产品页
+      docPage: 1, //医生页
       row: 10,
       productList: [], //产品审批数据
       hospitalList: [] //医生审批数据
@@ -117,91 +118,81 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
-
+    let active = this.$route.query.active;
+    active ? this.active= active : this.active = 0;
     this.role = localStorage.getItem("role");
   },
-  mounted() {
-    this.$nextTick(() => {
-      var that = this;
-      //  window.addEventListener('scroll', this.handleScroll);
-    });
-  },
   methods: {
-    // handleScroll () {
-    //   let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-    //   let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    //   let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-    //   if (scrollTop + clientHeight + 5 >= scrollHeight) { //0 表示距离底部多少的距离的开始触发loadmore效果
-    //         if (this.active == 1){
-    //             this.getHospitalData();
-    //         }
-
-    //     }
-    // },
     // 获取产品审批数据
     getProductData() {
-      console.log("产品");
-      // this.$api.regionApprove({
-      //   page: this.page,
-      //   row: this.row
-      // }).then( res => {
-      //   switch (res.code) {
-      //     case 9002:
-      //       this.proLoading = false;
-      //       this.proFinished = true;
-      //       break;
-      //     case 101:
-      //       this.$dialog.alert({
-      //         message: res.message
-      //       }).then( () => {
-      //         this.$router.push('/loginpassword')
-      //       });
-      //     break;
-      //   }
-      // }).catch( err => {
-      //   console.log(err)
-      // })
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.productList.push({
-            title: "XXXX提交的产品申请" + i,
-            hospitalName: "上海长海医院",
-            sales: "产品1 - 3321/月",
-            approveDate: "2019.10.15 15:32:32",
-            approveState: "succeed"
-          });
+      this.$api.regionApprove({
+        page: this.proPage,
+        row: this.row
+      }).then( res => {
+        switch (res.code) {
+          case 200:
+            let list = res.regional_hospital_product_list;
+            this.productList = this.productList.concat(list);
+            
+            if (list.length === this.row) {
+              this.proPage += 1;
+              this.proLoading = false;
+            } else {
+              this.proLoading = false;
+              this.proFinished = true;
+            }
+            break;
+          case 9002:
+            this.proLoading = false;
+            this.proFinished = true;
+            break;
+          case 101:
+            this.$dialog.alert({
+              message: res.message
+            }).then( () => {
+              this.$router.push('/loginpassword')
+            });
+          break;
         }
-        // 加载状态结束
-        this.proLoading = false;
-
-        // 数据全部加载完成
-        if (this.productList.length >= 40) {
-          this.proFinished = true;
-        }
-      }, 500);
+      }).catch( err => {
+        console.log(err)
+      })
     },
     // 获取医生审批数据
     getHospitalData() {
-      console.log("医生");
-      setTimeout(() => {
-        for (let i = 1; i < 10; i++) {
-          this.hospitalList.push({
-            title: "XXXX提交的医生申请" + i,
-            hospitalName: "上海长海医院",
-            doctor: "张XX",
-            approveDate: "2019.10.15 15:32:32",
-            approveState: "succeed"
-          });
+      // console.log("医生");
+      this.$api.regionDoctorList({
+        page: this.docPage,
+        row: this.row
+      }).then( res => {
+        switch (res.code) {
+          case 200:
+            let list = res.check_hospital_list;
+            this.hospitalList = this.hospitalList.concat(list);
+            
+            if (list.length === this.row) {
+              this.docPage += 1;
+              this.docLoading = false;
+            } else {
+              this.docLoading = false;
+              this.docFinished = true;
+            }
+            break;
+          case 9000:
+            this.docLoading = false;
+            this.docFinished = true;
+            break;
+          case 101:
+            this.$dialog.alert({
+              message: res.message
+            }).then( () => {
+              this.$router.push('/loginpassword')
+            });
+          break;
         }
-        // 加载状态结束
-        this.docLoading = false;
-
-        // 数据全部加载完成
-        console.log(this.hospitalList.length)
-        if (this.hospitalList.length >= 100) {
-          this.docFinished = true;
-        }
-      }, 500);
+      }).catch( err => {
+        console.log(err)
+      })
     },
     onBack() {
       history.back();
@@ -224,6 +215,7 @@ export default {
           console.log("取消退出登录！");
         });
     },
+    // 切换产品和医生选项
     switchOption() {
       let _this = this;
       let scrollOffset =
@@ -243,16 +235,20 @@ export default {
       } else {
         _this.active = 0;
         _this.hospitalOffset = scrollOffset;
+        if (!_this.productList.length) {
+          _this.getProductData();
+          return;
+        }
         setTimeout(() => {
           window.scrollTo(0, _this.productOffset);
         }, 100);
       }
     },
-    getDetail() {
-      this.$router.push({ path: "/hospitalapprove" });
+    getDetail(id) {
+      this.$router.push({ path: "/hospitalapprove", query: { id: id } });
     },
-    getDoctorDetail() {
-      this.$router.push({ path: "/doctorapprove" });
+    getDoctorDetail(id) {
+      this.$router.push({ path: "/doctorapprove", query: { id: id }});
     }
   },
   watch: {}

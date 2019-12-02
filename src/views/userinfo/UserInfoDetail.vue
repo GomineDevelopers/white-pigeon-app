@@ -20,28 +20,28 @@
       </van-row>
       <van-row class="user_item flex flex_align_center justify_between">
         <span class="flex_1">姓名</span>
-        <span>徐尚</span>
+        <span>{{user.name}}</span>
       </van-row>
       <van-row class="user_item flex flex_align_center justify_between">
         <span class="flex_1">身份证</span>
-        <span>500334198808184325</span>
+        <span>{{user.id_card}}</span>
       </van-row>
       <van-row class="user_item flex flex_align_center justify_between">
-        <span class="flex_1">证件地址</span>
-        <span>上海市XXXXXX</span>
+        <span class="lable">证件地址</span>
+        <span class="flex_1">{{user.id_address}}</span>
       </van-row>
       <van-row class="user_item flex flex_align_center justify_between">
         <span class="flex_1">有效期</span>
-        <span>2022.12.10</span>
+        <span>{{user.id_effect_time}}</span>
       </van-row>
       <van-row class="user_item">
         <span>身份证照片</span>
         <van-row class="IDcard_content flex flex_align_center">
           <span>
-            <img class="IDcard_photo" src="../../assets/image/img1.jpg" />
+            <img class="IDcard_photo" :src="user.id_front_img" />
           </span>
           <span>
-            <img class="IDcard_photo" src="../../assets/image/img2.jpg" />
+            <img class="IDcard_photo" :src="user.id_back_img" />
           </span>
         </van-row>
       </van-row>
@@ -52,7 +52,9 @@
 export default {
   name: "userinfodetail",
   data() {
-    return {};
+    return {
+      user: {}
+    };
   },
   created() {
     // H5 plus事件处理
@@ -67,7 +69,23 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
   },
+  mounted() {
+    this.getUserInfo();
+  },
   methods: {
+    // 获取用户信息
+    getUserInfo() {
+      this.$api
+        .userInfo()
+        .then(res => {
+          if (res.code == 200) {
+            this.user = res.user;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     onBack() {
       history.back();
     }
@@ -89,8 +107,10 @@ export default {
   border-bottom: 1px solid #eee;
   padding: 0.7rem 1rem;
 }
+
 .user_item span:nth-child(2) {
   color: #a8aec1;
+  text-align: right;
 }
 .right_icon {
   color: #c7c7cc;
@@ -104,9 +124,10 @@ export default {
   display: block;
   width: 47%;
   height: 4.5rem;
-  padding: 0.3125rem;
+  /* padding: 0.3125rem; */
   box-shadow: 0rem 0rem 0.3125rem #ccc;
 }
+
 .IDcard_content span:nth-child(1) {
   margin-right: 0.75rem;
 }
