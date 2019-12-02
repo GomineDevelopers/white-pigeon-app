@@ -28,5 +28,6 @@ let api = {
   regionDoctorList: params => post("/regionManager/regionDoctorList", params), //区域经理审核医生列表
   regionDoctorDetail: params => post("/regionManager/regionDoctorDetail", params), //区域经理审核医生详情
 
+  hospitalApplyRecord: params => post("hospitalManager/hospitalApplyRecord", params), //申请记录数目
 };
 export default api;

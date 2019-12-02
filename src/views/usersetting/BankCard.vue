@@ -13,7 +13,7 @@
       <van-row class="flex card_item border_bom">
         <span class="title">开户行</span>
         <van-row class="openingBank flex flex_1">
-          <span class="flex_1">{{openingBankValue ? openingBankValue:'请选择'}}</span>
+          <span class="flex_1">{{ openingBankValue ? openingBankValue : "请选择" }}</span>
           <van-icon name="arrow" @click="showOpeningBank" />
         </van-row>
       </van-row>
@@ -90,7 +90,7 @@ export default {
         temp.push(value.text);
       });
       this.openingBank = temp;
-      console.log(temp);
+      // console.log(temp);
     },
     goContract() {
       this.$Dialog

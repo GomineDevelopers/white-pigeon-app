@@ -209,15 +209,6 @@ export default new Router({
       component: () => import(/* webpackChunkName: "index" */ "./views/index/SignContract.vue")
     },
     {
-      path: "/bankcard",
-      name: "bankcard",
-      component: () =>
-        import(
-          /* webpackChunkName: "index" */
-          "./views/usersetting/BankCard.vue"
-        )
-    },
-    {
       path: "/hospitalmanagement",
       name: "hospitalmanagement",
       component: () =>
@@ -269,6 +260,15 @@ export default new Router({
         import(
           /* webpackChunkName: "usersetting" */
           "./views/usersetting/UserSetting.vue"
+        )
+    },
+    {
+      path: "/bankcard",
+      name: "bankcard",
+      component: () =>
+        import(
+          /* webpackChunkName: "index" */
+          "./views/usersetting/BankCard.vue"
         )
     },
     {

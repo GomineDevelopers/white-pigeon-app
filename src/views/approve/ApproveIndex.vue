@@ -1,12 +1,13 @@
 <template>
   <van-row class="approve">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="审批" left-arrow @click-left="onBack()" />
+      <van-nav-bar v-if="role == 2" title="审批" left-arrow @click-left="onBack()" />
+      <van-nav-bar v-if="role == 1" title="经理审批" left-arrow @click-left="logOut()" />
     </van-row>
     <van-row class="tabs flex">
       <van-row class="approve_nav flex">
-        <span :class="active == 0 ? 'active':''" @click="switchOption">产品</span>
-        <span :class="active == 1 ? 'active':''" @click="switchOption">医生</span>
+        <span :class="active == 0 ? 'active' : ''" @click="switchOption">产品</span>
+        <span :class="active == 1 ? 'active' : ''" @click="switchOption">医生</span>
       </van-row>
     </van-row>
     <van-list
@@ -19,24 +20,24 @@
     >
       <div
         class="approve_item flex justify_between"
-        v-for="(item,index) in productList"
-        :key="index+'a'"
+        v-for="(item, index) in productList"
+        :key="index + 'a'"
         @click="getDetail"
       >
         <div class="approve_item_detail">
           <ul>
-            <li>{{item.title}}</li>
+            <li>{{ item.title }}</li>
             <li class="flex justify_start">
               <span>医院名：</span>
-              <span>{{item.hospitalName}}</span>
+              <span>{{ item.hospitalName }}</span>
             </li>
             <li class="flex justify_start">
               <span>承诺销量：</span>
-              <span>{{item.sales}}</span>
+              <span>{{ item.sales }}</span>
             </li>
             <li class="flex justify_start">
               <span>申请时间：</span>
-              <span>{{item.approveDate}}</span>
+              <span>{{ item.approveDate }}</span>
             </li>
           </ul>
         </div>
@@ -57,24 +58,24 @@
     >
       <div
         class="approve_item flex justify_between"
-        v-for="(item,index) in hospitalList"
-        :key="index+'b'"
+        v-for="(item, index) in hospitalList"
+        :key="index + 'b'"
         @click="getDoctorDetail"
       >
         <div class="approve_item_detail">
           <ul>
-            <li>{{item.title}}</li>
+            <li>{{ item.title }}</li>
             <li class="flex justify_start">
               <span>医院名：</span>
-              <span>{{item.hospitalName}}</span>
+              <span>{{ item.hospitalName }}</span>
             </li>
             <li class="flex justify_start">
               <span>医生：</span>
-              <span>{{item.doctor}}</span>
+              <span>{{ item.doctor }}</span>
             </li>
             <li class="flex justify_start">
               <span>申请时间：</span>
-              <span>{{item.approveDate}}</span>
+              <span>{{ item.approveDate }}</span>
             </li>
           </ul>
         </div>
@@ -92,6 +93,7 @@ export default {
   name: "approveindex",
   data() {
     return {
+      role: "", //角色
       active: 0,
       proLoading: false,
       docLoading: false,
@@ -115,6 +117,8 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+
+    this.role = localStorage.getItem("role");
   },
   mounted() {
     this.$nextTick(() => {
@@ -201,6 +205,24 @@ export default {
     },
     onBack() {
       history.back();
+    },
+    //退出登录
+    logOut() {
+      this.$Dialog
+        .confirm({
+          message: "退出登录？",
+          confirmButtonText: "确定", //改变确认按钮上显示的文字
+          cancelButtonText: "取消" //改变取消按钮上显示的文字
+        })
+        .then(() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          this.$router.push({ path: "/loginpassword" });
+          console.log("退出登录");
+        })
+        .catch(() => {
+          console.log("取消退出登录！");
+        });
     },
     switchOption() {
       let _this = this;

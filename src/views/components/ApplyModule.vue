@@ -7,7 +7,7 @@
           class="approve_item flex justify_between"
           v-for="(item, index) in approveList"
           :key="index + 'b'"
-          @click="getDetail(item.id)"
+          @click="getDetail(item.id, item.status, item.is_sign)"
         >
           <div class="approve_item_detail">
             <ul>
@@ -94,11 +94,56 @@ export default {
           });
       }, 1000);
     },
-    getDetail(id) {
-      this.$router.push({
-        path: "/productapplydetail",
-        query: { id: id }
-      });
+    getDetail(id, status, isSign) {
+      //判断status是否为已通过
+      if (status == 1) {
+        //判断是否签约  1-已签约 2-未签约
+        if (isSign == 2) {
+          console.log("未签约", isSign);
+          this.$api
+            .userInfo()
+            .then(res => {
+              console.log(res);
+              //判断用户银行卡信息是否完善
+              if (
+                res.user.account_name == null ||
+                res.user.card_no == null ||
+                res.user.open_bank == null
+              ) {
+                //银行卡信息不完善跳转银行卡完善信息页
+                this.$Dialog
+                  .confirm({
+                    message: "请先完善银行卡信息！",
+                    confirmButtonText: "前往",
+                    cancelButtonText: "取消"
+                  })
+                  .then(() => {
+                    this.$router.push({ path: "/bankcard" });
+                    console.log("退出登录");
+                  })
+                  .catch(() => {
+                    console.log("取消完善银行卡信息！");
+                  });
+              } else {
+                //银行卡信息完善跳转签约
+                this.$router.push({ path: "/signcontract" });
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        } else {
+          this.$router.push({
+            path: "/productapplydetail",
+            query: { id: id }
+          });
+        }
+      } else {
+        this.$router.push({
+          path: "/productapplydetail",
+          query: { id: id }
+        });
+      }
     }
   }
 };
