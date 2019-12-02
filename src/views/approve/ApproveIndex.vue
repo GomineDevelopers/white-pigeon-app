@@ -9,7 +9,14 @@
         <span :class="active == 1 ? 'active':''" @click="switchOption">医生</span>
       </van-row>
     </van-row>
-    <van-list class="approve_list" v-show="active == 0" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getProductData">
+    <van-list
+      class="approve_list"
+      v-show="active == 0"
+      v-model="proLoading"
+      :finished="proFinished"
+      finished-text="无更多的产品申请"
+      @load="getProductData"
+    >
       <div
         class="approve_item flex justify_between"
         v-for="(item,index) in productList"
@@ -40,7 +47,14 @@
         </div>
       </div>
     </van-list>
-    <van-list class="approve_list" v-show="active == 1" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getHospitalData">
+    <van-list
+      class="approve_list"
+      v-show="active == 1"
+      v-model="docLoading"
+      :finished="docFinished"
+      finished-text="无更多的产品申请"
+      @load="getHospitalData"
+    >
       <div
         class="approve_item flex justify_between"
         v-for="(item,index) in hospitalList"
@@ -79,8 +93,12 @@ export default {
   data() {
     return {
       active: 0,
-      loading: false,
-      finished: false,
+      proLoading: false,
+      docLoading: false,
+      proFinished: false,
+      docFinished: false,
+      page: 1,
+      row: 10,
       productList: [], //产品审批数据
       hospitalList: [] //医生审批数据
     };
@@ -98,46 +116,86 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      var that = this;
+      //  window.addEventListener('scroll', this.handleScroll);
+    });
+  },
   methods: {
+    // handleScroll () {
+    //   let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+    //   let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    //   let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    //   if (scrollTop + clientHeight + 5 >= scrollHeight) { //0 表示距离底部多少的距离的开始触发loadmore效果
+    //         if (this.active == 1){
+    //             this.getHospitalData();
+    //         }
+
+    //     }
+    // },
     // 获取产品审批数据
     getProductData() {
+      console.log("产品");
+      // this.$api.regionApprove({
+      //   page: this.page,
+      //   row: this.row
+      // }).then( res => {
+      //   switch (res.code) {
+      //     case 9002:
+      //       this.proLoading = false;
+      //       this.proFinished = true;
+      //       break;
+      //     case 101:
+      //       this.$dialog.alert({
+      //         message: res.message
+      //       }).then( () => {
+      //         this.$router.push('/loginpassword')
+      //       });
+      //     break;
+      //   }
+      // }).catch( err => {
+      //   console.log(err)
+      // })
       setTimeout(() => {
         for (let i = 0; i < 10; i++) {
           this.productList.push({
-          title: "XXXX提交的产品申请" + i,
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "succeed"
-        });
+            title: "XXXX提交的产品申请" + i,
+            hospitalName: "上海长海医院",
+            sales: "产品1 - 3321/月",
+            approveDate: "2019.10.15 15:32:32",
+            approveState: "succeed"
+          });
         }
         // 加载状态结束
-        this.loading = false;
+        this.proLoading = false;
 
         // 数据全部加载完成
         if (this.productList.length >= 40) {
-          this.finished = true;
+          this.proFinished = true;
         }
       }, 500);
     },
     // 获取医生审批数据
     getHospitalData() {
+      console.log("医生");
       setTimeout(() => {
-        for (let i = 30; i < 60; i++) {
-            this.hospitalList.push({
+        for (let i = 1; i < 10; i++) {
+          this.hospitalList.push({
             title: "XXXX提交的医生申请" + i,
             hospitalName: "上海长海医院",
             doctor: "张XX",
             approveDate: "2019.10.15 15:32:32",
             approveState: "succeed"
-          })
+          });
         }
         // 加载状态结束
-        this.loading = false;
+        this.docLoading = false;
 
         // 数据全部加载完成
-        if (this.hospitalList.length >= 60) {
-          this.finished = true;
+        console.log(this.hospitalList.length)
+        if (this.hospitalList.length >= 100) {
+          this.docFinished = true;
         }
       }, 500);
     },
@@ -145,18 +203,27 @@ export default {
       history.back();
     },
     switchOption() {
-      if (this.active == 0) {
-        this.active = 1;
-        this.productOffset = window.pageYOffset;
-        window.scrollTo(0, this.hospitalOffset)
-        if (!this.hospitalList.length) {
-          this.getHospitalData();
+      let _this = this;
+      let scrollOffset =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      if (_this.active == 0) {
+        _this.active = 1;
+        this.productOffset = scrollOffset;
+        if (!_this.hospitalList.length) {
+          _this.getHospitalData();
+          return;
         }
+        setTimeout(() => {
+          window.scrollTo(0, _this.hospitalOffset);
+        }, 100);
       } else {
-        this.active = 0;
-        this.hospitalOffset = window.pageYOffset;
-        window.scrollTo(0, this.productOffset)
-        
+        _this.active = 0;
+        _this.hospitalOffset = scrollOffset;
+        setTimeout(() => {
+          window.scrollTo(0, _this.productOffset);
+        }, 100);
       }
     },
     getDetail() {
@@ -165,18 +232,19 @@ export default {
     getDoctorDetail() {
       this.$router.push({ path: "/doctorapprove" });
     }
-  }
+  },
+  watch: {}
 };
 </script>
 <style>
 .approve_list {
   padding-top: 120px;
-  padding-left: .8rem;
-  padding-right: .8rem;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
 }
 </style>
 <style scoped>
-.tabs{
+.tabs {
   position: fixed;
   top: 46px;
   left: 0;
