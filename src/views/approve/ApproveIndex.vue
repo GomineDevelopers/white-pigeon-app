@@ -9,7 +9,7 @@
         <span :class="active == 1 ? 'active':''" @click="switchOption">医生</span>
       </van-row>
     </van-row>
-    <van-list class="approve_list" v-show="active == 0" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getProductData" ref="proList">
+    <van-list class="approve_list" v-show="active == 0" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getProductData">
       <div
         class="approve_item flex justify_between"
         v-for="(item,index) in productList"
@@ -40,7 +40,7 @@
         </div>
       </div>
     </van-list>
-    <van-list class="approve_list" v-show="active == 1" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getHospitalData" ref="hosList">
+    <van-list class="approve_list" v-show="active == 1" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getHospitalData">
       <div
         class="approve_item flex justify_between"
         v-for="(item,index) in hospitalList"
@@ -123,7 +123,7 @@ export default {
     // 获取医生审批数据
     getHospitalData() {
       setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 30; i < 60; i++) {
             this.hospitalList.push({
             title: "XXXX提交的医生申请" + i,
             hospitalName: "上海长海医院",
@@ -136,7 +136,7 @@ export default {
         this.loading = false;
 
         // 数据全部加载完成
-        if (this.hospitalList.length >= 40) {
+        if (this.hospitalList.length >= 60) {
           this.finished = true;
         }
       }, 500);
@@ -147,12 +147,15 @@ export default {
     switchOption() {
       if (this.active == 0) {
         this.active = 1;
+        this.productOffset = window.pageYOffset;
+        window.scrollTo(0, this.hospitalOffset)
         if (!this.hospitalList.length) {
           this.getHospitalData();
         }
       } else {
-        
         this.active = 0;
+        this.hospitalOffset = window.pageYOffset;
+        window.scrollTo(0, this.productOffset)
         
       }
     },
