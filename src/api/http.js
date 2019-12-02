@@ -1,9 +1,8 @@
 import axios from "axios";
 import QS from "qs";
-import {
-  Toast
-} from "vant";
+import { Toast } from "vant";
 import store from "@/store";
+import router from ".././router";
 // console.log(store.state);
 
 // 环境的切换
@@ -16,15 +15,14 @@ import store from "@/store";
 // }
 
 axios.defaults.timeout = 10000; //设置请求超时
-axios.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded;charset=UTF-8"; //设置post请求头
+axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8"; //设置post请求头
 
 // 请求拦截
 axios.interceptors.request.use(
   config => {
     const token = store.state.token;
     if (token) {
-      config.headers.Authorization = 'Bearer ' + token;
+      config.headers.Authorization = "Bearer " + token;
     }
     return config;
   },
@@ -39,9 +37,9 @@ axios.interceptors.response.use(
     // var newToken = response.headers.authorization
     // 如果 header 中存在 token，那么触发 refreshToken 方法，替换本地的 token
     if (response.headers.authorization) {
-      let newToken = response.headers.authorization
+      let newToken = response.headers.authorization;
       // console.log("newToken", newToken.split(" ")[1])
-      store.dispatch('refreshToken', newToken.split(" ")[1])
+      store.dispatch("refreshToken", newToken.split(" ")[1]);
     }
 
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
@@ -57,38 +55,45 @@ axios.interceptors.response.use(
   error => {
     if (error.response.status) {
       switch (error.response.status) {
-        // 401: 未登录
-        // 未登录则跳转登录页面，并携带当前页面的路径
-        // 在登录成功后返回当前页面，这一步需要在登录页操作。
         case 401:
-          router.replace({
-            path: "/loginpassword",
-            query: {
-              redirect: router.currentRoute.fullPath
-            }
-          });
+          Toast("账号信息过期，请重新登录");
+          setTimeout(() => {
+            router.replace({
+              path: "/loginpassword",
+              query: {
+                redirect: router.currentRoute.fullPath
+              }
+            });
+          }, 2000);
+          break;
+        case 402:
+          Toast("token有误，请重新登录");
+          setTimeout(() => {
+            router.replace({
+              path: "/loginpassword",
+              query: {
+                redirect: router.currentRoute.fullPath
+              }
+            });
+          }, 2000);
           break;
         case 403:
-          Toast({
-            message: "登录过期，请重新登录",
-            duration: 1000,
-            forbidClick: true
-          });
+          Toast("未登录，请登录");
           // 清除token
           localStorage.removeItem("token");
           store.commit("setToken", null);
           // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
           setTimeout(() => {
             router.replace({
-              path: "/login",
+              path: "/loginpassword",
               query: {
                 redirect: router.currentRoute.fullPath
               }
             });
-          }, 1000);
+          }, 2000);
           break;
 
-          // 404请求不存在
+        // 404请求不存在
         case 404:
           Toast({
             message: "请求资源不存在",
@@ -98,7 +103,7 @@ axios.interceptors.response.use(
           store.commit("setToken", null);
           localStorage.removeItem("token");
           break;
-          // 其他错误，直接抛出错误提示
+        // 其他错误，直接抛出错误提示
         case 101:
           Toast({
             message: "用户不存在",
@@ -114,11 +119,7 @@ axios.interceptors.response.use(
           });
           break;
         default:
-          Toast({
-            message: error.response.data.message,
-            duration: 1500,
-            forbidClick: true
-          });
+          Toast(error.response.data.message);
       }
       return Promise.reject(error.response);
     }

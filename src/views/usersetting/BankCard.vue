@@ -93,6 +93,10 @@ export default {
       // console.log(temp);
     },
     goContract() {
+      if (this.name == "" || this.bankCard == "" || this.openingBankValue == "") {
+        this.$toast.fail("请填写完整信息");
+        return false;
+      }
       this.$Dialog
         .confirm({
           message: "请确定提交信息是否正确，银行卡绑定是否与本人信息一致！",
@@ -101,7 +105,29 @@ export default {
         })
         .then(() => {
           console.log("已确认信息无误！");
-          this.$router.push({ path: "/signcontract" });
+          let params = {
+            account_name: this.name,
+            open_bank: this.bankCard,
+            card_no: this.openingBankValue
+          };
+          this.$api
+            .bankFill(params)
+            .then(res => {
+              console.log(res);
+              if (res.code == 200) {
+                this.$toast.success("提交成功");
+                setTimeout(() => {
+                  if (this.$route.query.redirect) {
+                    this.$router.push({ path: this.$route.query.redirect });
+                  } else {
+                    this.$router.go(-1);
+                  }
+                }, 2000);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
         })
         .catch(() => {});
     }
@@ -126,6 +152,9 @@ export default {
   bottom: 0;
   right: 0;
   left: 0;
+}
+.bankcard .van-field__control {
+  color: #999;
 }
 </style>
 <style scoped>

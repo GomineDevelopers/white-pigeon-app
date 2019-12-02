@@ -67,12 +67,16 @@
           <van-row class="sign_matter_item">
             <span>1.技术服务的开始时间:</span>
             <br />
-            <span class="border_bom van-cell start_time">{{ startTime }}</span>
+            <span class="border_bom van-cell start_time" @click="dateShow = true">
+              {{ startTime }}
+            </span>
           </van-row>
           <van-row class="sign_matter_item">
             <span>2.技术服务的结束时间:</span>
             <br />
-            <span class="border_bom van-cell end_time">{{ endTime }}</span>
+            <span class="border_bom van-cell end_time" @click="endDateShow = true">{{
+              endTime
+            }}</span>
           </van-row>
           <van-row class="sign_matter_item">
             <span>3.技术服务的费用结算:</span>
@@ -174,8 +178,7 @@
             </ul>
           </van-row>
           <van-row class="sign_title1"
-            >五.本合同一式 2 份，甲方执 1 份，乙方执 1
-            份，每份合同具有同等法律效力。</van-row
+            >五.本合同一式 2 份，甲方执 1 份，乙方执 1 份，每份合同具有同等法律效力。</van-row
           >
           <van-row class="sign_moudle">
             <van-row>
@@ -204,13 +207,43 @@
         <button @click="goManagement">提&nbsp;交</button>
       </van-row>
     </van-row>
+    <!-- 开始时间选择 -->
+    <van-row class="showbank">
+      <transition name="van-slide-up">
+        <van-row class="area_option" v-show="dateShow">
+          <van-datetime-picker
+            v-model="currentDate"
+            type="date"
+            @confirm="dateConfirm"
+            @cancel="dateShow = false"
+          />
+        </van-row>
+      </transition>
+    </van-row>
+    <!-- 结束时间选择 -->
+    <van-row class="showbank">
+      <transition name="van-slide-up">
+        <van-row class="area_option" v-show="endDateShow">
+          <van-datetime-picker
+            v-model="currentDate"
+            type="date"
+            @confirm="endDateConfirm"
+            @cancel="endDateShow = false"
+          />
+        </van-row>
+      </transition>
+    </van-row>
   </van-row>
 </template>
 <script>
+import { timeFormat } from "@/js/public";
 export default {
   name: "signcontract",
   data() {
     return {
+      dateShow: false,
+      endDateShow: false,
+      currentDate: new Date(),
       firstPartyName: "", //甲方名称
       registeredAddress: "", //注册地址
       principal: "", //主要负责人
@@ -277,7 +310,6 @@ export default {
         this.isShowSignLabel = false;
       }
     },
-
     //手势移动事件
     touchMove(ev) {
       let evt = ev || event;
@@ -297,14 +329,12 @@ export default {
         this.startX = obj.x;
       }
     },
-
     //手势结束事件
     touchEnd(ev) {
       let img = this.$refs.canvasCont.toDataURL();
       console.log(this.base64ToFile(img));
       return;
     },
-
     // base64编码的图片
     base64ToFile(dataurl) {
       let filename = "usersign";
@@ -321,20 +351,61 @@ export default {
         type: mime
       });
     },
-
     //重写签名
     resetSign() {
-      this.canvasTxt.clearRect(
-        0,
-        0,
-        this.$refs.canvasCont.width,
-        this.$refs.canvasCont.height
-      );
+      this.canvasTxt.clearRect(0, 0, this.$refs.canvasCont.width, this.$refs.canvasCont.height);
       this.isShowSignLabel = true;
     },
-
+    dateConfirm(event) {
+      this.startTime = timeFormat(event);
+      this.dateShow = false;
+    },
+    endDateConfirm(event) {
+      this.endTime = timeFormat(event);
+      this.endDateShow = false;
+    },
     goManagement() {
       this.img = this.$refs.canvasCont.toDataURL();
+      // firstPartyName: "", //甲方名称
+      // registeredAddress: "", //注册地址
+      // principal: "", //主要负责人
+      // phone: "", //联系方式
+
+      // secondPartyName: "", // 乙方名称
+      // IDcard: "", //身份证
+      // address: "", //家庭住址
+      // tel: "", //联系方式
+
+      // startTime: "",
+      // endTime: "",
+      // cost: "",
+      // product: "",
+      // hospital: "",
+      let regs = /^1[3456789]\d{9}$/;
+      if (!regs.test(this.phone) || !regs.test(this.tel)) {
+        this.$toast.fail("手机号码有误");
+        return false;
+      }
+      if (this.IDcard.length < 18) {
+        this.$toast.fail("身份证号码有误");
+        return false;
+      }
+      if (
+        this.firstPartyName == "" ||
+        this.registeredAddress == "" ||
+        this.principal == "" ||
+        this.secondPartyName == "" ||
+        this.address == "" ||
+        this.startTime == "" ||
+        this.endTime == "" ||
+        this.cost == "" ||
+        this.product == "" ||
+        this.hospital == ""
+      ) {
+        this.$toast.fail("请填写完整合同信息");
+        return false;
+      }
+
       // this.$router.push({ path: "/hospitalmanagement" });
     }
   }
@@ -382,8 +453,7 @@ export default {
 }
 .end_time,
 .start_time {
-  height: 1.3125rem;
-  line-height: 1.3125rem;
+  height: 1.4rem;
 }
 .product_content {
   margin-top: 0.625rem;

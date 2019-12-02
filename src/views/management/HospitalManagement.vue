@@ -11,28 +11,29 @@
             clearable
             right-icon="search"
             placeholder="请输入医院名"
-            @click-right-icon="$toast('question')"
+            @click-right-icon="hospitalSearch"
           />
         </van-cell-group>
       </van-row>
       <van-row class="hospital_list">
         <van-row
           class="hospital_item border_bom"
-          v-for="(item,index) in searchMethod"
+          v-for="(item, index) in hospitalList"
           :key="index"
           @click="goApplyHospitalDetail"
         >
-          <van-row class="hospital_name">{{item.name}}</van-row>
+          <van-row class="hospital_name">{{ item.hospital_name }}</van-row>
           <van-row class="hospital_tag">
-            <span class="compositive" v-for="(tag,index2) in item.tag" :key="index2 +'a'">{{tag}}</span>
+            <span class="compositive" v-for="(tag, index2) in item.tag" :key="index2 + 'a'">{{
+              tag
+            }}</span>
           </van-row>
           <van-row class="product_list">
-            <span
-              v-for="(product,index3) in item.product"
-              :key="index3 +'b'"
-            >{{product+"&nbsp;&nbsp;&nbsp;"}}</span>
+            <span v-for="(product, index3) in item.product" :key="index3 + 'b'">{{
+              product + "&nbsp;&nbsp;&nbsp;"
+            }}</span>
           </van-row>
-          <van-row class="hospital_address">{{item.address}}</van-row>
+          <van-row class="hospital_address">{{ item.hospital_address }}</van-row>
         </van-row>
       </van-row>
     </van-row>
@@ -45,38 +46,14 @@ export default {
     return {
       search: "",
       hospitalList: [
-        {
-          name: "上海长海医院",
-          tag: ["综合医院", "三级甲等", "公立医院"],
-          product: ["产品1", "产品2", "产品3"],
-          address: "上海市杨浦区长海路168号"
-        },
-        {
-          name: "北京人民医院",
-          tag: ["综合医院", "公立医院"],
-          product: ["产品1", "产品2", "产品3"],
-          address: "北京市西直门南大街11号"
-        },
-        {
-          name: "上海市儿童医院",
-          tag: ["综合医院", "三级甲等", "公立医院"],
-          product: ["产品1", "产品2", "产品3"],
-          address: "上海市杨浦区长海路168号"
-        }
+        // {
+        //   name: "上海长海医院",
+        //   tag: ["综合医院", "三级甲等", "公立医院"],
+        //   product: ["产品1", "产品2", "产品3"],
+        //   address: "上海市杨浦区长海路168号"
+        // },
       ]
     };
-  },
-  computed: {
-    //搜索filter过滤
-    searchMethod() {
-      if (this.search.length == 0) {
-        return this.hospitalList;
-      } else {
-        return this.hospitalList.filter(value => {
-          return value.name.match(this.search);
-        });
-      }
-    }
   },
   created() {
     // H5 plus事件处理
@@ -90,10 +67,30 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.hospitalSearch();
   },
   methods: {
     onBack() {
       history.back();
+    },
+    //点击搜索
+    hospitalSearch() {
+      let params = {
+        key: this.search
+      };
+      this.$api
+        .hospitalList(params)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            this.hospitalList = res.hospital_lst;
+          } else if (res.code == 9000) {
+            this.hospitalList = [];
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     goApplyHospitalDetail() {
       this.$router.push({ path: "/applyhospitaldetail" });

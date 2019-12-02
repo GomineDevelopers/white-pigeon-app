@@ -4,16 +4,16 @@ html {
 
 a {
   text-decoration: none;
-  color: rgba(58, 64, 85, 1)
+  color: rgba(58, 64, 85, 1);
 }
 
 span {
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .van-nav-bar__arrow,
 .van-nav-bar__title {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 
 .height_auto {
@@ -59,23 +59,23 @@ span {
   line-height: 1.25rem;
   font-weight: bold;
   text-align: left;
-  margin-bottom: .625rem;
+  margin-bottom: 0.625rem;
 }
 
 .login_main_body .van-cell {
-  padding: .3125rem 0rem;
+  padding: 0.3125rem 0rem;
   line-height: 2rem;
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .login_main_body .password_input,
 .login_main_body .name_input {
   border-bottom: 1px solid rgba(238, 238, 238);
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .login_main_body .forget_password_btn {
-  padding: .3125rem 0rem;
+  padding: 0.3125rem 0rem;
   line-height: 2rem;
   color: rgba(51, 153, 255, 1);
   display: -webkit-flex;
@@ -86,8 +86,8 @@ span {
 
 .login_main_body .forget_password_btn span {
   display: inline-block;
-  margin-right: .625rem;
-  width: .0625rem;
+  margin-right: 0.625rem;
+  width: 0.0625rem;
   height: 1.25rem;
   border-left: 1px solid rgba(216, 216, 216, 1);
 }
@@ -101,17 +101,17 @@ span {
   padding: 0px;
   height: 2.1875rem;
   line-height: 2.1875rem;
-  font-size: .75rem;
-  border-radius: .1875rem;
+  font-size: 0.75rem;
+  border-radius: 0.1875rem;
 }
 
 .login_main_body .van-button span {
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .other_operation {
-  margin-top: .625rem;
-  font-size: .75rem;
+  margin-top: 0.625rem;
+  font-size: 0.75rem;
   justify-content: space-between;
 }
 
@@ -146,7 +146,7 @@ span {
 .area_option .van-picker-column,
 .van-picker__cancel,
 .van-picker__confirm {
-  font-size: .625rem !important;
+  font-size: 0.625rem !important;
 }
 
 .info_module .van-uploader__upload,
@@ -157,17 +157,17 @@ span {
 .van-dialog {
   width: 12.5rem;
   /* height: 5.6rem; */
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
 .van-dialog__message,
 .van-dialog__confirm .van-button__text,
 .van-dialog__cancel .van-button__text {
-  font-size: .625rem !important;
+  font-size: 0.625rem !important;
 }
 
 .van-dialog__message {
-  padding: 1rem .625rem;
+  padding: 1rem 0.625rem;
 }
 
 .top_nav_bar {
@@ -183,28 +183,28 @@ span {
 }
 
 .approve_content .van-dialog__header {
-  height: .5rem;
-  line-height: .5rem;
+  height: 0.5rem;
+  line-height: 0.5rem;
   font-size: 0.75rem;
   text-align: left;
-  margin-left: .625rem;
+  margin-left: 0.625rem;
 }
 
 .approve_content .refuse_text {
   height: 3.3rem;
-  font-size: .625rem;
+  font-size: 0.625rem;
   border: 1px solid #ccc;
   width: 90%;
   margin: 0 auto;
-  border-radius: .25rem;
-  margin-top: .625rem;
-  padding: .125rem;
+  border-radius: 0.25rem;
+  margin-top: 0.625rem;
+  padding: 0.125rem;
 }
 
 .refuse_daio .van-dialog {
   width: 12.5rem;
   height: 8rem;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
 .public_btn button {
@@ -212,12 +212,12 @@ span {
   padding: 0px;
   height: 2.1875rem;
   line-height: 2.1875rem;
-  font-size: .75rem;
-  border-radius: .1875rem;
-  background: #3399FF;
+  font-size: 0.75rem;
+  border-radius: 0.1875rem;
+  background: #3399ff;
   border: none;
   color: #fff;
-  margin-top: .8rem
+  margin-top: 0.8rem;
 }
 
 .van-radio__icon .van-icon {
@@ -230,7 +230,7 @@ span {
 .public_module {
   box-shadow: 0rem 0rem 0.3125rem #ccc;
   border-radius: 0.1875rem;
-  padding: 0rem 0.3rem;
+  padding: 0rem 0.5rem;
 }
 
 .van-dialog__cancel,
@@ -244,7 +244,7 @@ span {
 }
 
 .middle_button {
-  margin-top: .9375rem;
+  margin-top: 0.9375rem;
   justify-content: space-around;
 }
 
@@ -252,18 +252,18 @@ span {
   width: 46%;
   height: 1.875rem;
   line-height: 1.875rem;
-  border-radius: .1875rem;
-  font-size: .75rem;
+  border-radius: 0.1875rem;
+  font-size: 0.75rem;
   border: none;
 }
 
 .middle_button .middle_button1 {
   background: #b4d8fd;
-  color: #3399FF;
+  color: #3399ff;
 }
 
 .middle_button .middle_button2 {
-  background: #3399FF;
+  background: #3399ff;
   color: #fff;
 }
 
@@ -275,8 +275,8 @@ span {
 }
 
 .more {
-  margin-top: .75rem;
+  margin-top: 0.75rem;
   text-align: center;
-  font-size: .625rem;
-  color: #A8AEC1;
+  font-size: 0.625rem;
+  color: #a8aec1;
 }

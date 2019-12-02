@@ -94,7 +94,7 @@ export default {
             this.navList[2].num = res.refuse_apply_record_num;
             this.navList[3].num = res.pass_apply_record_num;
           } else {
-            this.$toast.fail("");
+            this.$toast.fail(res.message);
           }
           console.log(res);
         })
