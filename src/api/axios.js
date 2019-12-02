@@ -22,12 +22,14 @@ let api = {
   hospitalDevelopmentApply: params => post("hospitalManager/hospitalDevelopmentApply", params), //开发中医院提交申请
   hospitalDevelopdApply: params => post("hospitalManager/hospitalDevelopdApply", params), //已开发医院提交申请
   hospitalManagerList: params => post("hospitalManager/hospitalManagerList", params), //申请列表页
-  hospitalManagerDetail: params => post("hospitalManager/hospitalManagerDetail", params), //申请列表页
+  hospitalManagerDetail: params => post("hospitalManager/hospitalManagerDetail", params), //申请列表页详情
+  hospitalGetSection: params => post("hospitalManager/hospitalGetSection", params), //科室列表
   regionApprove: params => post("/regionManager/regionApprove", params), //区域经理审核医院产品列表
   regionProDetial: params => post("/regionManager/regionHospitalProductDetail", params), //区域经理审核产品详情
   regionDoctorList: params => post("/regionManager/regionDoctorList", params), //区域经理审核医生列表
   regionDoctorDetail: params => post("/regionManager/regionDoctorDetail", params), //区域经理审核医生详情
+  bankFill: params => post("/signManager/BankFill", params), //补全银行卡信息
 
-  hospitalApplyRecord: params => post("hospitalManager/hospitalApplyRecord", params), //申请记录数目
+  hospitalApplyRecord: params => post("hospitalManager/hospitalApplyRecord", params) //申请记录数目
 };
 export default api;

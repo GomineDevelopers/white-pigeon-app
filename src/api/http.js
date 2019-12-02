@@ -2,6 +2,7 @@ import axios from "axios";
 import QS from "qs";
 import { Toast } from "vant";
 import store from "@/store";
+import router from ".././router";
 // console.log(store.state);
 
 // 环境的切换
@@ -54,40 +55,42 @@ axios.interceptors.response.use(
   error => {
     if (error.response.status) {
       switch (error.response.status) {
-        // 401: 未登录
-        // 未登录则跳转登录页面，并携带当前页面的路径
-        // 在登录成功后返回当前页面，这一步需要在登录页操作。
         case 401:
-          Toast({
-            message: "账号信息过期，请重新登录",
-            duration: 1000,
-            forbidClick: true
-          });
-          router.replace({
-            path: "/loginpassword",
-            query: {
-              redirect: router.currentRoute.fullPath
-            }
-          });
+          Toast("账号信息过期，请重新登录");
+          setTimeout(() => {
+            router.replace({
+              path: "/loginpassword",
+              query: {
+                redirect: router.currentRoute.fullPath
+              }
+            });
+          }, 2000);
+          break;
+        case 402:
+          Toast("token有误，请重新登录");
+          setTimeout(() => {
+            router.replace({
+              path: "/loginpassword",
+              query: {
+                redirect: router.currentRoute.fullPath
+              }
+            });
+          }, 2000);
           break;
         case 403:
-          Toast({
-            message: "登录过期，请重新登录",
-            duration: 1000,
-            forbidClick: true
-          });
+          Toast("未登录，请登录");
           // 清除token
           localStorage.removeItem("token");
           store.commit("setToken", null);
           // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
           setTimeout(() => {
             router.replace({
-              path: "/login",
+              path: "/loginpassword",
               query: {
                 redirect: router.currentRoute.fullPath
               }
             });
-          }, 1000);
+          }, 2000);
           break;
 
         // 404请求不存在
@@ -116,11 +119,7 @@ axios.interceptors.response.use(
           });
           break;
         default:
-          Toast({
-            message: error.response.data.message,
-            duration: 1500,
-            forbidClick: true
-          });
+          Toast(error.response.data.message);
       }
       return Promise.reject(error.response);
     }

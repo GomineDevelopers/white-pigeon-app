@@ -77,9 +77,7 @@ export default {
             this.$api
               .userInfo()
               .then(res => {
-                console.log(res);
-                // console.log(res.user.invite_code)
-                // console.log(res.user.identify_status)
+                // console.log(res);
                 if (res.user.is_regional_mangager == 1) {
                   localStorage.setItem("role", 1); //本地存储区域经理的角色  1-经理  2-普通用户
                   this.$router.push({ path: "/approveindex" });
@@ -91,7 +89,12 @@ export default {
                   ) {
                     this.$router.push({ path: "/answer" });
                   } else {
-                    this.$router.push({ path: "/" });
+                    if (this.$route.query.redirect) {
+                      console.log("重定向地址", this.$route.query.redirect);
+                      this.$router.push({ path: decodeURIComponent(this.$route.query.redirect) });
+                    } else {
+                      this.$router.push({ path: "/" });
+                    }
                   }
                 }
               })

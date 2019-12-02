@@ -118,8 +118,12 @@ export default {
                     cancelButtonText: "取消"
                   })
                   .then(() => {
-                    this.$router.push({ path: "/bankcard" });
-                    console.log("退出登录");
+                    this.$router.push({
+                      path: "/bankcard",
+                      query: {
+                        redirect: this.$router.currentRoute.fullPath
+                      }
+                    });
                   })
                   .catch(() => {
                     console.log("取消完善银行卡信息！");
