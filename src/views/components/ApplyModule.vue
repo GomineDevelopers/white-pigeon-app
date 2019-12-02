@@ -1,52 +1,104 @@
 <template>
-  <van-row>
-    <van-row class="approve_content">
+  <van-row class="approve_content">
+    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
       <div class="approve_list">
         <div
           class="approve_item flex justify_between"
-          v-for="(item,index) in data"
-          :key="index+'b'"
-          @click="getDetail"
+          v-for="(item, index) in approveList"
+          :key="index + 'b'"
+          @click="getDetail(item.id)"
         >
           <div class="approve_item_detail">
             <ul>
-              <li>{{item.title}}</li>
-              <li class="flex justify_start flex_align_center">
-                <span>医院名：</span>
-                <span>{{item.hospitalName}}</span>
+              <li class="prodect_name flex justify_start flex_align_center">
+                <span>产品名：</span>
+                <span>{{ item.product_name }}</span>
               </li>
               <li class="flex justify_start flex_align_center">
-                <span>承诺销量：</span>
-                <span>{{item.sales}}</span>
+                <span>医院名：</span>
+                <span>{{ item.hospital_name }}</span>
               </li>
               <li class="flex justify_start flex_align_center">
                 <span>申请时间：</span>
-                <span>{{item.approveDate}}</span>
+                <span>{{ item.create_time }}</span>
               </li>
             </ul>
           </div>
           <div class="approve_state flex">
-            <img v-if="item.approveState == 'approveing'" src="@/assets/image/approveing.png" />
-            <img v-if="item.approveState == 'pass'" src="@/assets/image/approve_pass.png" />
-            <img v-if="item.approveState == 'notPass'" src="@/assets/image/approve_no.png" />
+            <img v-if="item.status == 3" src="@/assets/image/approveing.png" />
+            <img v-if="item.status == 1" src="@/assets/image/approve_pass.png" />
+            <img v-if="item.status == 2" src="@/assets/image/approve_no.png" />
           </div>
         </div>
       </div>
-    </van-row>
+    </van-list>
   </van-row>
 </template>
 <script>
 export default {
   name: "applymodule",
   props: {
-    data: Array
+    status: Number
   },
   data() {
-    return {};
+    return {
+      loading: false, //加载
+      finished: false, //完成
+      page: 1, //页码
+      row: 5, //每页显示条数
+      approveList: []
+    };
+  },
+  watch: {
+    status(newVal, oldVal) {
+      console.log("newVal", newVal);
+      this.page = 1; //初始化
+      this.approveList = []; //列表数据
+      this.loading = false; //加载
+      this.finished = false; //完成
+    }
   },
   methods: {
-    getDetail() {
-      this.$router.push({ path: "/productapplydetail" });
+    //加载更多
+    onLoad() {
+      console.log("当前页码", this.page);
+      let params = {
+        hospital_product_status: this.status,
+        page: this.page,
+        row: this.row
+      };
+      setTimeout(() => {
+        this.$api
+          .hospitalManagerList(params)
+          .then(res => {
+            console.log(res);
+            if (res.code == 200) {
+              if (res.hospital_product_list.length < this.row) {
+                this.approveList.push(...res.hospital_product_list);
+                // 加载状态结束
+                this.finished = true;
+              } else {
+                this.approveList.push(...res.hospital_product_list);
+                this.page++; //此处还有一个问题：页码为1时不等滑动就加载了页码2的内容，  页码为2时滑动加载了页码3和页码4的内容
+              }
+            } else {
+              // 加载状态结束
+              this.finished = true;
+            }
+            // 加载状态结束
+            this.loading = false; //注意：此处重要
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }, 1000);
+    },
+    getDetail(id) {
+      this.$router.push({
+        path: "/productapplydetail",
+        query: { id: id }
+      });
     }
   }
 };
@@ -56,6 +108,8 @@ export default {
   /* margin-top: 0.3125rem; */
   overflow: auto;
   /* height: 23.875rem; */
+  height: 100%;
+  overflow: auto;
 }
 .approve_item {
   border-bottom: 1px solid #ecf1f8;
@@ -87,5 +141,9 @@ export default {
 .approve_state img {
   width: 2.8125rem;
   height: 2.1875rem;
+}
+.approve_item_detail ul li.prodect_name span {
+  color: #333;
+  font-size: 0.6875rem;
 }
 </style>

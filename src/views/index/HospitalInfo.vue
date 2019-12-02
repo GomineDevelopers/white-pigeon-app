@@ -137,6 +137,7 @@ export default {
               // this.productName = res.product_info.product_name;
               let paramsData = {
                 hospitalId: this.hospitalData.infomation.hospital_id,
+                hospitailStatus: this.hospitalData.infomation.status,
                 productId: this.product,
                 productName: res.product_info.product_name
               };
@@ -155,7 +156,11 @@ export default {
             console.log(error);
           });
       } else {
-        this.$toast.fail("请选择产品！");
+        if (this.hospitalData.awaitApplyProduct.length == 0) {
+          this.$toast.fail("当前没有可申请产品");
+        } else {
+          this.$toast.fail("请选择产品");
+        }
       }
     },
     //电话功能

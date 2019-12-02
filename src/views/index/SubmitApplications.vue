@@ -156,25 +156,71 @@ export default {
           hospital_know: this.message,
           commodity_know: this.message2
         };
-        this.$api
-          .hospitalApply(postData)
-          .then(res => {
-            console.log(res);
-            if (res.code == 200) {
-              this.$toast.success("提交成功！");
-              setTimeout(() => {
-                this.$router.push({ path: "/home/productapply" });
-              }, 2000);
-            } else {
-              this.$toast.fail(res.message);
-              setTimeout(() => {
-                this.$router.push({ path: "/" });
-              }, 2000);
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        // 1-已开发  2-不可开发  3-空白医院  4-开发中
+        if (this.productData.hospitailStatus == 3) {
+          console.log("空白医院的提交");
+          this.$api
+            .hospitalApply(postData)
+            .then(res => {
+              console.log(res);
+              if (res.code == 200) {
+                this.$toast.success("提交成功！");
+                setTimeout(() => {
+                  this.$router.push({ path: "/home/productapply" });
+                }, 2000);
+              } else {
+                this.$toast.fail(res.message);
+                setTimeout(() => {
+                  this.$router.push({ path: "/" });
+                }, 2000);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        } else if (this.productData.hospitailStatus == 4) {
+          console.log("开发中医院的提交");
+          this.$api
+            .hospitalDevelopmentApply(postData)
+            .then(res => {
+              console.log(res);
+              if (res.code == 200) {
+                this.$toast.success("提交成功！");
+                setTimeout(() => {
+                  this.$router.push({ path: "/home/productapply" });
+                }, 2000);
+              } else {
+                this.$toast.fail(res.message);
+                setTimeout(() => {
+                  this.$router.push({ path: "/" });
+                }, 2000);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        } else if (this.productData.hospitailStatus == 1) {
+          console.log("已开发医院的提交");
+          this.$api
+            .hospitalDevelopdApply(postData)
+            .then(res => {
+              console.log(res);
+              if (res.code == 200) {
+                this.$toast.success("提交成功！");
+                setTimeout(() => {
+                  this.$router.push({ path: "/home/productapply" });
+                }, 2000);
+              } else {
+                this.$toast.fail(res.message);
+                setTimeout(() => {
+                  this.$router.push({ path: "/" });
+                }, 2000);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
       } else {
         this.$toast.fail("请填写必填信息");
       }

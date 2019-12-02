@@ -2,7 +2,7 @@
   <div class="home">
     <!-- aside开始 -->
     <!-- <van-cell></van-cell> -->
-    <van-popup v-model="asideShow" position="left" :style="{ height: '100%',width:'70%' }">
+    <van-popup v-model="asideShow" position="left" :style="{ height: '100%', width: '70%' }">
       <van-row class="aside_nav">
         <van-row class="top_image flex flex_align_center border_bom">
           <img src="https://img.yzcdn.cn/vant/cat.jpeg" @click="goUserInfo" />
@@ -13,9 +13,13 @@
           </van-row>
         </van-row>
         <van-row>
-          <van-row class="asideNavitem flex flex_align_center" v-for="(asideNavItem,index1) in asideNav" :key="index1+'as'">
+          <van-row
+            class="asideNavitem flex flex_align_center"
+            v-for="(asideNavItem, index1) in asideNav"
+            :key="index1 + 'as'"
+          >
             <img :src="asideNavItem.src" />
-            <router-link :to="{ path: asideNavItem.link }">{{asideNavItem.name}}</router-link>
+            <router-link :to="{ path: asideNavItem.link }">{{ asideNavItem.name }}</router-link>
           </van-row>
           <van-row class="bottom_nav">
             <van-col span="12" class="flex flex_align_center" @click="goSetting">
@@ -32,16 +36,33 @@
     </van-popup>
     <!-- aside结束 -->
     <van-row class="home_nav_bar flex flex_align_center">
-      <van-col span="3" class="left_nav flex flex_align_center flex_justify_center" @click="asideShow = true">
+      <van-col
+        span="3"
+        class="left_nav flex flex_align_center flex_justify_center"
+        @click="asideShow = true"
+      >
         <van-icon name="wap-nav" />
       </van-col>
-      <van-col :span="navItem.span" v-for="(navItem,index) in navList" :key="index+'nav'" @click="navHandle(index)">
-        <router-link :class="index === navActive ? 'active_Link':''" :to="{ path: navItem.link }">{{navItem.name}}</router-link>
+      <van-col
+        :span="navItem.span"
+        v-for="(navItem, index) in navList"
+        :key="index + 'nav'"
+        @click="navHandle(index)"
+      >
+        <router-link
+          :class="index === navActive ? 'active_Link' : ''"
+          :to="{ path: navItem.link }"
+          >{{ navItem.name }}</router-link
+        >
       </van-col>
-      <van-col span="3" class="notify_col left_nav flex flex_align_center flex_justify_center" @click="goNotify">
+      <van-col
+        span="3"
+        class="notify_col left_nav flex flex_align_center flex_justify_center"
+        @click="goNotify"
+      >
         <!-- <van-icon name="bell" /> -->
-        <img class="notify_icon" src="../assets/image/notify.png">
-        <i class="notify">{{notify}}</i>
+        <img class="notify_icon" src="../assets/image/notify.png" />
+        <i class="notify">{{ notify }}</i>
       </van-col>
     </van-row>
     <van-row class="home_router_view">
@@ -181,6 +202,9 @@ export default {
 .left_nav,
 .right_notice {
   font-size: 1rem;
+}
+.home_nav_bar a {
+  color: #333;
 }
 .home_nav_bar .active_Link {
   color: #3399ff;
