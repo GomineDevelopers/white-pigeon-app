@@ -62,7 +62,7 @@
       >
         <!-- <van-icon name="bell" /> -->
         <img class="notify_icon" src="../assets/image/notify.png" />
-        <i class="notify">{{ notify }}</i>
+        <i class="notify" v-show="notify">{{ notify }}</i>
       </van-col>
     </van-row>
     <van-row class="home_router_view">
@@ -76,7 +76,7 @@ export default {
   name: "home",
   data() {
     return {
-      notify: "5",
+      notify: 0,
       asideShow: false,
       navActive: 0,
       navList: [
@@ -145,6 +145,7 @@ export default {
   },
   mounted() {
     this.setNavActive();
+    this.getNotifyData();
   },
   methods: {
     navHandle(index) {
@@ -178,6 +179,19 @@ export default {
     },
     goUserInfo() {
       this.$router.push({ path: "/userinfocenter" });
+    },
+    // 获取消息数据条数
+    getNotifyData() {
+      this.$api
+        .notify()
+        .then(res => {
+          if (res.code == 200) {
+            this.notify = res.sign_notice_list.length;
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     goNotify() {
       this.$router.push({ path: "/notify" });

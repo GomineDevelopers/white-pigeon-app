@@ -12,10 +12,10 @@
         <span class="flex_1">意见反馈</span>
         <span>mog@famcigmic.ne</span>
       </van-row>
-      <van-row class="setting_item flex flex_align_center justify_between">
+      <!-- <van-row class="setting_item flex flex_align_center justify_between">
         <span class="flex_1">使用协议</span>
         <van-icon name="arrow" class="right_icon" />
-      </van-row>
+      </van-row> -->
     </van-row>
   </van-row>
 </template>

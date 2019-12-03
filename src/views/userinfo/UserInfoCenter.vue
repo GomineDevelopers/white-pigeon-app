@@ -4,7 +4,7 @@
       <van-nav-bar title="我的" left-arrow @click-left="onBack()" />
     </van-row>
     <!-- 头部用户信息开始 -->
-    <van-row class="header_body">
+    <van-row class="header_body"  @click="goUserInfoDetail">
       <van-row class="header_user_info flex flex_align_center">
         <van-row class="left_detail flex flex_1">
           <img src="https://img.yzcdn.cn/vant/cat.jpeg" />
@@ -14,7 +14,7 @@
             <span class="user_detail">{{user.id_address}}</span>
           </van-row>
         </van-row>
-        <van-row @click="goUserInfoDetail">
+        <van-row>
           <van-icon name="qr" class="code" />
           <van-icon name="arrow" class="right_icon" />
         </van-row>
@@ -48,8 +48,8 @@
         <span :class="active ? '':'activeLink'" @click="active = !active">我的产品</span>
       </van-row>
       <van-row>
-        <my-hospital v-show="active" :hospitalList="hospitalList"></my-hospital>
-        <my-product v-show="!active" :productList="productList"></my-product>
+        <my-hospital v-show="active"></my-hospital>
+        <my-product v-show="!active" ></my-product>
       </van-row>
     </van-row>
   </van-row>
@@ -66,41 +66,7 @@ export default {
   data() {
     return {
       active: true,
-      user: {},
-      hospitalList: [
-        {
-          name: "上海长海医院",
-          tag: ["综合医院", "三级甲等", "公立医院"],
-          product: ["产品1", "产品2", "产品3"],
-          address: "上海市杨浦区长海路168号"
-        },
-        {
-          name: "北京人民医院",
-          tag: ["综合医院", "公立医院"],
-          product: ["产品1", "产品2", "产品3"],
-          address: "北京市西直门南大街11号"
-        },
-        {
-          name: "上海市儿童医院",
-          tag: ["综合医院", "三级甲等", "公立医院"],
-          product: ["产品1", "产品2", "产品3"],
-          address: "上海市杨浦区长海路168号"
-        }
-      ],
-      productList: [
-        {
-          productName: "产品1",
-          hospital: "上海长海医院"
-        },
-        {
-          productName: "产品2",
-          hospital: "北京人民医院"
-        },
-        {
-          productName: "产品3",
-          hospital: "上海市儿童医院"
-        }
-      ]
+      user: {}
     };
   },
   created() {

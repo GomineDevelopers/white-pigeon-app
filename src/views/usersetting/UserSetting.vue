@@ -17,7 +17,8 @@
         <van-icon name="arrow" class="right_icon" />
       </van-row>
       <van-row class="public_btn">
-        <button>退出登录</button>
+        <!-- <button @click="loginOut">退出登录</button> -->
+        <van-button @click="loginOut" :loading="loading" type="info" :loading-text="loadingText" text="退出登录" />
       </van-row>
     </van-row>
   </van-row>
@@ -26,7 +27,10 @@
 export default {
   name: "usersetting",
   data() {
-    return {};
+    return {
+      loadingText: "正在退出中...",
+      loading: false
+    };
   },
   created() {
     // H5 plus事件处理
@@ -42,6 +46,30 @@ export default {
     }
   },
   methods: {
+    // 退出登录
+    loginOut() {
+      this.loading = true;
+      this.$api
+      .loginOut()
+      .then(res => {
+        console.log(res);
+        this.loading = false;
+        this.$store.commit("setToken", null);
+        this.$dialog.alert({
+          message: res.message
+        }).then(res => {
+          this.$router.replace("/loginpassword");
+        })
+      })
+      .catch(err => {
+        this.$dialog.alert({
+          message: '请先登录'
+        }).then(res => {
+          this.$router.replace("/loginpassword");
+        })
+      })
+    },
+
     onBack() {
       history.back();
     },

@@ -81,6 +81,7 @@
         <template v-if="item.hospital_status === 1">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+            :dragging="true"
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -98,6 +99,7 @@
         <template v-else-if="item.hospital_status === 2">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+            :dragging="true"
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -115,6 +117,7 @@
         <template v-else-if="item.hospital_status === 3">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+            :dragging="true"
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -132,6 +135,7 @@
         <template v-else-if="item.hospital_status === 4">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+            :dragging="true"
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -205,16 +209,6 @@
         <!-- 审核中的img在医院状态为开发中时显示 -->
         <img class="approve" src="@/assets/image/approveing.png" v-show="visitShow == 4" />
       </div>
-      <!-- 此处医院状态为已开发医院时显示 -->
-      <van-row class="pull_developed" v-show="visitShow == 1">
-        <van-col span="12" class="line">
-          <router-link :to="{ path: '/newvisit' }">创建拜访</router-link>
-        </van-col>
-        <van-col span="12">
-          <router-link :to="{ path: '/newmetting' }">创建会议</router-link>
-        </van-col>
-      </van-row>
-
       <!-- 拉出详情 start -->
       <div class="hospital_pull_detail" v-show="visitShow == 2">
         <div class="hospital_pull_cont">
@@ -246,6 +240,16 @@
         </div>
         <van-button class="apply_btn" size="large" @click="applyForHospital()">申请医院</van-button>
       </div>
+      <!-- 此处医院状态为已开发医院时显示 -->
+      <van-row class="pull_developed" v-show="visitShow == 1">
+        <van-col span="12" class="line">
+          <router-link :to="{ path: '/newvisit' }">创建拜访</router-link>
+        </van-col>
+        <van-col span="12">
+          <router-link :to="{ path: '/newmetting' }">创建会议</router-link>
+        </van-col>
+      </van-row>
+
       <!-- 拉出详情 end -->
     </div>
     <!-- popup end -->
