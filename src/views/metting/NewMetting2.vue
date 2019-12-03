@@ -1,7 +1,7 @@
 <template>
   <van-row class="visit">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="创建会议" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="创建会议2222" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body2">
       <!-- 会议 -->
@@ -239,31 +239,11 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
-    this.getInfoByProductId();
+    console.log(this.$route.query.data);
   },
   methods: {
     onBack() {
       history.back();
-    },
-    //通过产品关联会议
-    getInfoByProductId() {
-      this.$api
-        .meetingGetInfoByProductId()
-        .then(res => {
-          console.log(res);
-          if (res.code == 200) {
-            let producTemp = []; //产品 关联
-            let hospitalTemp = []; //医院
-            let sectionTemp = []; //科室
-            let mettingTemp = []; //产品 关联会议主题
-            res.getInfoByProductId.forEach(value => {
-              console.log(value.product_id);
-            });
-          }
-        })
-        .catch(error => {
-          console.log(eroor);
-        });
     },
     // 会议
     productConfirm2() {},

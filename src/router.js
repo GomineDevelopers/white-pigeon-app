@@ -70,11 +70,12 @@ export default new Router({
     {
       path: "/newmetting",
       name: "newmetting",
-      component: () => import(/* webpackChunkName: "metting" */ "./views/metting/NewMetting.vue"),
-      meta: {
-        title: "新建会议",
-        requiresAuth: true
-      }
+      component: () => import(/* webpackChunkName: "metting" */ "./views/metting/NewMetting.vue")
+    },
+    {
+      path: "/newmetting2",
+      name: "newmetting2",
+      component: () => import(/* webpackChunkName: "metting" */ "./views/metting/NewMetting2.vue")
     },
     {
       path: "/mettingdetailcontent",
@@ -233,6 +234,15 @@ export default new Router({
         import(
           /* webpackChunkName: "management" */
           "./views/management/NewDoctor.vue"
+        )
+    },
+    {
+      path: "/doctorapplylist",
+      name: "doctorapplylist",
+      component: () =>
+        import(
+          /* webpackChunkName: "management" */
+          "./views/management/DoctorApplyList.vue"
         )
     },
     {
