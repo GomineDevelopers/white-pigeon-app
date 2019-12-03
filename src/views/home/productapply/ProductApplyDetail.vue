@@ -61,6 +61,12 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.$toast.loading({
+      message: "数据加载中...",
+      forbidClick: true,
+      duration: 0,
+      loadingType: "spinner"
+    });
     this.getDetailData();
   },
   methods: {
@@ -72,6 +78,7 @@ export default {
         .then(res => {
           console.log(res);
           if (res.code == 200) {
+            this.$toast.clear();
             this.detailContent = res.hospital_product_detail;
           }
         })

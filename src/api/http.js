@@ -92,7 +92,9 @@ axios.interceptors.response.use(
             });
           }, 2000);
           break;
-
+        case 500:
+          Toast("服务器错误");
+          break;
         // 404请求不存在
         case 404:
           Toast({

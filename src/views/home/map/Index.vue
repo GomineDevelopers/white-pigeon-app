@@ -211,7 +211,7 @@
           <router-link :to="{ path: '/newvisit' }">创建拜访</router-link>
         </van-col>
         <van-col span="12">
-          <router-link :to="{ path: '/newmetting' }">创建会议</router-link>
+          <router-link :to="{ path: '/newmetting2',query:{data:hospitalRouteParams} }">创建会议</router-link>
         </van-col>
       </van-row>
 

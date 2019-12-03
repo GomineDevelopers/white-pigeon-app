@@ -91,7 +91,7 @@
           <van-icon name="arrow" @click="academicShow = true" />
         </van-row>
       </van-row>
-      <van-row class="public_btn">
+      <van-row class="public_btn" @click="create">
         <button>创&nbsp;建</button>
       </van-row>
     </van-row>
@@ -159,7 +159,7 @@
           <van-picker
             show-toolbar
             title="职务选择"
-            :columns="officeList"
+            :columns="filterOffice"
             @cancel="officeShow = false"
             @confirm="officeConfirm"
           />
@@ -221,15 +221,26 @@ export default {
       hospitalId: "", //医院id
       hospitalList: [],
       dutyValue: "",
+      dutyId: "",
       dutyShow: false,
       dutyList: [],
       sexValue: "",
+      sexId: "",
       sexShow: false,
-      sexList: ["男", "女"],
+      sexList: [
+        { id: 1, text: "男" },
+        { id: 2, text: "女" },
+        { id: 3, text: "保密" }
+      ],
       customerStatus: "",
+      customerStatusId: "",
       customerStatusShow: false,
-      customerStatusList: ["在职", "离职"],
+      customerStatusList: [
+        { id: 1, text: "在职" },
+        { id: 2, text: "离职" }
+      ],
       officeValue: "",
+      officeId: "",
       officeShow: false,
       officeList: [
         { id: "1", text: "病区副护士长" },
@@ -272,14 +283,44 @@ export default {
         { id: "38", text: "未知" }
       ],
       educationValue: "",
+      educationId: "",
       educationShow: false,
-      educationList: ["本科", "硕士", "博士"],
+      educationList: [
+        { id: 1, text: "学士/大学本科" },
+        { id: 5, text: "硕士" },
+        { id: 3, text: "博士" },
+        { id: 6, text: "高中" },
+        { id: 4, text: "初中级以下" },
+        { id: 7, text: "中专" },
+        { id: 2, text: "大专" },
+        { id: 8, text: "其他" }
+      ],
       professionValue: "",
+      professionId: "",
       professionShow: false,
-      professionList: ["执业医师", "专家", "执业医师"],
+      // 1-护师（士）2-技师（士）3-检验师（士）4-其他卫生技术人员 5-药剂师（士）6-执业医师
+      professionList: [
+        { id: 1, text: "护师（士）" },
+        { id: 2, text: "技师（士）" },
+        { id: 3, text: "检验师（士）" },
+        { id: 4, text: "药剂师" },
+        { id: 5, text: "执业医师" },
+        { id: 6, text: "其他卫生技术人员" }
+      ],
       academicValue: "",
+      academicId: "",
       academicShow: false,
-      academicList: ["教授"]
+      // 1-副教授 2-副研究员 3-讲师 4-教授 5-无学术职称 6-研究院 7-助教 8-未知
+      academicList: [
+        { id: 1, text: "副教授" },
+        { id: 2, text: "副研究员" },
+        { id: 3, text: "讲师" },
+        { id: 4, text: "教授" },
+        { id: 5, text: "无学术职称" },
+        { id: 6, text: "研究院" },
+        { id: 7, text: "助教" },
+        { id: 8, text: "未知" }
+      ]
     };
   },
   //过滤
@@ -304,6 +345,17 @@ export default {
           return value.text.match(this.dutyValue);
         });
       }
+    },
+
+    //职务过滤
+    filterOffice() {
+      if (this.officeValue == "") {
+        return this.officeList;
+      } else {
+        return this.officeList.filter(value => {
+          return value.text.match(this.officeValue);
+        });
+      }
     }
   },
   created() {
@@ -318,35 +370,27 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
-    this.getUserInfo();
+    this.gethospitalList();
     this.getSection();
   },
   methods: {
     onBack() {
       history.back();
     },
-    //获取个人信息
-    getUserInfo() {
+    //获取医院列表
+    gethospitalList() {
       this.$api
-        .userInfo()
+        .hospitalGethospitalId()
         .then(res => {
-          // console.log("用户信息", res);
-          //在此处获取医院信息
-          this.$api
-            .hospitalinit()
-            .then(res => {
-              if (res.code == 200) {
-                res.data.forEach(value => {
-                  this.hospitalList.push({
-                    text: value.hospital_name,
-                    id: value.id
-                  });
-                });
-              }
-            })
-            .catch(error => {
-              console.log(error);
+          // console.log(res);
+          if (res.code == 200) {
+            res.hospital_id_list.forEach(value => {
+              this.hospitalList.push({
+                text: value.hospital_name,
+                id: value.hospital_id
+              });
             });
+          }
         })
         .catch(error => {
           console.log(error);
@@ -357,13 +401,15 @@ export default {
       this.$api
         .hospitalGetSection()
         .then(res => {
+          // console.log("科室信息", res);
           if (res.code == 200) {
             res.section_list.forEach(value => {
               this.dutyList.push({
                 text: value.section_name,
-                id: value.id
+                id: value.section_id
               });
             });
+            // console.log(this.dutyList);
           }
         })
         .catch(error => {
@@ -381,28 +427,80 @@ export default {
       this.dutyId = value.id;
     },
     sexConfirm(value) {
-      this.sexValue = value;
+      this.sexValue = value.text;
+      this.sexId = value.id;
       this.sexShow = false;
     },
     statusConfirm(value) {
-      this.customerStatus = value;
       this.customerStatusShow = false;
+      this.customerStatus = value.text;
+      this.customerStatusId = value.id;
     },
     officeConfirm(value) {
-      this.officeValue = value;
+      this.officeValue = value.text;
+      this.officeId = value.id;
       this.officeShow = false;
     },
     educationConfirm(value) {
-      this.educationValue = value;
+      this.educationValue = value.text;
+      this.educationId = value.id;
       this.educationShow = false;
     },
     professionConfirm(value) {
-      this.professionValue = value;
+      this.professionValue = value.text;
+      this.professionId = value.id;
       this.professionShow = false;
     },
     academicConfirm(value) {
-      this.academicValue = value;
+      this.academicValue = value.text;
+      this.academicId = value.id;
       this.academicShow = false;
+    },
+
+    //创建
+    create() {
+      if (
+        this.doctorName == "" ||
+        this.hospitalId == "" ||
+        this.dutyId == "" ||
+        this.sexId == "" ||
+        this.customerStatusId == "" ||
+        this.officeId == ""
+      ) {
+        this.$toast.fail("请填写完整必填信息");
+        return false;
+      }
+      // console.log("this.doctorName", this.doctorName);
+      // console.log("this.hospitalId", this.hospitalId, this.hospitalValue);
+      // console.log("this.dutyId", this.dutyId, this.dutyValue);
+      // console.log("this.sexId", this.sexId, this.sexValue);
+      // console.log("this.customerStatusId", this.customerStatusId, this.customerStatus);
+      // console.log("this.officeId", this.officeId, this.officeValue);
+      let postData = {
+        doctor_name: this.doctorName,
+        hospital_id: this.hospitalId,
+        section_id: this.dutyId,
+        sex: this.sexId,
+        doctor_status: this.customerStatusId,
+        duty: this.officeId,
+        educate: this.educationId,
+        doctor_type: this.professionId,
+        academic_title: this.academicId
+      };
+      this.$api
+        .createDoctor(postData)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            this.$toast.success("提交成功");
+            setTimeout(() => {
+              this.$router.push({ path: "/doctormanagement" });
+            }, 2000);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
@@ -413,7 +511,7 @@ export default {
   font-size: 0.625rem;
 }
 .info_module .van-field__control {
-  color: #a8aec1 !important;
+  color: #77787b !important;
 }
 </style>
 <style scoped>
@@ -431,7 +529,7 @@ export default {
   color: red;
 }
 .icon_right span {
-  color: #a8aec1;
+  color: #77787b;
   font-size: 0.625rem;
 }
 .icon_right {
