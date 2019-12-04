@@ -4,11 +4,18 @@
       <van-nav-bar title="通知" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body">
-      <van-row class="notify_body" v-for="(notifyItem,index) in notifyList" :key="index">
-        <van-row class="notify_date">{{notifyItem.date}}</van-row>
+      <van-row
+        class="notify_body"
+        @click="toSign"
+        v-for="(notifyItem,index) in notifyList"
+        :key="index"
+      >
+        <van-row class="notify_date">{{notifyItem.modify_time}}</van-row>
         <van-row class="notify_content">
-          <van-row class="notify_title">{{notifyItem.title}}</van-row>
-          <van-row class="notify_text">{{notifyItem.content}}</van-row>
+          <van-row class="notify_title">您有一个新申请已通过</van-row>
+          <van-row
+            class="notify_text"
+          >您申请的{{notifyItem.hospital_name}}已于{{notifyItem.modify_time}}已经通过审核，请您及时查看！</van-row>
         </van-row>
       </van-row>
     </van-row>
@@ -19,20 +26,7 @@ export default {
   name: "notify",
   data() {
     return {
-      notifyList: [
-        {
-          date: "2019年10月15日",
-          title: "您有一个新申请已通过",
-          content:
-            "您申请的复旦大学附属眼耳鼻喉科医院已于2019-10-15 15:21已经通过审核，请您及时查看！"
-        },
-        {
-          date: "2019年10月13日",
-          title: "您有一个新申请已通过",
-          content:
-            "您申请的上海长海医院已于2019-10-13 11:21已经通过审核，请您及时查看！"
-        }
-      ]
+      notifyList: []
     };
   },
   created() {
@@ -48,7 +42,61 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
   },
+  mounted() {
+    this.getNotifyData();
+  },
   methods: {
+    // 获取消息数据条数
+    getNotifyData() {
+      this.$api
+        .notify()
+        .then(res => {
+          if (res.code == 200) {
+            this.notifyList = res.sign_notice_list;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 跳转签约页面
+    toSign() {
+      this.$api
+        .userInfo()
+        .then(res => {
+          //判断用户银行卡信息是否完善
+          if (
+            res.user.account_name == null ||
+            res.user.card_no == null ||
+            res.user.open_bank == null
+          ) {
+            //银行卡信息不完善跳转银行卡完善信息页
+            this.$Dialog
+              .confirm({
+                message: "请先完善银行卡信息！",
+                confirmButtonText: "前往",
+                cancelButtonText: "取消"
+              })
+              .then(() => {
+                this.$router.push({
+                  path: "/bankcard",
+                  query: {
+                    redirect: this.$router.currentRoute.fullPath
+                  }
+                });
+              })
+              .catch(() => {
+                console.log("取消完善银行卡信息！");
+              });
+          } else {
+            //银行卡信息完善跳转签约
+            this.$router.push({ path: "/signcontract" });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     onBack() {
       history.back();
     }

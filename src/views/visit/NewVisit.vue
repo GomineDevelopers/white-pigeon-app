@@ -215,7 +215,22 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
   },
+  mounted() {
+    this.getVisitRelation();
+  },
   methods: {
+    // 获取拜访关联的医院
+    getVisitRelation() {
+      this.$api
+        .visitRelation()
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
     onBack() {
       history.back();
     },

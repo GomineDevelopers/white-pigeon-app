@@ -12,15 +12,15 @@
       </van-row>
       <van-row class="flex card_item border_bom">
         <span class="title">开户行</span>
-        <van-row class="openingBank flex flex_1">
+        <van-row class="openingBank flex flex_1"  @click="showOpeningBank">
           <span class="flex_1">{{ openingBankValue ? openingBankValue : "请选择" }}</span>
-          <van-icon name="arrow" @click="showOpeningBank" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="flex card_item border_bom">
         <span>银行卡号</span>
         <span class="flex_1 sales_input">
-          <van-field v-model="bankCard" type="number" placeholder="你本人的银行卡卡号" />
+          <van-field v-model="bankCard" type="number" maxlength="19" placeholder="你本人的银行卡卡号" />
         </span>
       </van-row>
       <van-row class="notice">温馨提示：请提供与平台注册手机号绑定的银行账号</van-row>
@@ -72,6 +72,7 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
     this.getBankList();
+    this.getBankInfo();
   },
   methods: {
     onBack() {
@@ -84,6 +85,7 @@ export default {
       this.openingBankShow = false;
       this.openingBankValue = value;
     },
+    // 获取银行列表
     getBankList() {
       let temp = [];
       this.bankList.bankList.forEach(value => {
@@ -92,8 +94,25 @@ export default {
       this.openingBank = temp;
       // console.log(temp);
     },
+    // 获取银行卡信息
+    getBankInfo() {
+      this.$api
+        .userInfo()
+        .then(res => {
+          this.name =  res.user.account_name || '';
+          this.bankCard = res.user.card_no || '';
+          this.openingBankValue = res.user.open_bank || '';
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     goContract() {
-      if (this.name == "" || this.bankCard == "" || this.openingBankValue == "") {
+      if (
+        this.name == "" ||
+        this.bankCard == "" ||
+        this.openingBankValue == ""
+      ) {
         this.$toast.fail("请填写完整信息");
         return false;
       }
@@ -104,16 +123,16 @@ export default {
           cancelButtonText: "修改" //改变取消按钮上显示的文字
         })
         .then(() => {
-          console.log("已确认信息无误！");
+          // console.log("已确认信息无误！");
           let params = {
             account_name: this.name,
-            open_bank: this.bankCard,
-            card_no: this.openingBankValue
+            open_bank: this.openingBankValue,
+            card_no: this.bankCard
           };
           this.$api
             .bankFill(params)
             .then(res => {
-              console.log(res);
+              // console.log(res);
               if (res.code == 200) {
                 this.$toast.success("提交成功");
                 setTimeout(() => {

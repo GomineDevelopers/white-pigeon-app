@@ -6,72 +6,99 @@
           class="hospital_item border_bom"
           v-for="(item,index) in hospitalList"
           :key="index"
-          @click="goApplyHospitalDetail"
         >
-          <van-row class="hospital_name">{{item.name}}</van-row>
+          <van-row class="hospital_name">{{item.hospital_name}}</van-row>
           <van-row class="hospital_tag">
-            <span class="compositive" v-for="(tag,index2) in item.tag" :key="index2 +'a'">{{tag}}</span>
-            <!-- <span :class="compositive" v-for="(tag,index2) in item.tag" :key="index2 +'a'">{{tag}}</span>
-            <span :class="compositive" v-for="(tag,index2) in item.tag" :key="index2 +'a'">{{tag}}</span>
-            <span :class="compositive" v-for="(tag,index2) in item.tag" :key="index2 +'a'">{{tag}}</span>-->
+            <span class="compositive">{{setHospitalType(item.hospital_type)}}</span>
+            <span class="three_level">{{setHospitalLevel(item.hospital_level)}}</span>
+            <span class="public">{{setHospitalRunType(item.hospital_run_type)}}</span>
           </van-row>
           <van-row class="product_list">
             <span
               v-for="(product,index3) in item.product"
               :key="index3 +'b'"
-            >{{product+"&nbsp;&nbsp;&nbsp;"}}</span>
+            >{{product.product_name+"&nbsp;&nbsp;&nbsp;"}}</span>
           </van-row>
-          <van-row class="hospital_address">{{item.address}}</van-row>
+          <van-row class="hospital_address">{{item.hospital_address}}</van-row>
         </van-row>
       </van-row>
-      <van-row class="more">查看更多</van-row>
+      <van-row class="more" @click="getHospitalData()">
+          {{ finished ? '数据加载完成' : loading ? '数据加载中...' : loadingText}}
+      </van-row>
     </van-row>
   </van-row>
 </template>
 <script>
+import { setHospitalLevel, setHospitalType, setHospitalRunType } from "@/js/public";
+
+console.log(setHospitalType(1))
 export default {
   name: "hospitalmanagement",
   data() {
     return {
-      search: "",
-      hospitalList: [
-        {
-          name: "上海长海医院",
-          tag: ["综合医院", "三级甲等", "公立医院"],
-          product: ["产品1", "产品2", "产品3"],
-          address: "上海市杨浦区长海路168号"
-        },
-        {
-          name: "北京人民医院",
-          tag: ["综合医院", "公立医院"],
-          product: ["产品1", "产品2", "产品3"],
-          address: "北京市西直门南大街11号"
-        },
-        {
-          name: "上海市儿童医院",
-          tag: ["综合医院", "三级甲等", "公立医院"],
-          product: ["产品1", "产品2", "产品3"],
-          address: "上海市杨浦区长海路168号"
-        }
-      ]
+      page: 1,
+      row: 10,
+      loading: false,
+      finished: false,
+      loadingText: "查看更多",
+      hospitalList: []
     };
   },
+  mounted() {
+    this.$nextTick(() => {
+        this.getHospitalData();
+    })
+  },
   methods: {
-    goApplyHospitalDetail() {
-      this.$router.push({ path: "/applyhospitaldetail" });
-    }
+    // 获取我的医院数据
+    getHospitalData() {
+      if (!this.loading && !this.finished){
+        this.loading = true;
+        let data = {page: this.page, row: this.row};
+        this.$api
+          .userCenterHospital(data)
+          .then(res => {
+            switch (res.code) {
+              case 200:
+                let list = res.hospital_data;
+                this.hospitalList = this.hospitalList.concat(list);
+                if (list.length === this.row) {
+                  this.page += 1;
+                  this.loading = false;
+                } else {
+                  this.loading = true;
+                  this.finished = true;
+                };
+                break;
+              case 3001:
+                this.loadingText = res.message;
+                break;
+            } 
+          })
+          .catch(err => {
+
+          })
+        }
+    },
+    // 判断医院类型
+    setHospitalType(id){
+      return setHospitalType(id)
+    },
+    // 判断医院等级
+    setHospitalLevel(id){
+      return setHospitalLevel(id)
+    },
+    // 判断医院经营方式
+    setHospitalRunType(id){
+      return setHospitalRunType(id)
+    },
+    // goApplyHospitalDetail() {
+    //   this.$router.push({ path: "/applyhospitaldetail" });
+    // }
   }
 };
 </script>
 <style>
-.search_hospital .van-cell-group {
-  border: none;
-  box-shadow: 0rem 0.125rem 0.3125rem #ccc;
-  border-radius: 0.25rem;
-}
-.search_hospital .van-cell {
-  font-size: 0.625rem;
-}
 .hospital_list {
   text-align: left;
   margin-top: 1rem;
@@ -116,17 +143,5 @@ export default {
   color: #a8aec1;
   text-align: center;
   padding: 1rem;
-}
-.hospital_tag .compositive {
-  border-color: #f7af27;
-  color: #f7af27;
-}
-.hospital_tag .three_level {
-  border-color: #26c2e1;
-  color: #26c2e1;
-}
-.hospital_tag .public {
-  border-color: #3cd7be;
-  color: #3cd7be;
 }
 </style>
