@@ -226,7 +226,7 @@
             <li class="pull_cell" v-for="(item, index) in hospitalFoldData" :key="index">
               <div class="pull_cell_head" @click="showContent(index)">
                 <span class="tit">{{ item.product_name }}</span>
-                <span class="arrow">流向：26371盒</span>
+                <span class="arrow">流向：0盒</span>
               </div>
               <div class="pull_cell_cont">
                 <p>潜力：一般</p>
@@ -243,7 +243,9 @@
       <!-- 此处医院状态为已开发医院时显示 -->
       <van-row class="pull_developed" v-show="visitShow == 1">
         <van-col span="12" class="line">
-          <router-link :to="{ path: '/developvisit', query: {id: hosSingleData.id} }">创建拜访</router-link>
+          <router-link :to="{ path: '/developvisit', query: { id: hosSingleData.id } }"
+            >创建拜访</router-link
+          >
         </van-col>
         <van-col span="12">
           <router-link :to="{ path: '/newmetting2', query: { data: hospitalRouteParams } }"
