@@ -38,7 +38,14 @@ let api = {
   applyRecord: params => post("/doctorManager/applyRecord", params), //创建医生列表
   doctorDetail: params => post("/doctorManager/doctorDetail", params), //申请医生详情
   meetingGetInfoByProductId: params => post("/meetingManager/meetingGetInfoByProductId", params), //会议通过产品关联
+  createMeeting: params => post("/meetingManager/createMeeting", params), //创建/提交会议
+  meetingTotalNumber: params => post("/meetingManager/meetingTotalNumber", params), //会议总次数
+  meetingSumPeople: params => post("/meetingManager/meetingSumPeople", params), //会议总人数
   createList: params => post("/meetingManager/createList", params), //会议列表
+  meetingGetProductList: params => post("/meetingManager/meetingGetProductList", params), //获取筛选产品列表
+  meetingDetail: params => post("/meetingManager/meetingDetail", params), //会议详情
+  meetingEdit: params => post("/meetingManager/meetingEdit", params), //会议详情编辑提交
+  hospitalDevelopdMeeting: params => post("/hospitalManager/hospitalDevelopdMeeting", params), //会议详情编辑提交
 
   hospitalApplyRecord: params => post("hospitalManager/hospitalApplyRecord", params) //申请记录数目
 };

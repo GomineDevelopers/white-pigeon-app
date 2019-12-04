@@ -168,6 +168,7 @@ export default {
               }
             } else {
               // 加载状态结束
+              this.loading = false;
               this.finished = true;
             }
           })

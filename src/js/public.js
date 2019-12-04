@@ -331,3 +331,16 @@ export function timeFormat(time) {
   let day = time.getDate();
   return year + "-" + month + "-" + day;
 }
+
+//时间格式转换  2019-09-08 14：50：00
+export function minutesTimeFormat(time) {
+  var datetime = new Date();
+  datetime.setTime(time);
+  var year = datetime.getFullYear();
+  var month =
+    datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+  var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+  var hour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+  var minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+  return year + "-" + month + "-" + date + "  " + hour + ":" + minute + ":" + "00";
+}

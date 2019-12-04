@@ -6,36 +6,38 @@
     <van-row class="doctor_detail">
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">产品</span>
-        <span>产品1</span>
+        <span>{{ metting.product_name }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">会议主题</span>
-        <span>产品介绍</span>
+        <span>{{ metting.product_topic }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">医院</span>
-        <span>上海长海医院</span>
+        <span>{{ metting.hospital_name }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">所属科室</span>
-        <span>骨科</span>
+        <span>{{ metting.section_name }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">开始时间</span>
-        <span>2019-05-20 16:00</span>
+        <span>{{ metting.start_time }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">演讲人</span>
-        <span>XXX</span>
+        <span>{{ metting.speaker }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">人数</span>
-        <span>15</span>
+        <span>{{ metting.num }}</span>
       </van-row>
       <van-row class="doctor_detail_item">
         <span>照片上传</span>
         <van-row class="visit_photo">
-          <img :src="imgItem" v-for="(imgItem,index) in visitPhoto" :key="index" />
+          <img v-if="metting.personnel_image" :src="metting.personnel_image" />
+          <img v-if="metting.personnel_image_two" :src="metting.personnel_image_two" />
+          <img v-if="metting.sign_image" :src="metting.sign_image" />
         </van-row>
       </van-row>
     </van-row>
@@ -46,11 +48,18 @@ export default {
   name: "visitdetailcontent",
   data() {
     return {
-      visitPhoto: [
-        require("../../assets/image/img1.jpg"),
-        require("../../assets/image/img2.jpg"),
-        require("../../assets/image/img1.jpg")
-      ]
+      metting: {
+        product_name: "",
+        product_topic: "",
+        hospital_name: "",
+        section_name: "",
+        start_time: "",
+        speaker: "",
+        num: "",
+        personnel_image: "",
+        personnel_image_two: "",
+        sign_image: ""
+      }
     };
   },
   created() {
@@ -65,10 +74,34 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.getMetting();
   },
   methods: {
     onBack() {
       history.back();
+    },
+    //获取会议详情
+    getMetting() {
+      this.$toast.loading({
+        message: "数据加载中...",
+        forbidClick: true,
+        duration: 0,
+        loadingType: "spinner"
+      });
+      // console.log("会议id", this.$route.query.id);
+      let params = { meeting_id: this.$route.query.id };
+      this.$api
+        .meetingDetail(params)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            this.$toast.clear();
+            this.metting = res.meeting_detail;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
@@ -84,8 +117,13 @@ export default {
 .doctor_detail_item {
   padding: 0.6rem 0rem;
 }
+.doctor_detail_item span:nth-child(1) {
+  white-space: nowrap;
+  margin-right: 1rem;
+}
 .doctor_detail_item span:nth-child(2) {
   color: #a8aec1;
+  text-align: right;
 }
 .visit_photo img {
   width: 31%;

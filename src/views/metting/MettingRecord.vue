@@ -30,11 +30,11 @@
     <!-- 点击右上角展示操作菜单结束 -->
     <van-row class="metting_data_total">
       <van-col span="12">
-        <span>48</span>
+        <span>{{ mettingNum }}</span>
         <span>会议总次数</span>
       </van-col>
       <van-col span="12">
-        <span>238</span>
+        <span>{{ mettingUserNum }}</span>
         <span>会议总人数</span>
       </van-col>
     </van-row>
@@ -49,29 +49,29 @@
           class="approve_item flex justify_between"
           v-for="(item, index) in mettingList"
           :key="index + 'b'"
-          @click="getDetail(item.mettingState)"
+          @click="getDetail(item.status, item.id)"
         >
           <div class="approve_item_detail">
             <ul>
               <li>
-                {{ item.title }}
+                {{ item.product_topic }}
                 -
-                <span>{{ item.user }}</span>
+                <span>{{ item.speaker }}</span>
               </li>
               <li class="flex justify_start">
-                <span>{{ item.prodect }}</span>
+                <span>{{ item.product_name }}</span>
               </li>
               <li class="flex justify_start">
-                <span>{{ item.mettingDate }}</span>
+                <span>{{ item.start_time }}</span>
               </li>
             </ul>
           </div>
           <div class="approve_state flex">
-            <img v-if="item.mettingState == 'qualified'" src="@/assets/image/hg.png" />
-            <img v-if="item.mettingState == 'noqualified'" src="@/assets/image/bhg.png" />
-            <img v-if="item.mettingState == 'auditing'" src="@/assets/image/shz.png" />
-            <img v-if="item.mettingState == 'pass'" src="@/assets/image/yhx.png" />
-            <img v-if="item.mettingState == 'failure'" src="@/assets/image/ysx.png" />
+            <img v-if="item.status == '1'" src="@/assets/image/hg.png" />
+            <img v-if="item.status == '2'" src="@/assets/image/bhg.png" />
+            <img v-if="item.status == '3'" src="@/assets/image/shz.png" />
+            <img v-if="item.status == '4'" src="@/assets/image/yhx.png" />
+            <img v-if="item.status == '5'" src="@/assets/image/ysx.png" />
           </div>
         </div>
       </van-list>
@@ -98,12 +98,15 @@ export default {
   name: "visitrecord",
   data() {
     return {
+      mettingUserNum: "-",
+      mettingNum: "-",
       mettingFiltrate: false,
       mettingOptionNav: false,
       loading: false, //加载
       finished: false, //完成
       page: 1, //页码
       row: 5, //每页显示条数
+      //会议列表
       mettingList: [
         // {
         //   title: "主题名称XXXX",
@@ -113,7 +116,9 @@ export default {
         //   mettingState: "new"
         // }
       ],
-      productList: ["产品1", "产品2", "产品3", "产品4", "产品5"]
+      prodectName: "",
+      productId: "",
+      productList: []
     };
   },
   created() {
@@ -128,14 +133,58 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+
+    this.getMettingNum();
   },
   methods: {
     onBack() {
       history.back();
     },
+    //获取会议总次数和人数
+    getMettingNum() {
+      this.$api
+        .meetingTotalNumber()
+        .then(res => {
+          // console.log("会议总次数", res);
+          if (res.code == 200) {
+            this.mettingNum = res.meeting_total_count;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+      this.$api
+        .meetingSumPeople()
+        .then(res => {
+          // console.log("会议总人数", res);
+          if (res.code == 200) {
+            this.mettingUserNum = res.meeting_sum_people;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+      this.$api
+        .meetingGetProductList()
+        .then(res => {
+          // console.log("产品列表", res);
+          if (res.code == 200) {
+            res.product_list.forEach(value => {
+              this.productList.push({ id: value.id, text: value.product_name });
+            });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //获取会议列表
     getMettingList() {
       console.log("当前页码", this.page);
       let params = {
+        product_id: this.productId,
         page: this.page,
         row: this.row
       };
@@ -145,22 +194,21 @@ export default {
           .then(res => {
             console.log(res);
             if (res.code == 200) {
-              if (res.doctor_apply_list.length < this.row) {
-                //   this.mettingList.push(...res.doctor_apply_list);
+              if (res.meeting_list.length < this.row) {
+                this.mettingList.push(...res.meeting_list);
                 // 加载状态结束
                 this.finished = true;
                 this.loading = false;
               } else {
-                //   this.mettingList.push(...res.doctor_apply_list);
+                this.mettingList.push(...res.meeting_list);
                 this.page++; //此处还有一个问题：页码为1时不等滑动就加载了页码2的内容，  页码为2时滑动加载了页码3和页码4的内容
                 this.loading = false;
               }
             } else {
               // 加载状态结束
+              this.loading = false;
               this.finished = true;
             }
-            // 加载状态结束
-            // this.loading = false; //注意：此处重要
           })
           .catch(error => {
             console.log(error);
@@ -169,17 +217,25 @@ export default {
     },
     productConfirm(value) {
       this.mettingFiltrate = false;
+      this.mettingOptionNav = false;
+      this.prodectName = value.text;
+      this.productId = value.id;
+
+      //筛选数据初始化
+      this.mettingList = [];
+      this.page = 1;
+      this.finished = false;
     },
     newMetting() {
       this.$router.push({ path: "/newMetting" });
     },
     //点击每一项
-    getDetail(status) {
+    getDetail(status, id) {
       console.log(status);
-      if (status != "new") {
-        this.$router.push({ path: "/mettingdetailcontent" });
+      if (status == 6) {
+        this.$router.push({ path: "/mettingdetailedit", query: { id: id } });
       } else {
-        this.$router.push({ path: "/mettingdetailedit" });
+        this.$router.push({ path: "/mettingdetailcontent", query: { id: id } });
       }
     }
   }
