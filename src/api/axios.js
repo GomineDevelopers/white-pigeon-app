@@ -52,5 +52,7 @@ let api = {
   visitList: params => post("/visitManager/visitList", params), //拜访记录
   visitEdit: params => post("/visitManager/visitEdit", params), //拜访编辑
   visitDetail: params => post("/visitManager/visitDetail", params), //拜访详情
+  visitRecord: params => post("/visitManager/visitApplyRecord", params), //拜访记录
+  developdVisit: params => post("/hospitalManager/hospitalDevelopdVisit", params), //已开发拜访
 };
 export default api;

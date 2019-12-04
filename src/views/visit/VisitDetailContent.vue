@@ -6,36 +6,38 @@
     <van-row class="doctor_detail">
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">医院</span>
-        <span>上海长海医院</span>
+        <span>{{detail.hospital_name}}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">客户</span>
-        <span>XXX医生</span>
+        <span>{{detail.doctor_name}}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">开始时间</span>
-        <span>2019-05-20 16:00</span>
+        <span>{{detail.start_time}}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">拜访目的</span>
-        <span>产品宣传</span>
+        <span>{{detail.visit_goal}}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">拜访渠道</span>
-        <span>线下</span>
+        <span>{{detail.visit_channel == 1 ? '面对面拜访' : ""}}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">产品</span>
-        <span>产品1</span>
+        <span>{{detail.product_name}}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">拜访定位</span>
-        <span>上海市上海远洋医院附近</span>
+        <span>{{detail.visit_position}}</span>
       </van-row>
       <van-row class="doctor_detail_item">
         <span>照片上传</span>
         <van-row class="visit_photo">
-          <img :src="imgItem" v-for="(imgItem,index) in visitPhoto" :key="index" />
+          <img v-if="detail.visit_image != null" :src="detail.visit_image"/>
+          <img v-if="detail.visit_image_two != null" :src="detail.visit_image_two"/>
+          <img v-if="detail.visit_image_three != null" :src="detail.visit_image_three"/>
         </van-row>
       </van-row>
     </van-row>
@@ -46,11 +48,7 @@ export default {
   name: "visitdetailcontent",
   data() {
     return {
-      visitPhoto: [
-        require("../../assets/image/img1.jpg"),
-        require("../../assets/image/img2.jpg"),
-        require("../../assets/image/img1.jpg")
-      ]
+      detail: {}
     };
   },
   created() {
@@ -66,7 +64,23 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
   },
+  mounted() {
+    let visit_id = this.$route.query.id;
+    this.getVistDetail(visit_id);
+  },
   methods: {
+    // 获取拜访详情数据
+    getVistDetail(visit_id) {
+      this.$api.visitDetail({visit_id})
+        .then( res => {
+          if (res.code == 200){
+            this.detail = res.visit_detail;
+          }
+        })
+        .catch( err => {
+          console.log(err)
+        })
+    },
     onBack() {
       history.back();
     }
@@ -88,6 +102,7 @@ export default {
   color: #a8aec1;
 }
 .visit_photo img {
+  margin-top: 10px;
   width: 31%;
   height: 4.1rem;
   margin-right: 0.3125rem;

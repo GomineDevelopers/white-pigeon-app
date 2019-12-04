@@ -63,6 +63,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "visit" */ "./views/visit/NewVisit.vue")
     },
     {
+      path: "/developvisit",
+      name: "developvisit",
+      component: () => import(/* webpackChunkName: "visit" */ "./views/visit/VisitDevelop.vue")
+    },
+    {
       path: "/mettingrecord",
       name: "mettingrecord",
       component: () => import(/* webpackChunkName: "metting" */ "./views/metting/MettingRecord.vue")
