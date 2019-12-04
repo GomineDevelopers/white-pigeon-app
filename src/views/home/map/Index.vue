@@ -243,7 +243,7 @@
       <!-- 此处医院状态为已开发医院时显示 -->
       <van-row class="pull_developed" v-show="visitShow == 1">
         <van-col span="12" class="line">
-          <router-link :to="{ path: '/newvisit' }">创建拜访</router-link>
+          <router-link :to="{ path: '/developvisit', query: {id: hosSingleData.id} }">创建拜访</router-link>
         </van-col>
         <van-col span="12">
           <router-link :to="{ path: '/newmetting2', query: { data: hospitalRouteParams } }"
@@ -536,6 +536,7 @@ export default {
             console.log(res);
             let hospitolContent = res.hospital_data;
             this.hosSingleData = {
+              id: hospitolContent.id,
               content: hospitolContent.hospital_name,
               address: hospitolContent.detail_address,
               status: status,
