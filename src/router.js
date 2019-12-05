@@ -321,6 +321,15 @@ export default new Router({
           /* webpackChunkName: "userinfo" */
           "./views/userinfo/UserInfoDetail.vue"
         )
+    },
+    {
+      path: "/selfstudy",
+      name: "selfstudy",
+      component: () =>
+        import(
+          /* webpackChunkName: "userinfo" */
+          "./views/selfstudy/SelfStudy.vue"
+        )
     }
   ]
 });

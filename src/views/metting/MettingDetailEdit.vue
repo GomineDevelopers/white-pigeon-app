@@ -553,17 +553,17 @@ export default {
         this.$toast.fail("请填写完整必填信息");
         return false;
       }
-      console.log("会议id", this.$route.query.id);
-      console.log("产品", this.productId, this.product);
-      console.log("会议主题", this.conferenceThemeId, this.conferenceTheme);
-      console.log("医院", this.hospitalId, this.hospital);
-      console.log("所属科室", this.departmentId, this.department);
-      console.log("时间", this.mettingStartTime);
-      console.log("演讲人", this.userName);
-      console.log("演讲人数", this.userNum);
-      console.log("人员照片1", this.personnelPhoto[0]);
-      console.log("人员照片2", this.personnelPhoto[1]);
-      console.log("签到照片", this.signPhoto[0]);
+      // console.log("会议id", this.$route.query.id);
+      // console.log("产品", this.productId, this.product);
+      // console.log("会议主题", this.conferenceThemeId, this.conferenceTheme);
+      // console.log("医院", this.hospitalId, this.hospital);
+      // console.log("所属科室", this.departmentId, this.department);
+      // console.log("时间", this.mettingStartTime);
+      // console.log("演讲人", this.userName);
+      // console.log("演讲人数", this.userNum);
+      // console.log("人员照片1", this.personnelPhoto[0]);
+      // console.log("人员照片2", this.personnelPhoto[1]);
+      // console.log("签到照片", this.signPhoto[0]);
       this.$toast.loading({
         message: "会议提交中...",
         forbidClick: true,
@@ -587,7 +587,7 @@ export default {
       this.$api
         .meetingEdit(postData)
         .then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             this.$toast.success("会议提交成功");
             setTimeout(() => {

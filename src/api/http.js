@@ -100,8 +100,6 @@ axios.interceptors.response.use(
             duration: 1500,
             forbidClick: true
           });
-          store.commit("setToken", null);
-          localStorage.removeItem("token");
           break;
         // 其他错误，直接抛出错误提示
         case 101:

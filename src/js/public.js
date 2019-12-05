@@ -326,9 +326,12 @@ export function setAcademicTitle(type) {
 //时间格式转换
 export function timeFormat(time) {
   // 时间格式化 2019-09-08
-  let year = time.getFullYear();
-  let month = time.getMonth() + 1;
-  let day = time.getDate();
+  var datetime = new Date();
+  datetime.setTime(time);
+  var year = datetime.getFullYear();
+  var month =
+    datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+  var day = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
   return year + "-" + month + "-" + day;
 }
 

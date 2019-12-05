@@ -20,7 +20,8 @@ import {
   Popup,
   Notify,
   Toast,
-  List
+  List,
+  Loading
 } from "vant";
 
 Vue.use(Button);
@@ -44,5 +45,6 @@ Vue.use(Popup);
 Vue.use(Notify);
 Vue.use(Toast);
 Vue.use(List);
+Vue.use(Loading);
 
 Vue.prototype.$Dialog = Dialog;
