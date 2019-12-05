@@ -63,6 +63,7 @@
               :key="index+'vi'"
             >
               <img :src="visitPhotoList" />
+              <van-icon name="clear" class="del_icon" @click="deleteImg(index)" />
             </van-row>
             <van-uploader v-show="visitPhoto.length < 3" class="upload_btn" v-model="fileList" :preview-image="false" :max-count="3" :after-read="afterRead">
               <van-row class="flex camera_icon">
@@ -290,6 +291,10 @@ export default {
         this.visitPhoto.push(res);
       });
     },
+    // 删除图片
+    deleteImg(i) {
+      this.visitPhoto.splice(i,1);
+    },
     // 创建
     createData() {
       this.checkData(1);
@@ -468,6 +473,7 @@ export default {
   min-width: 4.1rem;
   height: 4.1rem !important;
   margin-right: 0.625rem;
+  position: relative;
 }
 .after_camera .visit_img:nth-child(3n) {
   margin-right: 0rem;
@@ -475,6 +481,15 @@ export default {
 .after_camera .visit_img img {
   width: 100%;
   height: 100%;
+}
+.after_camera .visit_img .del_icon {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  color: #969799;
+  font-size: 18px;
+  background-color: #fff;
+  border-radius: 100%;
 }
 .after_camera .van-uploader{
   width: auto !important;

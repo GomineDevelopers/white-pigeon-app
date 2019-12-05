@@ -46,12 +46,12 @@ let api = {
   meetingDetail: params => post("/meetingManager/meetingDetail", params), //会议详情
   meetingEdit: params => post("/meetingManager/meetingEdit", params), //会议详情编辑提交
   hospitalDevelopdMeeting: params => post("/hospitalManager/hospitalDevelopdMeeting", params), //会议详情编辑提交
-
   hospitalApplyRecord: params => post("/hospitalManager/hospitalApplyRecord", params), //申请记录数目
   addFeedback: params => post("/feedbackManager/addFeedback", params), //帮助反馈
   loginOut: params => post("/membercreate/logout", params), //推出登录
   userCenterHospital: params => post("/hospitalManager/hospitalManager", params), //个人中心我的医院
   userCenterProduct: params => post("/hospitalManager/hospitalUserProduct", params), //个人中心我的产品
+  userCenterStatistics: params => post("/membercreate/getMyApply", params), //个人中心会议、拜访、申请、积分统计
   notify: params => post("/signManager/SignNotice", params), //消息通知
   createVisit: params => post("/visitManager/createVisit", params), //创建拜访
   visitRelation: params => post("/visitManager/visitGetInfoByHospitalId", params), //拜访关联接口

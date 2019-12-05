@@ -30,8 +30,6 @@
 </template>
 <script>
 import { setHospitalLevel, setHospitalType, setHospitalRunType } from "@/js/public";
-
-console.log(setHospitalType(1))
 export default {
   name: "hospitalmanagement",
   data() {

@@ -6,13 +6,11 @@ import router from ".././router";
 // console.log(store.state);
 
 // 环境的切换
-// if (process.env.NODE_ENV == "development") {
-//   axios.defaults.baseURL = "http://api.zjsx.com";
-// } else if (process.env.NODE_ENV == "debug") {
-//   axios.defaults.baseURL = "";
-// } else if (process.env.NODE_ENV == "production") {
-//   axios.defaults.baseURL = "";
-// }
+if (process.env.NODE_ENV == "development") {
+  axios.defaults.baseURL = "http://localhost:8080";
+} else if (process.env.NODE_ENV == "production") {
+  axios.defaults.baseURL = "http://tjj.edgrng.com/api";
+}
 
 axios.defaults.timeout = 10000; //设置请求超时
 axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8"; //设置post请求头

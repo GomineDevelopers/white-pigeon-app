@@ -11,7 +11,7 @@
           <van-row class="user_info">
             <span class="user_name">{{user.name}}</span>
             <br />
-            <span class="user_detail">{{user.id_address}}</span>
+            <span class="user_detail">{{user.address}}</span>
           </van-row>
         </van-row>
         <van-row>
@@ -21,15 +21,15 @@
       </van-row>
       <van-row class="header_user_other">
         <van-col span="6" class="other_list_info">
-          <span>243</span>
+          <span>{{statistics.meeting_total_count}}</span>
           <span>会议</span>
         </van-col>
         <van-col span="6" class="other_list_info">
-          <span>1243</span>
+          <span>{{statistics.visit_record_num}}</span>
           <span>拜访</span>
         </van-col>
         <van-col span="6" class="other_list_info">
-          <span>12</span>
+          <span>{{statistics.hospital_product_num}}</span>
           <span>申请</span>
         </van-col>
         <van-col span="6" class="other_list_info">
@@ -66,7 +66,8 @@ export default {
   data() {
     return {
       active: true,
-      user: {}
+      user: {},
+      statistics: {}
     };
   },
   created() {
@@ -84,6 +85,7 @@ export default {
   },
   mounted() {
     this.getUserInfo();
+    this.getStatistics();
   },
   
   methods: {
@@ -93,7 +95,10 @@ export default {
         .userInfo()
         .then(res => {
           if (res.code == 200) {
-            this.user = res.user;
+            this.user = {
+              name: res.user.name,
+              address: res.user.id_address
+            };
             if (res.user.is_complete == 2){
               this.$dialog.alert({
                 message: "您还未完善信息",
@@ -102,6 +107,23 @@ export default {
                 this.$router.push('/improvepersonalinfo')
               })
             }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+     // 获取会议、拜访、申请、积分统计
+    getStatistics() {
+      this.$api
+        .userCenterStatistics()
+        .then(res => {
+          if (res.code == 200) {
+            this.statistics = {
+              meeting_total_count: res.meeting_total_count,
+              visit_record_num: res.visit_record_num,
+              hospital_product_num: res.hospital_product_num
+              };
           }
         })
         .catch(error => {

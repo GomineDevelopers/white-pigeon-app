@@ -81,7 +81,7 @@
         <template v-if="item.hospital_status === 1">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            :dragging="true"
+            
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -99,7 +99,7 @@
         <template v-else-if="item.hospital_status === 2">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            :dragging="true"
+            
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -117,7 +117,7 @@
         <template v-else-if="item.hospital_status === 3">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            :dragging="true"
+            
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -135,7 +135,7 @@
         <template v-else-if="item.hospital_status === 4">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            :dragging="true"
+            
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -186,10 +186,10 @@
       </a>
     </div>
     <!-- bottom-nav end -->
-    <!-- popup start -->
+    <!-- popup start Object.keys(hosSingleData) != 0-->
     <div
       class="van-popup popup_wrap"
-      v-show="Object.keys(hosSingleData) != 0"
+      v-show="isPopup"
       :class="{ popup_show: isPopup }"
       @touchstart="touchStart($event)"
       @touchmove="touchMove($event)"
@@ -398,7 +398,7 @@ export default {
       provinceShow: false, //省份选择
       inputShow: false, //输入框隐藏
       tagShow: false, //tag标签模块隐藏
-      isPopup: true, //显示医院详情弹窗
+      isPopup: false, //显示医院详情弹窗
       keywords: "", //输入框关键字
       hospitalSearchList: [
         // {
@@ -438,58 +438,12 @@ export default {
         offset: bmLabelOffset
       },
       //地图医院点数据
-      hospitalData: [
-        //医院数据
-        // {
-        //   // position: { lng: 121.5199, lat: 31.24347 },
-        //   lng: 121.5199,
-        //   lat: 31.24347,
-        //   content: "上海儿童医学中心",
-        //   status: 1,
-        //   address: "上海浦东新区即墨路150号",
-        //   type: ["综合医院", "三级甲等", "公立医院"]
-        // },
-        // {
-        //   // position: { lng: 121.5307, lat: 31.21144 },
-        //   lng: 121.5307,
-        //   lat: 31.21144,
-        //   content: "上海东方医院",
-        //   status: 2,
-        //   address: "上海市浦东新区高桥镇大同路358号",
-        //   type: ["公立医院"]
-        // }
-      ],
+      hospitalData: [],
       //单个医院详细数据
-      hosSingleData: {
-        // lng: 121.5199,
-        // lat: 31.24347,
-        // content: "上海儿童医学中心",
-        // status: 1,
-        // address: "上海浦东新区即墨路150号",
-        // type: ["综合医院", "三级甲等", "公立医院"]
-      },
+      hosSingleData: {},
       visitShow: "", //已开发医院显示创建拜访和创建会议
       //医院产品数据
-      hospitalFoldData: [
-        // {
-        //   title: "美唯宁",
-        //   to: "流向：26371盒",
-        //   cont:
-        //     "<p>潜力：一般</p><p>中标价：32.2元/盒</p> <p>主要科室：消化内科</p><p>适应症：胃灼热、嗳气、恶心、呕吐、早饱、上腹胀等 消化道症状</p>"
-        // },
-        // {
-        //   title: "美唯宁",
-        //   to: "流向：26371盒",
-        //   cont:
-        //     "<p>潜力：一般</p><p>中标价：32.2元/盒</p> <p>主要科室：消化内科</p><p>适应症：胃灼热、嗳气、恶心、呕吐、早饱、上腹胀等 消化道症状</p>"
-        // },
-        // {
-        //   title: "美唯宁",
-        //   to: "流向：26371盒",
-        //   cont:
-        //     "<p>潜力：一般</p><p>中标价：32.2元/盒</p> <p>主要科室：消化内科</p><p>适应症：胃灼热、嗳气、恶心、呕吐、早饱、上腹胀等 消化道症状</p>"
-        // }
-      ],
+      hospitalFoldData: [],
       hospitalRouteParams: {}, //用户选中的医院ID
       hospitalDetailScrollHeight: 0,
       startY: 0
@@ -529,6 +483,7 @@ export default {
       this.visitShow = data.hospital_status;
       this.currentPostion.lng = data.hospital_longtude;
       this.currentPostion.lat = data.hospital_latitude;
+      this.isPopup = true;
       let status = data.hospital_status; // 1-已开发  2-不可开发  3-空白医院  4-开发中
       let params = { hospital_id: data.id };
       if (status == 1) {

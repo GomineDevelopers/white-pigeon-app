@@ -7,9 +7,9 @@
         <van-row class="top_image flex flex_align_center border_bom">
           <img src="https://img.yzcdn.cn/vant/cat.jpeg" @click="goUserInfo" />
           <van-row class="user_info">
-            <span class="user_name" @click="goUserInfo">徐尚</span>
+            <span class="user_name" @click="goUserInfo">{{user.name}}</span>
             <br />
-            <span class="user_detail">上海市-静安区</span>
+            <span class="user_detail">{{user.address}}</span>
           </van-row>
         </van-row>
         <van-row>
@@ -77,6 +77,7 @@ export default {
   data() {
     return {
       notify: 0,
+      user: {},
       asideShow: false,
       navActive: 0,
       navList: [
@@ -146,6 +147,7 @@ export default {
   mounted() {
     this.setNavActive();
     this.getNotifyData();
+    this.getUserInfo();
   },
   methods: {
     navHandle(index) {
@@ -179,6 +181,22 @@ export default {
     },
     goUserInfo() {
       this.$router.push({ path: "/userinfocenter" });
+    },
+    // 获取用户信息
+    getUserInfo() {
+      this.$api
+        .userInfo()
+        .then(res => {
+          if (res.code == 200) {
+            this.user = {
+              name: res.user.name,
+              address: res.user.id_address
+              };
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     // 获取消息数据条数
     getNotifyData() {
@@ -253,12 +271,17 @@ export default {
   font-size: 0.75rem;
   line-height: 1.25rem;
   margin-left: 0.5rem;
+  overflow: hidden;
 }
 .top_image .user_name {
   font-weight: bold;
 }
 .top_image .user_detail {
+  display: block;
   font-size: 0.6875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .asideNavitem {
   margin-top: 0.75rem;
