@@ -23,10 +23,10 @@
           <van-button type="info" @click="login">登&nbsp;录</van-button>
         </van-row>
         <van-row class="other_operation flex">
-          <van-col span="12" class="justify_left">
+          <!-- <van-col span="12" class="justify_left">
             <router-link :to="{ path: '/loginsms' }">短信验证码登录</router-link>
-          </van-col>
-          <van-col span="12" class="justify_right">
+          </van-col> -->
+          <van-col span="24" class="justify_left">
             <router-link :to="{ path: '/register' }">新用户注册</router-link>
           </van-col>
         </van-row>
@@ -91,7 +91,9 @@ export default {
                   } else {
                     if (this.$route.query.redirect) {
                       console.log("重定向地址", this.$route.query.redirect);
-                      this.$router.replace({ path: decodeURIComponent(this.$route.query.redirect) });
+                      this.$router.replace({
+                        path: decodeURIComponent(this.$route.query.redirect)
+                      });
                     } else {
                       this.$router.replace({ path: "/" });
                     }
