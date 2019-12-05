@@ -4,26 +4,45 @@
       <van-nav-bar title="识别测试" />
     </van-row>
     <van-row class="main_body">
-      <van-row v-for="(item,index) in questionList" :key="index+'q'">
-        <van-row class="answer_item" v-show="showQuestion==index+1">
-          <van-row class="answer_num">{{index+1}}/{{questionList.length}}&nbsp;单选题</van-row>
-          <van-row class="answer_question">{{item.questionTitle}}：</van-row>
+      <van-row v-for="(item, index) in questionList" :key="index + 'q'">
+        <van-row class="answer_item" v-show="showQuestion == index + 1">
+          <van-row class="answer_num"
+            >{{ index + 1 }}/{{ questionList.length }}&nbsp;单选题</van-row
+          >
+          <van-row class="answer_question">{{ item.questionTitle }}：</van-row>
           <van-row class="answer_option">
             <van-radio-group v-model="item.questionAnswer">
-              <van-cell v-for="(option,index2) in item.questionOption" :key="index2+'o'" :title="option" clickable @click="item.questionAnswer = option">
+              <van-cell
+                v-for="(option, index2) in item.questionOption"
+                :key="index2 + 'o'"
+                :title="option"
+                clickable
+                @click="item.questionAnswer = option"
+              >
                 <van-radio slot="right-icon" :name="option" />
               </van-cell>
             </van-radio-group>
           </van-row>
           <van-row class="next_btn">
-            <van-button type="info" @click="nextQuestion" v-if="index<questionList.length-1">下一题</van-button>
-            <van-button type="info" @click="submit" v-if="index==questionList.length-1">提交</van-button>
+            <van-button type="info" @click="nextQuestion" v-if="index < questionList.length - 1"
+              >下一题</van-button
+            >
+            <van-button type="info" @click="submit" v-if="index == questionList.length - 1"
+              >提交</van-button
+            >
           </van-row>
         </van-row>
       </van-row>
     </van-row>
     <van-row class="refuse_daio">
-      <van-dialog v-model="dialogShow" title="如果您有推荐码，即可使用推荐码免试进入！" show-cancel-button confirm-button-text="提交" cancel-button-text="识别测试" @confirm="referraCode">
+      <van-dialog
+        v-model="dialogShow"
+        title="如果您有推荐码，即可使用推荐码免试进入！"
+        show-cancel-button
+        confirm-button-text="提交"
+        cancel-button-text="识别测试"
+        @confirm="referraCode"
+      >
         <van-field class="refuse_text" v-model="phone" placeholder />
       </van-dialog>
     </van-row>
@@ -32,6 +51,7 @@
 <script>
 export default {
   name: "answer",
+  inject: ["reload"], //刷新页面
   data() {
     return {
       dialogShow: true,
@@ -46,7 +66,7 @@ export default {
           questionTitle: "可用来注册的是",
           questionOption: ["通用名", "商用名", "化学名"],
           questionAnswer: "",
-          answer: '商品名'
+          answer: "商品名"
         },
         {
           questionTitle: "目前我国生物制药企业最大的问题是",
@@ -57,43 +77,48 @@ export default {
             "以上说法都不正确"
           ],
           questionAnswer: "",
-          answer: '缺乏具有自主知识产权的产品'
+          answer: "缺乏具有自主知识产权的产品"
         },
         {
           questionTitle: "药品生产质量管理规范的英文缩写为",
           questionOption: ["WHO", "OTC", "GMP", "FDA"],
           questionAnswer: "",
-          answer: 'GMP'
+          answer: "GMP"
         },
         {
           questionTitle: "非处方药的英文缩写",
           questionOption: ["WHO", "OTC", "GMP", "GSP"],
           questionAnswer: "",
-          answer: 'OTC'
+          answer: "OTC"
         },
         {
           questionTitle: "一般情况下，对患者的诊断治疗等具有最终决定权的是",
           questionOption: ["主任医师", "教授", "科主任", "院长"],
           questionAnswer: "",
-          answer: '科主任'
+          answer: "科主任"
         },
         {
           questionTitle: "药品供应质量管理规范的英文缩写",
           questionOption: ["WHO", "OTC", "GMP", "GSP"],
           questionAnswer: "",
-          answer: 'GSP'
+          answer: "GSP"
         },
         {
           questionTitle: "药物滥用指的是",
-          questionOption: ["医生用药不当", "长期大量食用某种药物", "未掌握药物适用症", "无病情依据的长期自我用药"],
+          questionOption: [
+            "医生用药不当",
+            "长期大量食用某种药物",
+            "未掌握药物适用症",
+            "无病情依据的长期自我用药"
+          ],
           questionAnswer: "",
-          answer: '无病情依据的长期自我用药'
+          answer: "无病情依据的长期自我用药"
         },
         {
           questionTitle: "建立新的医疗机构分类管理制度，将医疗机构分为___和___两类进行管理",
           questionOption: ["公立，私立", "全民，集体", "非营利性，营利性", "医疗，保健"],
           questionAnswer: "",
-          answer: '非营利性，营利性'
+          answer: "非营利性，营利性"
         },
         {
           questionTitle: "药品的通用名是指",
@@ -104,7 +129,7 @@ export default {
             "别名"
           ],
           questionAnswer: "",
-          answer: '按中国药典委员会的药品命名原则制定的药品名称'
+          answer: "按中国药典委员会的药品命名原则制定的药品名称"
         },
         {
           questionTitle: "药品是指",
@@ -115,8 +140,8 @@ export default {
             "用于预防，诊断，治疗人疾病的物质"
           ],
           questionAnswer: "",
-          answer: '用于预防，诊断，治疗人疾病的物质'
-        },
+          answer: "用于预防，诊断，治疗人疾病的物质"
+        }
       ]
     };
   },
@@ -143,65 +168,68 @@ export default {
     },
     //提交答题
     submit() {
-      let score = 0
+      let score = 0;
       this.questionList.forEach(value => {
         if (value.questionAnswer == value.answer) {
-          score += 1
+          score += 1;
         }
-      })
-      console.log(score)
-      let identify_status = score >= 8 ? '1' : '2';
-      console.log(identify_status)
-      let params = { identify_status: identify_status }
-      this.$api.question(params)
+      });
+      console.log(score);
+      let identify_status = score >= 8 ? "1" : "2";
+      console.log(identify_status);
+      let params = { identify_status: identify_status };
+      this.$api
+        .question(params)
         .then(res => {
-          console.log(res)
+          console.log(res);
           if (res.code == 200) {
             this.$toast.success("答题提交成功！");
             setTimeout(() => {
-              this.$router.push({ path: '/' })
-            }, 1000)
+              this.$router.push({ path: "/" });
+            }, 1000);
           } else if (res.code == 9002) {
             this.$toast.fail("对不起您没有通过答题！");
-            this.$router.push({ path: '/answer' })
+            setTimeout(() => {
+              this.reload();
+            }, 1500);
           } else if (res.code == 9004) {
             this.$toast.fail("你已经通过答题了,请勿重复提交");
             setTimeout(() => {
-              this.$router.push({ path: '/' })
-            }, 1000)
+              this.$router.push({ path: "/" });
+            }, 1500);
           }
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
     //推荐码
     referraCode() {
-      console.log(this.phone)
-      let params = { referra_code: this.phone }
-      this.$api.referraCode(params)
+      console.log(this.phone);
+      let params = { referra_code: this.phone };
+      this.$api
+        .referraCode(params)
         .then(res => {
-          console.log(res)
+          console.log(res);
           if (res.code == 200) {
             this.$toast.success("推荐码验证成功！");
             setTimeout(() => {
-              this.$router.push({ path: '/' })
-            }, 1000)
+              this.$router.push({ path: "/" });
+            }, 1000);
           } else if (res.code == 9002) {
             this.$toast.fail("输入的推荐码有误！");
-            this.$router.push({ path: '/answer' })
+            this.$router.push({ path: "/answer" });
           } else if (res.code == 9004) {
             this.$toast.fail("你已经提交过了,请勿重复提交");
             setTimeout(() => {
-              this.$router.push({ path: '/' })
-            }, 1000)
+              this.$router.push({ path: "/" });
+            }, 1000);
           }
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     }
-
   }
 };
 </script>

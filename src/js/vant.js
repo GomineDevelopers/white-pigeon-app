@@ -21,7 +21,8 @@ import {
   Notify,
   Toast,
   List,
-  Loading
+  Loading,
+  Checkbox
 } from "vant";
 
 Vue.use(Button);
@@ -46,5 +47,6 @@ Vue.use(Notify);
 Vue.use(Toast);
 Vue.use(List);
 Vue.use(Loading);
+Vue.use(Checkbox);
 
 Vue.prototype.$Dialog = Dialog;

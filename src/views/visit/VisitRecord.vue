@@ -9,20 +9,20 @@
     <van-row class="top_nav border_bom">
       <van-row class="top_nav_list">
         <van-col
-          :class="index === navActive ? 'active':''"
-          v-for="(navItem,index) in navList"
-          :key="index+'a'"
-          @click="navHandle(index,navItem.status)"
+          :class="index === navActive ? 'active' : ''"
+          v-for="(navItem, index) in navList"
+          :key="index + 'a'"
+          @click="navHandle(index, navItem.status)"
         >
-          <van-row>{{navItem.num}}</van-row>
-          <van-row>{{navItem.name}}</van-row>
+          <van-row>{{ navItem.num }}</van-row>
+          <van-row>{{ navItem.name }}</van-row>
         </van-col>
       </van-row>
-      <!-- <van-row class="newest_date">最新核销日期：2019.10.12</van-row>  二期开发 --> 
+      <!-- <van-row class="newest_date">最新核销日期：2019.10.12</van-row>  二期开发 -->
     </van-row>
 
     <van-row class="main_body3">
-       <visitrecord-list :status="status"></visitrecord-list>
+      <visitrecord-list :status="status"></visitrecord-list>
     </van-row>
   </van-row>
 </template>
@@ -43,7 +43,7 @@ export default {
         { name: "不合格", num: 0, status: 2 },
         { name: "已核销", num: 0, status: 4 },
         { name: "已失效", num: 0, status: 5 }
-      ],
+      ]
     };
   },
   mounted() {
@@ -80,7 +80,7 @@ export default {
         })
         .catch(error => {
           console.log(error);
-        }); 
+        });
     },
     navHandle(index, status) {
       this.navActive = index;
@@ -91,8 +91,41 @@ export default {
     },
     //创建拜访
     newVisit() {
-      this.$router.push({ path: "/newvisit" });
-    },
+      this.$api
+        .userInfo()
+        .then(res => {
+          //判断用户银行卡信息是否完善
+          if (
+            res.user.account_name == null ||
+            res.user.card_no == null ||
+            res.user.open_bank == null
+          ) {
+            //银行卡信息不完善跳转银行卡完善信息页
+            this.$Dialog
+              .confirm({
+                message: "请先完善银行卡信息！",
+                confirmButtonText: "前往",
+                cancelButtonText: "取消"
+              })
+              .then(() => {
+                this.$router.push({
+                  path: "/bankcard",
+                  query: {
+                    redirect: this.$router.currentRoute.fullPath
+                  }
+                });
+              })
+              .catch(() => {
+                console.log("取消完善银行卡信息！");
+              });
+          } else {
+            this.$router.push({ path: "/newvisit" });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
 };
 </script>

@@ -7,9 +7,9 @@
         <van-row class="top_image flex flex_align_center border_bom">
           <img src="https://img.yzcdn.cn/vant/cat.jpeg" @click="goUserInfo" />
           <van-row class="user_info">
-            <span class="user_name" @click="goUserInfo">{{user.name}}</span>
+            <span class="user_name" @click="goUserInfo">{{ user.name }}</span>
             <br />
-            <span class="user_detail">{{user.address}}</span>
+            <span class="user_detail">{{ user.address }}</span>
           </van-row>
         </van-row>
         <van-row>
@@ -47,13 +47,14 @@
         :span="navItem.span"
         v-for="(navItem, index) in navList"
         :key="index + 'nav'"
-        @click="navHandle(index)"
+        @click="navHandle(index, navItem.link)"
       >
-        <router-link
+        <span :class="index === navActive ? 'active_Link' : ''">{{ navItem.name }}</span>
+        <!-- <router-link
           :class="index === navActive ? 'active_Link' : ''"
           :to="{ path: navItem.link }"
           >{{ navItem.name }}</router-link
-        >
+        > -->
       </van-col>
       <van-col
         span="3"
@@ -119,7 +120,7 @@ export default {
           src: require("../assets/image/yy.png"),
           link: "/hospitalmanagement"
         },
-        { name: "资料", src: require("../assets/image/zl.png"), link: "/selfstudy" },
+        { name: "资料", src: require("../assets/image/zl.png"), link: "/selfstudy" }
         // {
         //   name: "审批",
         //   src: require("../assets/image/sp.png"),
@@ -150,8 +151,52 @@ export default {
     this.getUserInfo();
   },
   methods: {
-    navHandle(index) {
-      this.navActive = index;
+    navHandle(index, path) {
+      console.log(index, path);
+      if (index == 1) {
+        this.$api
+          .userInfo()
+          .then(res => {
+            //判断用户银行卡信息是否完善
+            if (
+              res.user.account_name == null ||
+              res.user.card_no == null ||
+              res.user.open_bank == null
+            ) {
+              //银行卡信息不完善跳转银行卡完善信息页
+              this.$Dialog
+                .confirm({
+                  message: "请先完善银行卡信息！",
+                  confirmButtonText: "前往",
+                  cancelButtonText: "取消"
+                })
+                .then(() => {
+                  this.$router.push({
+                    path: "/bankcard",
+                    query: {
+                      redirect: this.$router.currentRoute.fullPath
+                    }
+                  });
+                })
+                .catch(() => {
+                  console.log("取消完善银行卡信息！");
+                });
+            } else {
+              this.navActive = index;
+              //银行卡信息完善跳转签约
+              this.$router.push({ path: path });
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else {
+        this.navActive = index;
+        this.$router.push({ path: path });
+      }
+    },
+    asideNavRoute(path) {
+      console.log(path);
     },
     setNavActive() {
       let routePath = this.$route.path;
@@ -191,12 +236,12 @@ export default {
             this.user = {
               name: res.user.name,
               address: res.user.id_address
-              };
+            };
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     // 获取消息数据条数
     getNotifyData() {
@@ -231,6 +276,9 @@ export default {
   z-index: 99;
   padding: 0rem 0.5rem;
 }
+.home_nav_bar span {
+  font-size: 0.6875rem;
+}
 .left_nav,
 .right_notice {
   font-size: 1rem;
@@ -258,6 +306,8 @@ export default {
 .aside_nav {
   padding: 0rem 0.75rem;
   text-align: left;
+  position: relative;
+  height: 100%;
 }
 .top_image {
   height: 5rem;
@@ -292,7 +342,14 @@ export default {
   margin-right: 0.5rem;
 }
 .bottom_nav {
-  margin-top: 4.5rem;
+  /* margin-top: 4.5rem; */
+  position: absolute;
+  bottom: 1.25rem;
+  /* left: 0;
+  right: 0; */
+  left: 0.75rem;
+  right: 0rem;
+  text-align: center;
 }
 .bottom_nav span {
   font-size: 0.6875rem;

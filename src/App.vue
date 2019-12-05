@@ -1,16 +1,23 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view v-if="isRouterAlive" />
   </div>
 </template>
 <script>
 export default {
+  name: "app",
+  provide() {
+    return {
+      reload: this.reload
+    };
+  },
   data() {
     return {
       active: 0,
       icon: {
         active: "home"
-      }
+      },
+      isRouterAlive: true
     };
   },
   created() {
@@ -24,6 +31,14 @@ export default {
       plusReady();
     } else {
       document.addEventListener("plusready", plusReady, false);
+    }
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+      });
     }
   }
 };

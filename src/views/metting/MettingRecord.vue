@@ -227,7 +227,40 @@ export default {
       this.finished = false;
     },
     newMetting() {
-      this.$router.push({ path: "/newMetting" });
+      this.$api
+        .userInfo()
+        .then(res => {
+          //判断用户银行卡信息是否完善
+          if (
+            res.user.account_name == null ||
+            res.user.card_no == null ||
+            res.user.open_bank == null
+          ) {
+            //银行卡信息不完善跳转银行卡完善信息页
+            this.$Dialog
+              .confirm({
+                message: "请先完善银行卡信息！",
+                confirmButtonText: "前往",
+                cancelButtonText: "取消"
+              })
+              .then(() => {
+                this.$router.push({
+                  path: "/bankcard",
+                  query: {
+                    redirect: this.$router.currentRoute.fullPath
+                  }
+                });
+              })
+              .catch(() => {
+                console.log("取消完善银行卡信息！");
+              });
+          } else {
+            this.$router.push({ path: "/newMetting" });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     //点击每一项
     getDetail(status, id) {

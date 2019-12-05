@@ -23,6 +23,10 @@
         <van-button type="info" @click="registerInfo">注&nbsp;册</van-button>
       </van-row>
     </van-row>
+    <van-row class="login_protocol flex flex_align_center flex_justify_center">
+      <van-checkbox v-model="checked" shape="square">我已阅读并同意</van-checkbox
+      ><router-link :to="{ path: '/loginprotocol' }">《用户注册协议》</router-link>
+    </van-row>
   </van-row>
 </template>
 <script>
@@ -34,7 +38,8 @@ export default {
       password: "",
       passwordAgain: "",
       authCode: "",
-      isDisable: true
+      isDisable: true,
+      checked: true
     };
   },
   methods: {
@@ -105,6 +110,13 @@ export default {
         });
         return false;
       }
+      if (!this.checked) {
+        this.$notify({
+          type: "warning",
+          message: "请阅读并同意《用户注册协议》！"
+        });
+        return false;
+      }
       let postData = {
         mobile: this.phone,
         password: this.password,
@@ -129,5 +141,20 @@ export default {
   }
 };
 </script>
-<style scoped>
+
+<style scpoed>
+.login_protocol {
+  position: fixed;
+  bottom: 1.875rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.625rem;
+}
+.van-checkbox__icon {
+  font-size: 0.75rem;
+}
+.login_protocol span {
+  font-size: 0.625rem;
+}
 </style>

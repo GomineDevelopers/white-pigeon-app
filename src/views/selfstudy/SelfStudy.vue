@@ -16,7 +16,7 @@
           v-show="infomationList.length == 0"
         />
         <van-row class="self_study_content" v-show="active">
-          <span class="self_study_title" v-show="infomationList.length > 0">公司政策</span>
+          <!-- <span class="self_study_title" v-show="infomationList.length > 0">公司政策</span> -->
           <van-row>
             <ul>
               <li v-for="(item, index) in infomationList" :key="index + 'a'">
@@ -26,7 +26,7 @@
           </van-row>
         </van-row>
         <van-row class="self_study_content" v-show="!active">
-          <span class="self_study_title" v-show="infomationList.length > 0">产品资料</span>
+          <!-- <span class="self_study_title" v-show="infomationList.length > 0">产品资料</span> -->
           <van-row>
             <ul>
               <li v-for="(item2, index2) in infomationList" :key="index2 + 'b'">
@@ -98,7 +98,7 @@ export default {
   min-height: 75vh;
 }
 .top_nav {
-  margin-bottom: 0.8rem;
+  margin-bottom: 1.2rem;
 }
 .top_nav span {
   margin-right: 1.2rem;
@@ -125,7 +125,7 @@ export default {
 .self_study_content ul li {
   list-style: none;
   font-size: 0.625rem;
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   color: #333;
 }
 .self_study_content ul li::before {

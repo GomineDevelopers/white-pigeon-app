@@ -81,7 +81,6 @@
         <template v-if="item.hospital_status === 1">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -99,7 +98,6 @@
         <template v-else-if="item.hospital_status === 2">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -117,7 +115,6 @@
         <template v-else-if="item.hospital_status === 3">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -135,7 +132,6 @@
         <template v-else-if="item.hospital_status === 4">
           <bm-marker
             :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            
             @click="clickHandler(item)"
             v-bind:key="index"
             :icon="{
@@ -243,14 +239,16 @@
       <!-- 此处医院状态为已开发医院时显示 -->
       <van-row class="pull_developed" v-show="visitShow == 1">
         <van-col span="12" class="line">
-          <router-link :to="{ path: '/developvisit', query: { id: hosSingleData.id } }"
+          <span @click="creat(1)">创建拜访</span>
+          <!-- <router-link :to="{ path: '/developvisit', query: { id: hosSingleData.id } }"
             >创建拜访</router-link
-          >
+          > -->
         </van-col>
         <van-col span="12">
-          <router-link :to="{ path: '/newmetting2', query: { data: hospitalRouteParams } }"
+          <span @click="creat(2)">创建会议</span>
+          <!-- <router-link :to="{ path: '/newmetting2', query: { data: hospitalRouteParams } }"
             >创建会议</router-link
-          >
+          > -->
         </van-col>
       </van-row>
 
@@ -388,9 +386,9 @@ let bmLabelOffset = { width: -16, height: 32 }; // 定义覆盖层字体位置
 let bmIconSize = { width: 36, height: 36 }; // 定义覆盖层图标大小
 export default {
   name: "index",
+  inject: ["reload"], //刷新页面
   data() {
     return {
-      inject: ["reload"], //刷新页面
       dialogShow: false, //省份输入框
       isComplete: null, //用户是否完善信息
       areaList: AreaList, // 指定数据源
@@ -473,9 +471,9 @@ export default {
       // this.center.lat = 31.222785;
       let geoLocation = new BMap.Geolocation();
       geoLocation.getCurrentPosition(r => {
-        console.log(r)
+        console.log(r);
         // this.center = { lng: r.longitude, lat: r.latitude}
-      })
+      });
       this.zoom = 13;
     },
     //点击医院获取详细信息
@@ -738,16 +736,18 @@ export default {
     },
     //提交省数据
     provinceSubmit() {
-      console.log(this.provinceValue);
+      // console.log(this.provinceValue);
       if (this.provinceValue[0].code) {
         let params = { province_code: this.provinceValue[0].code };
         this.$api
           .selectProvice(params)
           .then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.code == 200) {
               this.$toast.success("提交成功！");
-              this.reload(); //刷新当前页面，加载医院数据
+              setTimeout(() => {
+                this.reload(); //刷新当前页面，加载医院数据
+              }, 1500);
             } else if (res.code == 9002) {
               this.$toast.fail("该省份没有医院信息");
             } else {
@@ -842,6 +842,50 @@ export default {
     },
     settingEvent(event) {
       event.stopPropagation(); //此区域不受上面方法的影响
+    },
+
+    //点击创建
+    creat(type) {
+      let path;
+      if (type == 1) {
+        path = "/newvisit";
+      } else if (type == 2) {
+        path = "/newmetting";
+      }
+      this.$api
+        .userInfo()
+        .then(res => {
+          //判断用户银行卡信息是否完善
+          if (
+            res.user.account_name == null ||
+            res.user.card_no == null ||
+            res.user.open_bank == null
+          ) {
+            //银行卡信息不完善跳转银行卡完善信息页
+            this.$Dialog
+              .confirm({
+                message: "请先完善银行卡信息！",
+                confirmButtonText: "前往",
+                cancelButtonText: "取消"
+              })
+              .then(() => {
+                this.$router.push({
+                  path: "/bankcard",
+                  query: {
+                    redirect: this.$router.currentRoute.fullPath
+                  }
+                });
+              })
+              .catch(() => {
+                console.log("取消完善银行卡信息！");
+              });
+          } else {
+            this.$router.push({ path: path });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
@@ -987,7 +1031,7 @@ export default {
   margin-top: 0.35rem;
   padding-top: 0.5rem;
 }
-.pull_developed a {
+.pull_developed span {
   font-size: 0.75rem;
   color: #3399ff;
 }

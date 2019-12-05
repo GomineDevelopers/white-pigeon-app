@@ -119,6 +119,15 @@ export default new Router({
         )
     },
     {
+      path: "/loginprotocol",
+      name: "loginprotocol",
+      component: () =>
+        import(
+          /* webpackChunkName: "login" */
+          "./views/login/LoginProtocol.vue"
+        )
+    },
+    {
       path: "/loginsms",
       name: "loginsms",
       component: () => import(/* webpackChunkName: "login" */ "./views/login/LoginSMS.vue")
