@@ -527,6 +527,7 @@ export default {
 .start_time {
   height: 1.4rem;
   color: #615d5d;
+  border-bottom: 1px solid #eee;
 }
 .product_content {
   margin-top: 0.625rem;
