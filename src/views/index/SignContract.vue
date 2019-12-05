@@ -243,6 +243,7 @@
               ></canvas>
               <van-icon class="reset_btn" name="replay" @click="resetSign" />
             </div>
+            <span class="strat_time">日期：{{ startTime }}</span>
             <!-- <img :src="img" /> -->
           </van-row>
         </van-row>
@@ -346,7 +347,7 @@ export default {
       this.$api
         .getContractInfo(params)
         .then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             this.$toast.clear();
             this.firstPartyName = res.getContractInfo.product_company; //甲方名称
@@ -358,6 +359,8 @@ export default {
             this.product = res.getContractInfo.product_name;
             this.content = res.getContractInfo.product_name + "产品的所有甲方指定推广宣传内容";
             this.hospital = res.getContractInfo.hospital_name;
+          } else {
+            this.$toast.fail(res.message);
           }
         })
         .catch(error => {
@@ -512,7 +515,7 @@ export default {
   margin-top: 0.8rem;
 }
 .sign_matter {
-  margin-top: 0.625rem;
+  margin: 0.625rem 0rem;
   font-size: 0.75rem;
 }
 .sign_title1 {
@@ -610,5 +613,8 @@ canvas {
   color: #3399ff;
   margin-right: 5px;
   margin-top: -28px;
+}
+.strat_time {
+  font-size: 0.6875rem;
 }
 </style>

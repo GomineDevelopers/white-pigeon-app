@@ -6,16 +6,18 @@
     <van-row class="main_body">
       <van-row
         class="notify_body"
-        @click="toSign"
-        v-for="(notifyItem,index) in notifyList"
+        @click="toSign(notifyItem.id)"
+        v-for="(notifyItem, index) in notifyList"
         :key="index"
       >
-        <van-row class="notify_date">{{notifyItem.modify_time}}</van-row>
+        <van-row class="notify_date">{{ notifyItem.modify_time }}</van-row>
         <van-row class="notify_content">
           <van-row class="notify_title">您有一个新申请已通过</van-row>
-          <van-row
-            class="notify_text"
-          >您申请的{{notifyItem.hospital_name}}已于{{notifyItem.modify_time}}已经通过审核，请您及时查看！</van-row>
+          <van-row class="notify_text"
+            >您申请的{{ notifyItem.hospital_name }}已于{{
+              notifyItem.modify_time
+            }}已经通过审核，请您及时查看！</van-row
+          >
         </van-row>
       </van-row>
     </van-row>
@@ -52,6 +54,7 @@ export default {
         .notify()
         .then(res => {
           if (res.code == 200) {
+            console.log(res);
             this.notifyList = res.sign_notice_list;
           }
         })
@@ -60,7 +63,7 @@ export default {
         });
     },
     // 跳转签约页面
-    toSign() {
+    toSign(id) {
       this.$api
         .userInfo()
         .then(res => {
@@ -90,7 +93,7 @@ export default {
               });
           } else {
             //银行卡信息完善跳转签约
-            this.$router.push({ path: "/signcontract" });
+            this.$router.push({ path: "/signcontract", query: { id: id } });
           }
         })
         .catch(error => {
