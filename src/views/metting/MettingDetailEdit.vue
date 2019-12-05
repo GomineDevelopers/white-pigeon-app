@@ -375,7 +375,7 @@ export default {
               this.personnelPhoto.push(data.personnel_image_two);
             }
             if (data.sign_image != null) {
-              this.personnelPhoto.push(data.sign_image);
+              this.signPhoto.push(data.sign_image);
             }
             this.getInfoByProductId();
           }
