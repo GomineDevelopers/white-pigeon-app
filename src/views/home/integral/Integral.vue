@@ -9,7 +9,7 @@
         <van-row class="integral_total">
           <span>累计积分总额</span>
           <span>
-            <i>67341</i>分
+            <i>0</i>分
           </span>
         </van-row>
         <van-row class="integral_detail">
@@ -18,23 +18,23 @@
             <ul>
               <li>
                 <span>累计已返积分</span>
-                <span>+4664.21</span>
+                <span>+0.00</span>
               </li>
               <li>
                 <span>本次业绩积分</span>
-                <span>+42311.19</span>
+                <span>+0.00</span>
               </li>
               <li>
                 <span>本次行为积分</span>
-                <span>+11298.08</span>
+                <span>+0.00</span>
               </li>
               <li>
                 <span>本次可提积分</span>
-                <span>+21234.21</span>
+                <span>+0.00</span>
               </li>
             </ul>
           </van-row>
-          <van-row class="cancel_date">核销日期：2019.10.12</van-row>
+          <van-row class="cancel_date">核销日期：xxxx.xx.xx</van-row>
         </van-row>
       </van-row>
     </van-row>

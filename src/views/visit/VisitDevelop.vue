@@ -65,7 +65,7 @@
               <img :src="visitPhotoList" />
               <van-icon name="clear" class="del_icon" @click="deleteImg(index)" />
             </van-row>
-            <van-uploader v-show="visitPhoto.length < 3" class="upload_btn" v-model="fileList" :preview-image="false" :max-count="3" :after-read="afterRead">
+            <van-uploader v-show="visitPhoto.length < 3" class="upload_btn" v-model="fileList" capture="camera" :preview-image="false" :max-count="3" :after-read="afterRead">
               <van-row class="flex camera_icon">
                 <van-icon name="photograph" />
                 <span>点击拍照</span>

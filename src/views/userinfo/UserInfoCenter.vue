@@ -36,7 +36,7 @@
           <span>216371</span>
           <span class="jifen flex flex_align_center">
             积分
-            <van-icon name="eye" class="eye_icon" />
+            <!-- <van-icon name="eye" class="eye_icon" /> -->
           </span>
         </van-col>
       </van-row>
