@@ -10,36 +10,26 @@
         <van-row class="party">
           <van-row class="party_item">
             <van-row>甲方：</van-row>
-            <van-row>
-              <van-field v-model="firstPartyName" disabled />
-            </van-row>
+            <span class="content_detail">{{ firstPartyName }}</span>
           </van-row>
         </van-row>
         <!-- 乙方 -->
         <van-row class="party second_party">
           <van-row class="party_item">
             <van-row>乙方（服务商）名称：</van-row>
-            <van-row>
-              <van-field v-model="secondPartyName" disabled />
-            </van-row>
+            <span class="content_detail">{{ secondPartyName }}</span>
           </van-row>
           <van-row class="party_item">
             <van-row>身份证号：</van-row>
-            <van-row>
-              <van-field v-model="IDcard" disabled />
-            </van-row>
+            <span class="content_detail">{{ IDcard }}</span>
           </van-row>
           <van-row class="party_item">
             <van-row>家庭住址：</van-row>
-            <van-row>
-              <van-field v-model="address" disabled />
-            </van-row>
+            <span class="content_detail">{{ address }}</span>
           </van-row>
           <van-row class="party_item">
             <van-row>联系方式：</van-row>
-            <van-row>
-              <van-field v-model="tel" type="number" disabled />
-            </van-row>
+            <span class="content_detail">{{ tel }}</span>
           </van-row>
         </van-row>
 
@@ -70,23 +60,18 @@
             <span>1.推广宣传内容：</span>
             <van-row class="marign_top_12">
               <span class="product_content">推广产品：</span>
-              <span>
-                <van-field v-model="product" disabled />
-              </span>
+              <br />
+              <span class="content_detail">{{ product }}</span>
             </van-row>
             <van-row class="marign_top_12">
               <span class="product_content">推广内容：</span>
               <br />
-              <span>
-                <van-field v-model="content" disabled />
-              </span>
+              <span class="content_detail">{{ content }}</span>
             </van-row>
             <van-row class="marign_top_12">
               <span class="product_content">推广对象（医院）：</span>
               <br />
-              <span>
-                <van-field v-model="hospital" disabled />
-              </span>
+              <span class="content_detail">{{ hospital }}</span>
             </van-row>
           </van-row>
           <van-row class="sign_matter_item font_11">
@@ -479,20 +464,6 @@ export default {
   }
 };
 </script>
-<style>
-.signcontract .van-cell {
-  padding: 0.18rem 0rem 0rem 0rem;
-  font-size: 0.75rem;
-  border-bottom: 1px solid #eee;
-}
-.signcontract .van-field__control {
-  font-size: 0.6875rem;
-}
-.signcontract .van-field__control:disabled {
-  color: #615d5d;
-  -webkit-text-fill-color: #615d5d;
-}
-</style>
 <style scoped>
 .public_module {
   text-align: left;
@@ -616,5 +587,13 @@ canvas {
 }
 .strat_time {
   font-size: 0.6875rem;
+}
+.content_detail {
+  display: block;
+  width: 100%;
+  font-size: 0.6875rem;
+  color: #615d5d;
+  border-bottom: 1px solid #eee;
+  margin-top: 0.3rem;
 }
 </style>
