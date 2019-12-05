@@ -1,4 +1,3 @@
-
 <template>
   <van-row class="applyhospitaldetail">
     <van-row class="top_nav_bar nav_bgm">
@@ -10,97 +9,88 @@
           <img src="@/assets/image/Combined.png" />
         </span>
         <img src="@/assets/image/hospital_icon.png" class="hospital_icon" />
-        <van-row class="hospital_name">上海长海医院</van-row>
+        <van-row class="hospital_name">{{ hospitalInfo.hospital_name }}</van-row>
         <van-row class="hospital_tag">
-          <span class="compositive">综合医院</span>
-          <span class="three_level">三级甲等</span>
-          <span class="public">公立医院</span>
+          <span class="compositive">{{ hospitalInfo.hospital_type }}</span>
+          <span class="three_level">{{ hospitalInfo.hospital_level }}</span>
+          <span class="public">{{ hospitalInfo.hospital_run_type }}</span>
         </van-row>
         <van-row class="hospital_adress flex justify_between">
           <span class="flex flex_align_center">
-            <img src="@/assets/image/address.png" />上海市杨浦区长海路168号
+            <img src="@/assets/image/address.png" />{{ hospitalInfo.address }}
           </span>
-          <span>
+          <span @click="call(hospitalInfo.tel)">
             <i></i>
             <img class="call_img" src="@/assets/image/phone.png" />
           </span>
         </van-row>
       </van-row>
       <van-row class="await_develop_title">待申请产品</van-row>
-      <van-row class="await_develop_product hospital_module">
-        <van-row class="await_develop_product_list">
-          <van-radio-group v-model="product">
-            <van-cell title="乌本美司片-0.25g*6片  ¥110.63" clickable @click="product = '1'">
-              <van-radio slot="right-icon" name="1" />
-            </van-cell>
-            <!-- <van-cell title="磺胺间二甲氧嘧啶-0.25g*6片  ¥23.89" clickable @click="product = 'OTC'">
-              <van-radio slot="right-icon" name="OTC" />
-            </van-cell>
-            <van-cell title="磺胺嘧啶-0.25g*6片  ¥23.89" clickable @click="product = '2'">
-              <van-radio slot="right-icon" name="2" />
-            </van-cell>
-            <van-cell title="新诺明-0.25g*6片 ¥23.89" clickable @click="product = '3'">
-              <van-radio slot="right-icon" name="3" />
-            </van-cell>
-            <van-cell title="三甲氧苄氨嘧啶-0.25g*6片 ¥23.89" clickable @click="product = '4'">
-              <van-radio slot="right-icon" name="4" />
-            </van-cell>
-            <van-cell title="磺胺二甲嘧啶-0.25g*6片 ¥23.89" clickable @click="product = '5'">
-              <van-radio slot="right-icon" name="5" />
-            </van-cell>-->
-          </van-radio-group>
+      <van-row class="already_develop_content">
+        <van-row class="already_develop_product hospital_module">
+          <van-row v-for="(awaitItem, index) in awaitDevelopd" :key="index + 'a'">
+            <span
+              >{{ awaitItem.product_name }}-{{ awaitItem.specification }}&nbsp;&nbsp;¥{{
+                awaitItem.bidding_price
+              }}</span
+            >
+          </van-row>
         </van-row>
       </van-row>
       <van-row class="await_develop_title">已申请产品</van-row>
       <van-row class="already_develop_product hospital_module">
         <van-row class="already_develop_title">
-          <van-col span="12" :class="isShow ? 'active':''" @click="isShow = !isShow">销量</van-col>
-          <van-col span="12" :class="isShow ? '':'active'" @click="isShow = !isShow">价格</van-col>
+          <van-col span="12" :class="isShow ? 'active' : ''" @click="isShow = !isShow"
+            >销量</van-col
+          >
+          <van-col span="12" :class="isShow ? '' : 'active'" @click="isShow = !isShow"
+            >价格</van-col
+          >
         </van-row>
         <van-row class="already_develop_content" v-show="isShow">
-          <van-row>头孢丙烯分散片-0.25g*6片 ¥23.89</van-row>
-          <van-row>磺胺间二甲氧嘧啶-1246盒 ¥23.89</van-row>
-          <van-row>磺胺嘧啶-1102盒 ¥23.89</van-row>
-          <van-row>磺胺二甲嘧啶-982盒 ¥23.89</van-row>
-          <van-row>新诺明-872盒 ¥23.89</van-row>
-          <van-row>三甲氧苄氨嘧啶-814盒 ¥23.89</van-row>
-          <van-row>新诺明-679盒 ¥23.89</van-row>
+          <van-row v-for="(item, index2) in developdData" :key="index2 + 'b'">
+            <span
+              >{{ item.product_name }}-{{ item.specification }}&nbsp;&nbsp;¥{{
+                item.bidding_price
+              }}</span
+            >
+          </van-row>
         </van-row>
         <van-row class="already_develop_content" v-show="!isShow">
-          <van-row>新诺明-872盒 ¥23.89</van-row>
-          <van-row>三甲氧苄氨嘧啶-814盒 ¥23.89</van-row>
-          <van-row>新诺明-679盒 ¥23.89</van-row>
-          <van-row>头孢丙烯分散片-0.25g*6片 ¥23.89</van-row>
-          <van-row>磺胺间二甲氧嘧啶-1246盒 ¥23.89</van-row>
-          <van-row>磺胺嘧啶-1102盒 ¥23.89</van-row>
+          <van-row v-for="(item, index2) in developdData" :key="index2 + 'b'">
+            <span
+              >{{ item.product_name }}-{{ item.specification }}&nbsp;&nbsp;¥{{
+                item.bidding_price
+              }}</span
+            >
+          </van-row>
         </van-row>
       </van-row>
-      <van-row class="public_btn">
+      <!-- <van-row class="public_btn">
         <button>确&nbsp;定</button>
-      </van-row>
+      </van-row> -->
     </van-row>
   </van-row>
 </template>
 <script>
+import { setHospitalLevel, setHospitalType, setHospitalRunType } from "@/js/public";
 export default {
   name: "applyhospitaldetail",
   data() {
     return {
       product: "1",
-      isShow: true
+      isShow: true,
+      hospitalInfo: {
+        hospital_name: "",
+        hospital_type: "",
+        hospital_level: "",
+        hospital_run_type: "",
+        address: "",
+        tel: ""
+      }, //医院基础信息
+      developdData: [], //已申请产品
+      awaitDevelopd: [] //待申请产品
     };
-  },
-  computed: {
-    //搜索filter过滤
-    searchMethod() {
-      if (this.search.length == 0) {
-        return this.hospitalList;
-      } else {
-        return this.hospitalList.filter(value => {
-          return value.name.match(this.search);
-        });
-      }
-    }
   },
   created() {
     // H5 plus事件处理
@@ -114,15 +104,70 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.getHospitalDetail();
   },
   methods: {
     onBack() {
       history.back();
+    },
+    getHospitalDetail() {
+      this.$toast.loading({
+        message: "数据加载中...",
+        forbidClick: true,
+        duration: 0,
+        loadingType: "spinner"
+      });
+      let params = { hospital_id: this.$route.query.id };
+      this.$api
+        .hospitalDevelopd(params)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            this.$toast.clear();
+            this.hospitalInfo = {
+              hospital_name: res.hospital_data.hospital_name,
+              hospital_type: setHospitalType(res.hospital_data.hospital_type),
+              hospital_level: setHospitalLevel(res.hospital_data.hospital_level),
+              hospital_run_type: setHospitalRunType(res.hospital_data.hospital_run_type),
+              address: res.hospital_data.detail_address,
+              tel: res.hospital_data.hospital_mobile
+            };
+            this.developdData = res.developd_data; //已申请产品
+            this.awaitDevelopd = res.development_no_apply_data; //待申请产品
+          } else {
+            this.$toast.fail(res.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //电话功能
+    call(mobile) {
+      // console.log(mobile);
+      this.$Dialog
+        .confirm({
+          message: mobile,
+          confirmButtonText: "呼叫", //改变确认按钮上显示的文字
+          cancelButtonText: "取消" //改变取消按钮上显示的文字
+        })
+        .then(() => {
+          let callHref = "tel://" + mobile;
+          window.location.href = "tel://" + mobile;
+          // console.log(callHref);
+        })
+        .catch(() => {
+          console.log("取消拨打电话！");
+        });
     }
   }
 };
 </script>
 <style scoped>
+.main_body {
+  height: auto;
+  overflow: auto !important;
+}
 .hospital_module {
   box-shadow: 0rem 0rem 0.3125rem #ccc;
   border-radius: 0.1875rem;
@@ -149,8 +194,8 @@ export default {
   margin: 0.8rem 0rem 0.5rem 0rem;
 }
 .hospital_name {
-  font-size: 0.875rem;
-  font-weight: bold;
+  font-size: 0.75rem;
+  color: #333;
   margin-bottom: 0.3125rem;
 }
 .await_develop_product {
@@ -188,6 +233,7 @@ export default {
 }
 .hospital_adress span:nth-child(1) {
   padding-right: 0.5rem;
+  font-size: 0.625rem;
 }
 .hospital_adress span:nth-child(2) i {
   font-style: normal;
@@ -207,8 +253,16 @@ export default {
   /* height: 30vh; */
   overflow: auto;
 }
-.await_develop_product span {
-  font-size: 0.625rem;
+/* .await_develop_product_list {
+  padding-top: 0.4rem;
+} */
+.await_develop_product .van-row {
+  text-align: left;
+  padding: 0.5rem 0rem;
+}
+.await_develop_product span,
+.already_develop_product span {
+  font-size: 0.6275rem;
 }
 .await_develop_product .van-cell {
   text-align: left;
