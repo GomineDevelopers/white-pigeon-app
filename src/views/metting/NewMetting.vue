@@ -524,8 +524,17 @@ export default {
           if (res.code == 200) {
             this.$toast.success(type == 1 ? "会议创建成功" : "会议提交成功");
             setTimeout(() => {
+              this.productId = "";
+              this.conferenceThemeId = "";
+              this.hospitalId = "";
+              this.departmentId = "";
+              this.mettingStartTime = "";
+              this.userName = "";
+              this.userNum = "";
+              this.personnelPhoto = "";
+              this.signPhoto = "";
               this.$router.push({ path: "/mettingrecord" });
-            }, 2000);
+            }, 1500);
           } else {
             this.$toast.fail(res.message);
           }
