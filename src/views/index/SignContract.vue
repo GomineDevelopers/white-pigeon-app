@@ -39,16 +39,12 @@
           <van-row class="sign_matter_item font_11">
             <span>1.技术服务的开始时间:</span>
             <br />
-            <span class="border_bom van-cell start_time">
-              {{ startTime }}
-            </span>
+            <span class="start_time"> {{ startTime }}</span>
           </van-row>
           <van-row class="sign_matter_item font_11">
             <span>2.技术服务的结束时间:</span>
             <br />
-            <span class="border_bom van-cell end_time">
-              {{ endTime }}
-            </span>
+            <span class="end_time"> {{ endTime }}</span>
           </van-row>
           <van-row class="sign_matter_item font_11">
             <span class="time_notice"
@@ -525,7 +521,8 @@ export default {
 }
 .end_time,
 .start_time {
-  height: 1.4rem;
+  display: block;
+  margin-top: 0.3rem;
   color: #615d5d;
   border-bottom: 1px solid #eee;
 }
