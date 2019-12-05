@@ -471,6 +471,11 @@ export default {
     handler({ BMap, map }) {
       // this.center.lng = 121.536019;
       // this.center.lat = 31.222785;
+      let geoLocation = new BMap.Geolocation();
+      geoLocation.getCurrentPosition(r => {
+        console.log(r)
+        // this.center = { lng: r.longitude, lat: r.latitude}
+      })
       this.zoom = 13;
     },
     //点击医院获取详细信息

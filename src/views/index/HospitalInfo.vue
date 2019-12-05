@@ -174,7 +174,7 @@ export default {
         })
         .then(() => {
           let callHref = "tel://" + mobile;
-          // window.location.href = 'tel://'+mobile
+          window.location.href = 'tel://'+mobile
           console.log(callHref);
         })
         .catch(() => {
