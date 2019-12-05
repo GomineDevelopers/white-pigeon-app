@@ -10,6 +10,12 @@ import * as qiniu from "qiniu-js";
  * @param {Number} type [上传文件格式类型，0：图片文件，1：文档文件]
  */
 export function upload(file,type) {
+  Toast.loading({
+    message: `文件上传中...`,
+    loadingType: 'spinner',
+    duration: 0,
+    forbidClick: true
+  });
   return new Promise((resolve) => {
     let files = file['file'];
     switch (type) {
@@ -33,7 +39,7 @@ export function upload(file,type) {
             return false;
         } 
       break;
-    };
+    }
     // 获取上去七牛云的doman和token
     axios.post('/getQiniu/getToken',{})
     .then( res => {
@@ -54,7 +60,7 @@ export function upload(file,type) {
     })
 
   })
-};
+}
 /**
  * 上传文件到七牛云方法
  * @param {file} file [获取的本地文件信息]
@@ -62,6 +68,7 @@ export function upload(file,type) {
  * @param {String} domain [请求的七牛云地址]
  */
 function uploadToQiniuyun( file, token, domain, resolve ) {
+    Toast.clear();
     const config = {
       useCdnDomain: true,
       region: qiniu.region.z2
