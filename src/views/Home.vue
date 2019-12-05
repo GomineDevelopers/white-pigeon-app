@@ -118,7 +118,7 @@ export default {
           src: require("../assets/image/yy.png"),
           link: "/hospitalmanagement"
         },
-        { name: "资料", src: require("../assets/image/zl.png"), link: "" },
+        { name: "资料", src: require("../assets/image/zl.png"), link: "/selfstudy" },
         {
           name: "审批",
           src: require("../assets/image/sp.png"),
@@ -190,8 +190,8 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     goNotify() {
       this.$router.push({ path: "/notify" });

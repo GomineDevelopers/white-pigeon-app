@@ -139,7 +139,7 @@ export default {
       let nowDate = new Date();
       let date = nowDate.setMonth(nowDate.getMonth() + mouthNum);
       this.date = timeFormat(nowDate);
-      console.log(typeof this.date);
+      // console.log(this.date);
     },
     chooseTag(tag) {
       // console.log(tag);

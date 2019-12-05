@@ -4,14 +4,14 @@
       <van-nav-bar title="我的" left-arrow @click-left="onBack()" />
     </van-row>
     <!-- 头部用户信息开始 -->
-    <van-row class="header_body"  @click="goUserInfoDetail">
+    <van-row class="header_body" @click="goUserInfoDetail">
       <van-row class="header_user_info flex flex_align_center">
         <van-row class="left_detail flex flex_1">
           <img src="https://img.yzcdn.cn/vant/cat.jpeg" />
           <van-row class="user_info">
-            <span class="user_name">{{user.name}}</span>
+            <span class="user_name">{{ user.name }}</span>
             <br />
-            <span class="user_detail">{{user.id_address}}</span>
+            <span class="user_detail">{{ user.id_address }}</span>
           </van-row>
         </van-row>
         <van-row>
@@ -44,12 +44,12 @@
     <!-- 头部用户信息结束 -->
     <van-row class="user_body">
       <van-row class="my_product_nav">
-        <span :class="active ? 'activeLink':''" @click="active = !active">我的医院</span>
-        <span :class="active ? '':'activeLink'" @click="active = !active">我的产品</span>
+        <span :class="active ? 'activeLink' : ''" @click="active = !active">我的医院</span>
+        <span :class="active ? '' : 'activeLink'" @click="active = !active">我的产品</span>
       </van-row>
       <van-row>
         <my-hospital v-show="active"></my-hospital>
-        <my-product v-show="!active" ></my-product>
+        <my-product v-show="!active"></my-product>
       </van-row>
     </van-row>
   </van-row>
@@ -85,7 +85,7 @@ export default {
   mounted() {
     this.getUserInfo();
   },
-  
+
   methods: {
     // 获取用户信息
     getUserInfo() {
@@ -94,13 +94,15 @@ export default {
         .then(res => {
           if (res.code == 200) {
             this.user = res.user;
-            if (res.user.is_complete == 2){
-              this.$dialog.alert({
-                message: "您还未完善信息",
-                confirmButtonText: "完善信息"
-              }).then( () => {
-                this.$router.push('/improvepersonalinfo')
-              })
+            if (res.user.is_complete == 2) {
+              this.$dialog
+                .alert({
+                  message: "您还未完善信息",
+                  confirmButtonText: "完善信息"
+                })
+                .then(() => {
+                  this.$router.push("/improvepersonalinfo");
+                });
             }
           }
         })
@@ -191,8 +193,5 @@ export default {
   width: 0.9rem;
   height: 0.125rem;
   border-bottom: 2px solid #3399ff;
-}
-.right_icon {
-  /* font-size: 0.75rem; */
 }
 </style>

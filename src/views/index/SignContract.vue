@@ -1,35 +1,17 @@
 <template>
   <van-row class="signcontract">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="合同签署" />
+      <van-nav-bar title="合同签署" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body">
       <van-row class="public_module">
-        <van-row class="party_title">服务合同</van-row>
+        <van-row class="party_title">技术服务合同</van-row>
         <!-- 甲方 -->
         <van-row class="party">
           <van-row class="party_item">
-            <van-row>甲方（需求方）公司名称：</van-row>
+            <van-row>甲方：</van-row>
             <van-row>
-              <van-field v-model="firstPartyName" />
-            </van-row>
-          </van-row>
-          <van-row class="party_item">
-            <van-row>注册地址：</van-row>
-            <van-row>
-              <van-field v-model="registeredAddress" />
-            </van-row>
-          </van-row>
-          <van-row class="party_item">
-            <van-row>主要负责人：</van-row>
-            <van-row>
-              <van-field v-model="principal" />
-            </van-row>
-          </van-row>
-          <van-row class="party_item">
-            <van-row>联系方式：</van-row>
-            <van-row>
-              <van-field v-model="phone" type="number" />
+              <van-field v-model="firstPartyName" disabled />
             </van-row>
           </van-row>
         </van-row>
@@ -38,124 +20,180 @@
           <van-row class="party_item">
             <van-row>乙方（服务商）名称：</van-row>
             <van-row>
-              <van-field v-model="secondPartyName" />
+              <van-field v-model="secondPartyName" disabled />
             </van-row>
           </van-row>
           <van-row class="party_item">
             <van-row>身份证号：</van-row>
             <van-row>
-              <van-field v-model="IDcard" />
+              <van-field v-model="IDcard" disabled />
             </van-row>
           </van-row>
           <van-row class="party_item">
             <van-row>家庭住址：</van-row>
             <van-row>
-              <van-field v-model="address" />
+              <van-field v-model="address" disabled />
             </van-row>
           </van-row>
           <van-row class="party_item">
             <van-row>联系方式：</van-row>
             <van-row>
-              <van-field v-model="tel" type="number" />
+              <van-field v-model="tel" type="number" disabled />
             </van-row>
           </van-row>
         </van-row>
 
         <!-- 委托事项、工期和支付费用  -->
         <van-row class="sign_matter">
-          <van-row class="sign_title1">一.委托事项、工期和支付费用</van-row>
-          <van-row class="sign_matter_item">
+          <van-row class="sign_title1">一.委托事项、期限</van-row>
+          <van-row class="sign_matter_item font_11">
             <span>1.技术服务的开始时间:</span>
             <br />
-            <span class="border_bom van-cell start_time" @click="dateShow = true">
+            <span class="border_bom van-cell start_time">
               {{ startTime }}
             </span>
           </van-row>
-          <van-row class="sign_matter_item">
+          <van-row class="sign_matter_item font_11">
             <span>2.技术服务的结束时间:</span>
             <br />
-            <span class="border_bom van-cell end_time" @click="endDateShow = true">{{
-              endTime
-            }}</span>
-          </van-row>
-          <van-row class="sign_matter_item">
-            <span>3.技术服务的费用结算:</span>
-            <br />
-            <span>
-              <van-field v-model="cost" />
+            <span class="border_bom van-cell end_time">
+              {{ endTime }}
             </span>
           </van-row>
-          <van-row class="sign_title1">二．宣传内容和人员要求</van-row>
-          <van-row class="sign_matter_item">
-            <span>1.宣传内容：</span>
-            <br />
-            <span class="product_content">产品：</span>
-            <br />
-            <span>
-              <van-field v-model="product" />
-            </span>
-            <span class="product_content">对象（医院）：</span>
-            <br />
-            <span>
-              <van-field v-model="hospital" />
-            </span>
+          <van-row class="sign_matter_item font_11">
+            <span class="time_notice"
+              >默认本合同约定的起始时间与结束时间为实际服务的起始时间与结束时间。</span
+            >
           </van-row>
-          <van-row class="sign_matter_item">
-            <span>2. 活动人员要求:</span>
+          <van-row class="sign_title1">二．推广宣传内容和乙方应具有的条件</van-row>
+          <van-row class="sign_matter_item font_11">
+            <span>1.推广宣传内容：</span>
+            <van-row class="marign_top_12">
+              <span class="product_content">推广产品：</span>
+              <span>
+                <van-field v-model="product" disabled />
+              </span>
+            </van-row>
+            <van-row class="marign_top_12">
+              <span class="product_content">推广内容：</span>
+              <br />
+              <span>
+                <van-field v-model="content" disabled />
+              </span>
+            </van-row>
+            <van-row class="marign_top_12">
+              <span class="product_content">推广对象（医院）：</span>
+              <br />
+              <span>
+                <van-field v-model="hospital" disabled />
+              </span>
+            </van-row>
+          </van-row>
+          <van-row class="sign_matter_item font_11">
+            <span>2. 乙方应具有的条件:</span>
             <ul class="disc_ul">
-              <li>医学/药学/生物工程医药相关背景</li>
-              <li>有一年以上医药行业市场 推广相关工作经验</li>
-              <li>能独立组织并完成学术推广活动</li>
-              <li>有抗病毒、抗抑郁等相关产品推广经验</li>
-              <li>自带推广工作 中可能用到的仪器设备，如电脑、投影仪、手机等</li>
-              <li>擅长人际交流及沟通，表达能力佳</li>
+              <li>医学/药学/生物工程医药相关背景。</li>
+              <li>有一年以上医药行业市场 推广相关工作经验。</li>
+              <li>能独立组织并完成学术推广活动。</li>
+              <li>擅长人际交流及沟通，表达能力佳。</li>
+              <li>拥有推广工作中所需仪器设备，如电脑、便携式投影仪、手机等。</li>
             </ul>
           </van-row>
-          <van-row class="sign_matter_item">
-            <span>3. 技术服务的要求:</span>
+          <van-row class="sign_matter_item font_11">
+            <span>3. 乙方不得具有以下身份或情形:</span>
             <ul class="disc_ul">
+              <li>不得为军人、公职人员等国家法律法规和纪律规定禁止从事兼职或经商的人员。</li>
               <li>
-                要求服务者责任心强，能够根据需求约定，在服务结束时间保质保量的完成需求。验收方式可以通过线上的方式提交。服务过程中和完成后不得随意泄露甲方信息。
+                不得为公司雇员等其他与企业具有劳动/劳务合同关系、或其他类似的劳动人事法律关系并从与其有前述关系的公司取得工资薪金所得的人员
+                。
               </li>
+              <li>不得为企业法定代表人、股东、董事、监事等其他从所属公司取得收入的人员。</li>
+            </ul>
+          </van-row>
+          <van-row class="sign_matter_item font_11">
+            <span>4. 技术服务的要求:</span>
+            <ul class="disc_ul">
+              <li>验收方式可以通过线上的方式提交。服务过程中和完成后不得随意泄露甲方信息。</li>
               <li>
-                根据甲方业务需求，对公司重点产品在全国范围内指定医院及产品进行学术推广活动。
+                根据甲方业务需求，对甲方指定重点产品在全国范围内指定医院及产品进行学术推广活动，作为有行业经验的市场推广人员协助完成甲方指定产品的学术推广工作，审核合格的推广工作由甲方支付服务费用。
               </li>
+              <li>通过公司指定平台记录此签约产品推广行为。</li>
+              <li>推广形式可为点对点，点对面的形式进行临床拜访或者推广活动。</li>
             </ul>
           </van-row>
           <van-row class="sign_title1">三.协作事项与双方责任</van-row>
           <van-row>
             <ul>
               <li>
-                1.甲方与乙方应确认好工作内容、工作期限、交付标准、支付金额等事项，无异议后乙方开始工作。
+                1.甲方与乙方应确认好工作内容、工作期限、交付标准、支付金额等事项，无异议后乙方开始工作，乙方应尽责完成约定技术服务工作。
+                乙方可以在服务过程中根据实际需求情况申请延迟完成时间，但必须得到甲方的同意才能生效。
               </li>
               <li>
                 2.为了最大程度确保乙方按甲方的委托要求完成服务，甲方应尽量详细地向乙方说明需求详情，交付要求，
                 并提供必要的相关材料和支持。
               </li>
               <li>
-                3.由于甲方需求不明确或提供的材料存在错误、遗漏、失效、缺失、伪造、变造等原因导致乙方无法提供服
-                务或提供的服务无法符合甲方要求的，相关的责任和后果由甲方承担。
+                3.乙方应在合同约定期限内完成服务内容，并提交验收；如未在约定的期限内为完成服务，视为无法完成该服务并放弃服务费用。
               </li>
               <li>
-                4.未经甲方同意，乙方不得将本合同项下服务通过转包或分包等方式交由第三方完成或提供，否则甲方有权
-                拒绝验收服务成果，支付服务费用。
+                4.未经甲方书面同意，乙方不得将本合同服务通过转包或分包等方式交由第三方完成或提供，否则甲方有权拒绝验收服务成果，支付服务费用。
               </li>
               <li>
-                5.服务过程中，甲方应当予以配合，发生的合理费用由双方协商承担，并可以通过合同变更方式修改委托事
-                项。但乙方不得将应当由乙方承担的工作交由甲方，甲方有权拒绝。
+                5.乙方须妥善保管甲方提供的技术资料，不得私自复制、转移、转让以及其他各类方式向其他第三方提供甲方的技术资料。
               </li>
               <li>
-                6.本协议订立后，乙方应按照约定的工作期限内完成工作内容，并提交验收;如工作期限内发生委托服务合
-                同内容发生变更的，需要双方协商一致并签订补充协议，方可作为合同附件与主合同具有同等法律效力。否则视
-                为合同约定未变更。
+                6.本协议订立后，乙方应按照约定的工作期限内完成工作内容，并提交验收;如工作期限内发生委托服务合同内容发生变更的，需要双方协商一致并签订书面补充协议，方可作为合同附件与主合同具有同等法律效力。否则视为合同约定未变更。
               </li>
               <li>
-                7.
+                7.乙方需确保提供的服务未侵害他人的著作权或其它合法权利，如甲方因使用乙方提供的服务而导致有第三方对甲方提起侵害著作权或其它知识产权诉讼，乙方应负责出面抗辩并承担由此产生的所有赔偿责任。
+              </li>
+              <li>
+                8.
+                乙方承诺不是法人、军人、公职人员等国家法律法规和纪律规定禁止从事兼职或经商人员的身份。
+              </li>
+              <li>
+                9.
                 乙方不得做出任何损伤甲方利益的任何行为，若出现此情况，甲方有权拒绝支付服务费用，乙方需赔偿甲方因乙方产生的所有损失。
               </li>
             </ul>
           </van-row>
-          <van-row class="sign_title1">四．保密及权利</van-row>
+          <!-- 费用核算开始 -->
+          <van-row class="sign_title1">四．费用核算&支付方式</van-row>
+          <van-row class="sign_matter_item font_11">
+            <span>1.拜访：费用核算为300元/次拜访</span>
+            <van-row class="marign_top_8">
+              <span>合格标准：</span>
+              <ul>
+                <li>A） 签到位置不能与乙方医院相距1千米以上</li>
+                <li>B） 每天每家医院的拜访必须有一张或一张以上签到照片，并包含医院门牌名称</li>
+                <li>C） 照片必须具有真实性</li>
+                <li>D） 拜访必须为已提交状态</li>
+              </ul>
+            </van-row>
+            <span
+              >2.活动：费用核算标准：500元/人次
+              （例；一次活动邀请5位参与者，为5人次，参与者需为甲方目标客户人群）</span
+            >
+            <van-row class="marign_top_8">
+              <span>审核标准：</span>
+              <ul>
+                <li>A） 每场活动必须上传两张或以上照片，并满足以下要求</li>
+                <li class="padding_left_5">a) 包含签到表（签到表人员必须与上报到场人员相符）</li>
+                <li class="padding_left_5">
+                  b) 体现宣传甲方指定产品（参会人员需与甲方指定产品ppt同框）
+                </li>
+                <li>B） 照片必须具有真实性</li>
+              </ul>
+            </van-row>
+            <span>3.支付方式：</span>
+            <br />
+            <span class="font_size_10"
+              >甲方将按照乙方所做有效学术推广服务进行付费，已甲方指定的付款方式为准。</span
+            >
+          </van-row>
+          <!-- 费用核算结束 -->
+
+          <van-row class="sign_title1">五．保密及权利</van-row>
           <van-row>
             <ul>
               <li>
@@ -177,15 +215,21 @@
               </li>
             </ul>
           </van-row>
+
           <van-row class="sign_title1"
-            >五.本合同一式 2 份，甲方执 1 份，乙方执 1 份，每份合同具有同等法律效力。</van-row
+            >六.本合同一式 2 份，甲方执 1 份，乙方执 1 份，每份合同具有同等法律效力。</van-row
           >
           <van-row class="sign_moudle">
-            <van-row>
-              甲方：
-              <br />上海臣邦医药科技股份有限公司
+            <van-row class="first_company font_11">
+              <span>甲方：上海臣邦医药科技股份有限公司</span>
+              <br />
+              <span>日期：{{ startTime }}</span>
             </van-row>
-            <van-row class="second_party_sign">乙方：</van-row>
+            <van-row class="second_party_sign">
+              <van-row class="font_11">
+                <span>乙方：</span>
+              </van-row>
+            </van-row>
             <!-- <van-row class="signature_card flex">电子签名</van-row> -->
             <div :style="sign_lable_css" class="sign_label">
               <span v-show="isShowSignLabel">电子签名</span>
@@ -199,7 +243,7 @@
               ></canvas>
               <van-icon class="reset_btn" name="replay" @click="resetSign" />
             </div>
-            <img :src="img" />
+            <!-- <img :src="img" /> -->
           </van-row>
         </van-row>
       </van-row>
@@ -207,36 +251,11 @@
         <button @click="goManagement">提&nbsp;交</button>
       </van-row>
     </van-row>
-    <!-- 开始时间选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row class="area_option" v-show="dateShow">
-          <van-datetime-picker
-            v-model="currentDate"
-            type="date"
-            @confirm="dateConfirm"
-            @cancel="dateShow = false"
-          />
-        </van-row>
-      </transition>
-    </van-row>
-    <!-- 结束时间选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row class="area_option" v-show="endDateShow">
-          <van-datetime-picker
-            v-model="currentDate"
-            type="date"
-            @confirm="endDateConfirm"
-            @cancel="endDateShow = false"
-          />
-        </van-row>
-      </transition>
-    </van-row>
   </van-row>
 </template>
 <script>
 import { timeFormat } from "@/js/public";
+import { upload } from "@/js/upload";
 export default {
   name: "signcontract",
   data() {
@@ -244,10 +263,8 @@ export default {
       dateShow: false,
       endDateShow: false,
       currentDate: new Date(),
+      signStatus: false,
       firstPartyName: "", //甲方名称
-      registeredAddress: "", //注册地址
-      principal: "", //主要负责人
-      phone: "", //联系方式
 
       secondPartyName: "", // 乙方名称
       IDcard: "", //身份证
@@ -256,8 +273,9 @@ export default {
 
       startTime: "",
       endTime: "",
-      cost: "",
+
       product: "",
+      content: "",
       hospital: "",
 
       canvasTxt: null,
@@ -285,6 +303,7 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.getContractInfo();
   },
   mounted() {
     let canvas = this.$refs.canvasCont;
@@ -299,6 +318,52 @@ export default {
     this.sign_lable_css.lineHeight = `${canvas.width / 2}px`;
   },
   methods: {
+    onBack() {
+      history.back();
+    },
+    getContractInfo() {
+      this.$toast.loading({
+        message: "数据加载中...",
+        forbidClick: true,
+        duration: 0,
+        loadingType: "spinner"
+      });
+      this.$api
+        .userInfo()
+        .then(res => {
+          // console.log(res);
+          if (res.code == 200) {
+            this.secondPartyName = res.user.name; // 乙方名称
+            this.IDcard = res.user.id_card;
+            this.address = res.user.id_address;
+            this.tel = res.user.email;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      let params = { hospital_product_id: this.$route.query.id };
+      this.$api
+        .getContractInfo(params)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            this.$toast.clear();
+            this.firstPartyName = res.getContractInfo.product_company; //甲方名称
+            let nowDate = new Date();
+            let startDate = timeFormat(nowDate);
+            this.startTime = startDate;
+            let endFDate = nowDate.setMonth(nowDate.getMonth() + 12);
+            this.endTime = timeFormat(endFDate);
+            this.product = res.getContractInfo.product_name;
+            this.content = res.getContractInfo.product_name + "产品的所有甲方指定推广宣传内容";
+            this.hospital = res.getContractInfo.hospital_name;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //手势事件
     touchStart(ev) {
       let evt = ev || event;
@@ -331,13 +396,14 @@ export default {
     },
     //手势结束事件
     touchEnd(ev) {
-      let img = this.$refs.canvasCont.toDataURL();
-      console.log(this.base64ToFile(img));
+      // let img = this.$refs.canvasCont.toDataURL();
+      // console.log(this.base64ToFile(img));
+      this.signStatus = true;
       return;
     },
     // base64编码的图片
     base64ToFile(dataurl) {
-      let filename = "usersign";
+      let filename = "usersign" + this.$route.query.id;
       let arr = dataurl.split(",");
       let mime = arr[0].match(/:(.*?);/)[1];
       let suffix = mime.split("/")[1];
@@ -353,6 +419,8 @@ export default {
     },
     //重写签名
     resetSign() {
+      this.signStatus = false;
+      this.img = "";
       this.canvasTxt.clearRect(0, 0, this.$refs.canvasCont.width, this.$refs.canvasCont.height);
       this.isShowSignLabel = true;
     },
@@ -365,48 +433,45 @@ export default {
       this.endDateShow = false;
     },
     goManagement() {
-      this.img = this.$refs.canvasCont.toDataURL();
-      // firstPartyName: "", //甲方名称
-      // registeredAddress: "", //注册地址
-      // principal: "", //主要负责人
-      // phone: "", //联系方式
-
-      // secondPartyName: "", // 乙方名称
-      // IDcard: "", //身份证
-      // address: "", //家庭住址
-      // tel: "", //联系方式
-
-      // startTime: "",
-      // endTime: "",
-      // cost: "",
-      // product: "",
-      // hospital: "",
-      let regs = /^1[3456789]\d{9}$/;
-      if (!regs.test(this.phone) || !regs.test(this.tel)) {
-        this.$toast.fail("手机号码有误");
+      if (!this.signStatus) {
+        this.$toast.fail("请签名");
         return false;
       }
-      if (this.IDcard.length < 18) {
-        this.$toast.fail("身份证号码有误");
-        return false;
-      }
-      if (
-        this.firstPartyName == "" ||
-        this.registeredAddress == "" ||
-        this.principal == "" ||
-        this.secondPartyName == "" ||
-        this.address == "" ||
-        this.startTime == "" ||
-        this.endTime == "" ||
-        this.cost == "" ||
-        this.product == "" ||
-        this.hospital == ""
-      ) {
-        this.$toast.fail("请填写完整合同信息");
-        return false;
-      }
-
-      // this.$router.push({ path: "/hospitalmanagement" });
+      this.$toast.loading({
+        message: "合同提交中...",
+        forbidClick: true,
+        duration: 0,
+        loadingType: "spinner"
+      });
+      let base64Img = this.$refs.canvasCont.toDataURL();
+      let files = this.base64ToFile(base64Img);
+      let file = { content: base64Img, file: files };
+      console.log(file);
+      upload(file, 0).then(res => {
+        this.img = res;
+        let params = {
+          hospital_product_id: this.$route.query.id,
+          sign_image: this.img
+        };
+        console.log(params);
+        this.$api
+          .SignSubmit(params)
+          .then(res => {
+            console.log(res);
+            if (res.code == 200) {
+              this.$toast.success("合同提交成功");
+              setTimeout(() => {
+                this.$router.push({ path: "/" });
+              }, 2000);
+            } else {
+              this.$toast.fail(res.message);
+            }
+          })
+          .catch(error => {
+            this.$toast.clear();
+            console.log(error);
+          });
+      });
     }
   }
 };
@@ -416,6 +481,13 @@ export default {
   padding: 0.18rem 0rem 0rem 0rem;
   font-size: 0.75rem;
   border-bottom: 1px solid #eee;
+}
+.signcontract .van-field__control {
+  font-size: 0.6875rem;
+}
+.signcontract .van-field__control:disabled {
+  color: #615d5d;
+  -webkit-text-fill-color: #615d5d;
 }
 </style>
 <style scoped>
@@ -427,7 +499,7 @@ export default {
   text-align: left;
 }
 .party_title {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   padding: 0.625rem 0rem;
   font-weight: bold;
   text-align: center;
@@ -437,23 +509,50 @@ export default {
   padding: 0.2rem 0rem;
 }
 .second_party {
-  margin-top: 1rem;
+  margin-top: 0.8rem;
 }
 .sign_matter {
   margin-top: 0.625rem;
   font-size: 0.75rem;
 }
 .sign_title1 {
-  font-weight: bold;
+  color: #000;
   margin: 0.5rem 0rem 0.3125rem 0rem;
+}
+
+.font_11 span {
+  font-size: 0.6875rem;
+}
+.marign_top_8 {
+  margin-top: 0.3rem;
+}
+.marign_top_12 {
+  margin-top: 0.5rem;
+}
+.marign_top_8 ul {
+  padding: 0.3125rem 0.3125rem 0.3125rem 0rem !important;
+}
+.font_size_10 {
+  font-size: 0.625rem !important;
+}
+.marign_top_8 ul li.padding_left_5 {
+  padding-left: 0.7rem;
+}
+.time_notice {
+  font-size: 0.625rem !important;
+  color: #999;
 }
 .border_bom {
   display: inline-block;
   width: 100%;
 }
+.first_company {
+  position: relative;
+}
 .end_time,
 .start_time {
   height: 1.4rem;
+  color: #615d5d;
 }
 .product_content {
   margin-top: 0.625rem;
