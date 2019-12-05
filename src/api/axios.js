@@ -25,6 +25,7 @@ let api = {
   hospitalManagerDetail: params => post("/hospitalManager/hospitalManagerDetail", params), //申请列表页详情
   hospitalGetSection: params => post("/hospitalManager/hospitalGetSection", params), //科室列表
   hospitalGethospitalId: params => post("/hospitalManager/hospitalGethospitalId", params), //医院列表
+  hospitalManager: params => post("/hospitalManager/hospitalManager", params), //已开发医院搜索
   regionApprove: params => post("/regionManager/regionApprove", params), //区域经理审核医院产品列表
   regionProDetial: params => post("/regionManager/regionHospitalProductDetail", params), //区域经理审核产品详情
   regionProPass: params => post("/regionManager/regionHospitalProductSubmit", params), //区域经理审核产品通过

@@ -165,7 +165,7 @@ export default {
     },
     //电话功能
     call(mobile) {
-      console.log(mobile);
+      // console.log(mobile);
       this.$Dialog
         .confirm({
           message: mobile,
