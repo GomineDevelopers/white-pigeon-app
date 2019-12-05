@@ -120,11 +120,11 @@ export default {
           link: "/hospitalmanagement"
         },
         { name: "资料", src: require("../assets/image/zl.png"), link: "/selfstudy" },
-        {
-          name: "审批",
-          src: require("../assets/image/sp.png"),
-          link: "/approveindex"
-        }
+        // {
+        //   name: "审批",
+        //   src: require("../assets/image/sp.png"),
+        //   link: "/approveindex"
+        // }
       ]
     };
   },

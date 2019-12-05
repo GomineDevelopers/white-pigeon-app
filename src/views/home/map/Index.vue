@@ -1133,6 +1133,7 @@ export default {
   min-width: 2rem;
   margin-right: 0.6rem;
   font-size: 0.625rem;
+  border: none;
   margin-bottom: 0.6rem;
   border-radius: 0.25rem;
   background: #e9ebef;

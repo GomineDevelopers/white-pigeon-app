@@ -70,6 +70,7 @@
               v-show="visitPhoto.length < 3"
               class="upload_btn"
               v-model="fileList"
+              capture="camera"
               :preview-image="false"
               :max-count="3"
               :after-read="afterRead"
