@@ -195,6 +195,7 @@
         <p class="popup_top_line">
           <span></span>
         </p>
+        <van-icon class="close_btn" @click="close_popup" name="cross" />
         <h1 class="pop_title">{{ hosSingleData.content }}</h1>
         <ul class="pop_hosp_type">
           <li class="hospital_type">{{ hosSingleData.hospital_type }}</li>
@@ -600,6 +601,11 @@ export default {
       }
       this.bottomNavIsShow = false;
     },
+    // 关闭医院弹窗
+    close_popup() {
+      this.isPopup = false;
+      this.hospitalDetailScrollHeight = "0px";
+    },
     //获取个人信息
     getUserInfo() {
       this.$api
@@ -897,6 +903,9 @@ export default {
 .search .van-cell:not(:last-child)::after {
   border-bottom: none;
 }
+iframe{
+  display: block;
+}
 </style>
 <style scoped>
 .BMap_Marker img {
@@ -974,7 +983,7 @@ export default {
 .popup_wrap .popup_top .approve {
   position: absolute;
   width: 2.6rem;
-  top: 1rem;
+  top: 1.4rem;
   right: 0;
   z-index: 100;
 }
@@ -990,6 +999,13 @@ export default {
   width: 1.875rem;
   border-radius: 4px;
   background: #e1e1e1;
+}
+.popup_top .close_btn{
+  position: absolute;
+  top: 3px;
+  right: -5%;
+  z-index: 10;
+  color: #ddd;
 }
 .popup_wrap .pop_title {
   font-size: 0.75rem;
@@ -1282,4 +1298,5 @@ export default {
   color: #666;
   text-align: center;
 }
+
 </style>
