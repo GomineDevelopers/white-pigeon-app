@@ -6,38 +6,38 @@
     <van-row class="doctor_detail">
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">医院</span>
-        <span>{{detail.hospital_name}}</span>
+        <span>{{ detail.hospital_name }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">客户</span>
-        <span>{{detail.doctor_name}}</span>
+        <span>{{ detail.doctor_name }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">开始时间</span>
-        <span>{{detail.start_time}}</span>
+        <span>{{ detail.start_time }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">拜访目的</span>
-        <span>{{detail.visit_goal}}</span>
+        <span>{{ detail.visit_goal }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">拜访渠道</span>
-        <span>{{detail.visit_channel == 1 ? '面对面拜访' : ""}}</span>
+        <span>{{ detail.visit_channel == 1 ? "面对面拜访" : "" }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">产品</span>
-        <span>{{detail.product_name}}</span>
+        <span>{{ detail.product_name }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">拜访定位</span>
-        <span>{{detail.visit_position}}</span>
+        <span>{{ detail.visit_position }}</span>
       </van-row>
       <van-row class="doctor_detail_item">
         <span>照片上传</span>
         <van-row class="visit_photo">
-          <img v-if="detail.visit_image != null" :src="detail.visit_image"/>
-          <img v-if="detail.visit_image_two != null" :src="detail.visit_image_two"/>
-          <img v-if="detail.visit_image_three != null" :src="detail.visit_image_three"/>
+          <img v-if="detail.visit_image != null" :src="detail.visit_image" />
+          <img v-if="detail.visit_image_two != null" :src="detail.visit_image_two" />
+          <img v-if="detail.visit_image_three != null" :src="detail.visit_image_three" />
         </van-row>
       </van-row>
     </van-row>
@@ -71,15 +71,16 @@ export default {
   methods: {
     // 获取拜访详情数据
     getVistDetail(visit_id) {
-      this.$api.visitDetail({visit_id})
-        .then( res => {
-          if (res.code == 200){
+      this.$api
+        .visitDetail({ visit_id })
+        .then(res => {
+          if (res.code == 200) {
             this.detail = res.visit_detail;
           }
         })
-        .catch( err => {
-          console.log(err)
-        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     onBack() {
       history.back();
@@ -97,6 +98,10 @@ export default {
 }
 .doctor_detail_item {
   padding: 0.6rem 0rem;
+}
+.doctor_detail_item span:nth-child(1) {
+  white-space: nowrap;
+  margin-right: 1rem;
 }
 .doctor_detail_item span:nth-child(2) {
   color: #a8aec1;

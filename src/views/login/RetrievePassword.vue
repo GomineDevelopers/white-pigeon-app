@@ -37,6 +37,19 @@ export default {
       authCode: ""
     };
   },
+  created() {
+    // H5 plus事件处理
+    function plusReady() {
+      // 设置系统状态栏背景为白色
+      plus.navigator.setStatusBarBackground("#FFF");
+      plus.navigator.setStatusBarStyle("dark");
+    }
+    if (window.plus) {
+      plusReady();
+    } else {
+      document.addEventListener("plusready", plusReady, false);
+    }
+  },
   methods: {
     onBack() {
       history.back();
@@ -56,7 +69,8 @@ export default {
       }, 60000);
       let postData = {
         mobile: this.phone,
-        type: 2      };
+        type: 2
+      };
       if (this.isDisable) {
         this.$api
           .authCode(postData)
@@ -112,25 +126,24 @@ export default {
         password: this.password,
         confirmPasswd: this.passwordAgain,
         code: this.authCode
-      }
-      this.$api.forgetPassword(postData)
+      };
+      this.$api
+        .forgetPassword(postData)
         .then(res => {
           if (res.code == 200) {
             this.$toast.success("找回密码成功！");
-            localStorage.removeItem('token')
-            this.$router.push({ path: '/' })
+            localStorage.removeItem("token");
+            this.$router.push({ path: "/" });
           } else {
             this.$toast.fail(res.message);
           }
-          console.log(res)
+          console.log(res);
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
       // this.$router.push({ path: "/" });
     }
   }
 };
 </script>
-<style scoped>
-</style>

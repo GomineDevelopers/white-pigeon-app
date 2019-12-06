@@ -35,15 +35,15 @@ export default {
       newPassword: "",
       newPasswordAgain: "",
       authCode: "",
-      phone: ''
+      phone: ""
     };
   },
   created() {
     // H5 plus事件处理
     function plusReady() {
-      // 设置系统状态栏背景为蓝色
-      plus.navigator.setStatusBarBackground("#2A76FF");
-      plus.navigator.setStatusBarStyle("light");
+      // 设置系统状态栏背景为白色
+      plus.navigator.setStatusBarBackground("#FFF");
+      plus.navigator.setStatusBarStyle("dark");
     }
     if (window.plus) {
       plusReady();
@@ -52,7 +52,7 @@ export default {
     }
   },
   mounted() {
-    this.getUserInfo()
+    this.getUserInfo();
   },
   methods: {
     onBack() {
@@ -63,7 +63,7 @@ export default {
         .userInfo()
         .then(res => {
           if (res.code == 200) {
-            this.phone = res.user.email
+            this.phone = res.user.email;
           }
           // console.log(res);
         })
@@ -73,7 +73,7 @@ export default {
     },
     //获取验证码
     getCode() {
-      console.log(this.phone)
+      console.log(this.phone);
       //修改密码type=2
       let postData = { mobile: this.phone, type: 2 };
       if (this.isDisable) {
@@ -125,24 +125,24 @@ export default {
         newPassword: this.newPassword,
         confirmNewPassword: this.newPasswordAgain,
         code: this.authCode
-      }
-      this.$api.changePassword(postData)
+      };
+      this.$api
+        .changePassword(postData)
         .then(res => {
           if (res.code == 200) {
             this.$toast.success("密码修改成功！");
-            localStorage.removeItem('token')
-            this.$router.push({ path: '/' })
+            localStorage.removeItem("token");
+            this.$router.push({ path: "/" });
           } else {
             this.$toast.fail(res.message);
           }
-          console.log(res)
+          console.log(res);
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     }
   }
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

@@ -31,7 +31,7 @@
     <!-- 点击右上角展示操作菜单结束 -->
     <van-row class="main_body">
       <van-row class="search_body flex flex_align_center">
-        <van-field v-model="keyWords" placeholder="请输入医生名" />
+        <van-field v-model="keyWords" placeholder="请输入医生名" @input="hospitalShow = false" />
         <span class="filtrate" @click="hospitalShow = true">筛选</span>
         <span class="search_icon flex flex_align_center" @click="search">
           <van-icon name="search" />
@@ -203,6 +203,7 @@ export default {
       this.hospitalShow = false;
     },
     search() {
+      this.hospitalShow = false;
       this.doctorList = [];
       this.page = 1;
       this.finished = false; //初始化完成状态  @load="getDoctorList" 自动加载

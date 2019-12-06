@@ -476,6 +476,12 @@ export default {
       // console.log("this.sexId", this.sexId, this.sexValue);
       // console.log("this.customerStatusId", this.customerStatusId, this.customerStatus);
       // console.log("this.officeId", this.officeId, this.officeValue);
+      this.$toast.loading({
+        message: "创建中...",
+        forbidClick: true,
+        duration: 0,
+        loadingType: "spinner"
+      });
       let postData = {
         doctor_name: this.doctorName,
         hospital_id: this.hospitalId,
@@ -492,7 +498,7 @@ export default {
         .then(res => {
           console.log(res);
           if (res.code == 200) {
-            this.$toast.success("提交成功");
+            this.$toast.success("创建成功");
             setTimeout(() => {
               this.$router.push({ path: "/doctormanagement" });
             }, 2000);

@@ -45,9 +45,11 @@ span {
   justify-content: center;
 }
 
-.login_main_body,
 .main_body {
   padding: 1rem;
+}
+.login_main_body {
+  padding: 0rem 1rem;
 }
 
 .main_body2 {

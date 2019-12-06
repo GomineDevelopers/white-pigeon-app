@@ -1,5 +1,5 @@
 <template>
-  <van-row>
+  <van-row class="register">
     <van-nav-bar title="注册" left-arrow @click-left="onBack()" />
     <van-row class="login_main_body">
       <van-row class="name_input">
@@ -143,8 +143,12 @@ export default {
 </script>
 
 <style scpoed>
+.register {
+  height: 100vh;
+  position: relative;
+}
 .login_protocol {
-  position: fixed;
+  position: absolute;
   bottom: 1.875rem;
   left: 0;
   right: 0;

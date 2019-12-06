@@ -1,7 +1,7 @@
 <template>
   <van-row class="approve_content">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="审批" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="申请详情" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body">
       <van-row class="approve_detail">

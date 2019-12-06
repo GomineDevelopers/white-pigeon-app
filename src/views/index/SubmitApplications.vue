@@ -127,7 +127,7 @@ export default {
     //接收路由数据
     getRouterData() {
       this.productData = this.$route.query.data;
-      console.log("提交申请data", this.productData);
+      // console.log("提交申请data", this.productData);
     },
     timeConfirm(value) {
       // console.log(value);
@@ -147,7 +147,13 @@ export default {
     },
     goApproveindex() {
       if (this.sales && this.time && this.message) {
-        console.log("准备提交申请");
+        this.$toast.loading({
+          message: "申请提交中...",
+          forbidClick: true,
+          duration: 0,
+          loadingType: "spinner"
+        });
+        // console.log("准备提交申请");
         let postData = {
           hospital_id: this.productData.hospitalId,
           product_id: this.productData.productId,
@@ -167,12 +173,12 @@ export default {
                 this.$toast.success("提交成功！");
                 setTimeout(() => {
                   this.$router.push({ path: "/home/productapply" });
-                }, 2000);
+                }, 1500);
               } else {
                 this.$toast.fail(res.message);
                 setTimeout(() => {
                   this.$router.push({ path: "/" });
-                }, 2000);
+                }, 1500);
               }
             })
             .catch(error => {
@@ -188,12 +194,12 @@ export default {
                 this.$toast.success("提交成功！");
                 setTimeout(() => {
                   this.$router.push({ path: "/home/productapply" });
-                }, 2000);
+                }, 1500);
               } else {
                 this.$toast.fail(res.message);
                 setTimeout(() => {
                   this.$router.push({ path: "/" });
-                }, 2000);
+                }, 1500);
               }
             })
             .catch(error => {
@@ -209,12 +215,12 @@ export default {
                 this.$toast.success("提交成功！");
                 setTimeout(() => {
                   this.$router.push({ path: "/home/productapply" });
-                }, 2000);
+                }, 1500);
               } else {
                 this.$toast.fail(res.message);
                 setTimeout(() => {
                   this.$router.push({ path: "/" });
-                }, 2000);
+                }, 1500);
               }
             })
             .catch(error => {

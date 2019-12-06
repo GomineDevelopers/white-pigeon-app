@@ -85,7 +85,10 @@
             show-toolbar
             title="产品筛选"
             :columns="productList"
-            @cancel="mettingFiltrate = false"
+            @cancel="
+              mettingFiltrate = false;
+              mettingOptionNav = false;
+            "
             @confirm="productConfirm"
           />
         </van-row>
