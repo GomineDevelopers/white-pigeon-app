@@ -239,13 +239,13 @@
       <!-- 此处医院状态为已开发医院时显示 -->
       <van-row class="pull_developed" v-show="visitShow == 1">
         <van-col span="12" class="line">
-          <span @click="creat(1)">创建拜访</span>
+          <span @click="creatVisit(hosSingleData.id)">创建拜访</span>
           <!-- <router-link :to="{ path: '/developvisit', query: { id: hosSingleData.id } }"
             >创建拜访</router-link
           > -->
         </van-col>
         <van-col span="12">
-          <span @click="creat(2)">创建会议</span>
+          <span @click="creatMetting(hospitalRouteParams)">创建会议</span>
           <!-- <router-link :to="{ path: '/newmetting2', query: { data: hospitalRouteParams } }"
             >创建会议</router-link
           > -->
@@ -844,14 +844,7 @@ export default {
       event.stopPropagation(); //此区域不受上面方法的影响
     },
 
-    //点击创建
-    creat(type) {
-      let path;
-      if (type == 1) {
-        path = "/newvisit";
-      } else if (type == 2) {
-        path = "/newmetting";
-      }
+    creatVisit(id) {
       this.$api
         .userInfo()
         .then(res => {
@@ -880,7 +873,43 @@ export default {
                 console.log("取消完善银行卡信息！");
               });
           } else {
-            this.$router.push({ path: path });
+            this.$router.push({ path: "/developvisit", query: { id: id } });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    creatMetting(data) {
+      this.$api
+        .userInfo()
+        .then(res => {
+          //判断用户银行卡信息是否完善
+          if (
+            res.user.account_name == null ||
+            res.user.card_no == null ||
+            res.user.open_bank == null
+          ) {
+            //银行卡信息不完善跳转银行卡完善信息页
+            this.$Dialog
+              .confirm({
+                message: "请先完善银行卡信息！",
+                confirmButtonText: "前往",
+                cancelButtonText: "取消"
+              })
+              .then(() => {
+                this.$router.push({
+                  path: "/bankcard",
+                  query: {
+                    redirect: this.$router.currentRoute.fullPath
+                  }
+                });
+              })
+              .catch(() => {
+                console.log("取消完善银行卡信息！");
+              });
+          } else {
+            this.$router.push({ path: "/newmetting2", query: { data: data } });
           }
         })
         .catch(error => {

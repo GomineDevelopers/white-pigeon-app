@@ -11,7 +11,7 @@
       </van-row>
     </van-row>
     <van-list
-      class="approve_list"
+      class="approve_list manager_approve"
       v-show="active == 0"
       v-model="proLoading"
       :finished="proFinished"
@@ -33,7 +33,7 @@
             </li>
             <li class="flex justify_start">
               <span>承诺销量：</span>
-              <span>{{ item.product_name }}  {{ item.promise_sales }}/月</span>
+              <span>{{ item.product_name }} {{ item.promise_sales }}/月</span>
             </li>
             <li class="flex justify_start">
               <span>申请时间：</span>
@@ -49,11 +49,11 @@
       </div>
     </van-list>
     <van-list
-      class="approve_list"
+      class="approve_list manager_approve"
       v-show="active == 1"
       v-model="docLoading"
       :finished="docFinished"
-      finished-text="无更多医院需要审核"
+      finished-text="无更多医生需要审核"
       @load="getHospitalData"
     >
       <div
@@ -119,80 +119,90 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
     let active = this.$route.query.active;
-    active ? this.active= active : this.active = 0;
+    active ? (this.active = active) : (this.active = 0);
     this.role = localStorage.getItem("role");
   },
   methods: {
     // 获取产品审批数据
     getProductData() {
-      this.$api.regionApprove({
-        page: this.proPage,
-        row: this.row
-      }).then( res => {
-        switch (res.code) {
-          case 200:
-            let list = res.regional_hospital_product_list;
-            this.productList = this.productList.concat(list);
-            
-            if (list.length === this.row) {
-              this.proPage += 1;
-              this.proLoading = false;
-            } else {
+      this.$api
+        .regionApprove({
+          page: this.proPage,
+          row: this.row
+        })
+        .then(res => {
+          switch (res.code) {
+            case 200:
+              let list = res.regional_hospital_product_list;
+              this.productList = this.productList.concat(list);
+
+              if (list.length === this.row) {
+                this.proPage += 1;
+                this.proLoading = false;
+              } else {
+                this.proLoading = false;
+                this.proFinished = true;
+              }
+              break;
+            case 9002:
               this.proLoading = false;
               this.proFinished = true;
-            }
-            break;
-          case 9002:
-            this.proLoading = false;
-            this.proFinished = true;
-            break;
-          case 101:
-            this.$dialog.alert({
-              message: res.message
-            }).then( () => {
-              this.$router.push('/loginpassword')
-            });
-          break;
-        }
-      }).catch( err => {
-        console.log(err)
-      })
+              break;
+            case 101:
+              this.$dialog
+                .alert({
+                  message: res.message
+                })
+                .then(() => {
+                  this.$router.push("/loginpassword");
+                });
+              break;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     // 获取医生审批数据
     getHospitalData() {
       // console.log("医生");
-      this.$api.regionDoctorList({
-        page: this.docPage,
-        row: this.row
-      }).then( res => {
-        switch (res.code) {
-          case 200:
-            let list = res.check_hospital_list;
-            this.hospitalList = this.hospitalList.concat(list);
-            
-            if (list.length === this.row) {
-              this.docPage += 1;
-              this.docLoading = false;
-            } else {
+      this.$api
+        .regionDoctorList({
+          page: this.docPage,
+          row: this.row
+        })
+        .then(res => {
+          switch (res.code) {
+            case 200:
+              let list = res.check_hospital_list;
+              this.hospitalList = this.hospitalList.concat(list);
+
+              if (list.length === this.row) {
+                this.docPage += 1;
+                this.docLoading = false;
+              } else {
+                this.docLoading = false;
+                this.docFinished = true;
+              }
+              break;
+            case 9000:
               this.docLoading = false;
               this.docFinished = true;
-            }
-            break;
-          case 9000:
-            this.docLoading = false;
-            this.docFinished = true;
-            break;
-          case 101:
-            this.$dialog.alert({
-              message: res.message
-            }).then( () => {
-              this.$router.push('/loginpassword')
-            });
-          break;
-        }
-      }).catch( err => {
-        console.log(err)
-      })
+              break;
+            case 101:
+              this.$dialog
+                .alert({
+                  message: res.message
+                })
+                .then(() => {
+                  this.$router.push("/loginpassword");
+                });
+              break;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     onBack() {
       history.back();
@@ -219,9 +229,7 @@ export default {
     switchOption() {
       let _this = this;
       let scrollOffset =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop;
+        window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
       if (_this.active == 0) {
         _this.active = 1;
         this.productOffset = scrollOffset;
@@ -248,14 +256,14 @@ export default {
       this.$router.push({ path: "/hospitalapprove", query: { id: id } });
     },
     getDoctorDetail(id) {
-      this.$router.push({ path: "/doctorapprove", query: { id: id }});
+      this.$router.push({ path: "/doctorapprove", query: { id: id } });
     }
   },
   watch: {}
 };
 </script>
 <style>
-.approve_list {
+.manager_approve {
   padding-top: 120px;
   padding-left: 0.8rem;
   padding-right: 0.8rem;
