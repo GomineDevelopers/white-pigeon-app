@@ -12,7 +12,7 @@
       </van-row>
       <van-row class="flex card_item border_bom">
         <span class="title">开户行</span>
-        <van-row class="openingBank flex flex_1"  @click="showOpeningBank">
+        <van-row class="openingBank flex flex_1" @click="showOpeningBank">
           <span class="flex_1">{{ openingBankValue ? openingBankValue : "请选择" }}</span>
           <van-icon name="arrow" />
         </van-row>
@@ -20,7 +20,12 @@
       <van-row class="flex card_item border_bom">
         <span>银行卡号</span>
         <span class="flex_1 sales_input">
-          <van-field v-model="bankCard" type="number" maxlength="19" placeholder="你本人的银行卡卡号" />
+          <van-field
+            v-model="bankCard"
+            type="number"
+            maxlength="19"
+            placeholder="你本人的银行卡卡号"
+          />
         </span>
       </van-row>
       <van-row class="notice">温馨提示：请提供与平台注册手机号绑定的银行账号</van-row>
@@ -99,20 +104,16 @@ export default {
       this.$api
         .userInfo()
         .then(res => {
-          this.name =  res.user.account_name || '';
-          this.bankCard = res.user.card_no || '';
-          this.openingBankValue = res.user.open_bank || '';
+          this.name = res.user.account_name || "";
+          this.bankCard = res.user.card_no || "";
+          this.openingBankValue = res.user.open_bank || "";
         })
         .catch(error => {
           console.log(error);
         });
     },
     goContract() {
-      if (
-        this.name == "" ||
-        this.bankCard == "" ||
-        this.openingBankValue == ""
-      ) {
+      if (this.name == "" || this.bankCard == "" || this.openingBankValue == "") {
         this.$toast.fail("请填写完整信息");
         return false;
       }
@@ -174,6 +175,7 @@ export default {
 }
 .bankcard .van-field__control {
   color: #999;
+  font-size: 0.75rem;
 }
 </style>
 <style scoped>

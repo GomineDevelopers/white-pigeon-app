@@ -53,8 +53,8 @@ export default {
   watch: {
     status(newVal, oldVal) {
       console.log("newVal", newVal);
-      this.approveList = []; //列表数据
       this.page = 1; //初始化
+      this.approveList = []; //列表数据
       this.finished = false; //完成
     }
   },
@@ -76,7 +76,6 @@ export default {
               if (res.hospital_product_list.length < this.row) {
                 this.approveList.push(...res.hospital_product_list);
                 // 加载状态结束
-                this.loading = false; //注意：此处重要
                 this.finished = true;
               } else {
                 this.approveList.push(...res.hospital_product_list);
@@ -84,11 +83,10 @@ export default {
               }
             } else {
               // 加载状态结束
-              this.loading = false; //注意：此处重要
               this.finished = true;
             }
             // 加载状态结束
-            // this.loading = false; //注意：此处重要
+            this.loading = false; //注意：此处重要
           })
           .catch(error => {
             console.log(error);
