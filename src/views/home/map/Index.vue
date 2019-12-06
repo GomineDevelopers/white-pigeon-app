@@ -698,6 +698,7 @@ export default {
     },
     // 详情弹窗开始
     touchStart(e) {
+      
       this.startY = e.touches[0].clientY;
       this.hoDetailHeight = this.$refs.hoDetailHeight.offsetHeight;
     },
@@ -707,6 +708,7 @@ export default {
       let MoveY = e.touches[0].clientY - _this.startY;
       let MoveYAbs = Math.abs(MoveY);
       let pullDownMoveY;
+      if ($(e.target).parents(".hospital_pull_cont").length) { return false};
       if (MoveY < 0 && _this.hoDetailHeight === 0) {
         _this.hospitalDetailScrollHeight = `${MoveYAbs}px`;
       } else if (MoveY > 0 && _this.hoDetailHeight > 0) {
@@ -719,6 +721,7 @@ export default {
       let MoveY = e.changedTouches[0].clientY - _this.startY;
       // console.log(MoveY);
       let MoveYAbs = Math.abs(MoveY);
+      if ($(e.target).parents(".hospital_pull_cont").length) { return false};
       if (MoveYAbs >= 20) {
         if (MoveY < 0) {
           _this.hospitalDetailScrollHeight = "100%";

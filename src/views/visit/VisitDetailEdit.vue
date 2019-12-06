@@ -52,7 +52,7 @@
           <van-row class="row_title">拜访定位</van-row>
           <van-row class="icon_right flex">
             <span class="flex_1">{{visit_position}}</span>
-            <van-icon name="replay" @click="handler" />
+            <van-icon name="replay" @click="location" />
           </van-row>
         </van-row>
         <van-row class="info_module">
@@ -240,13 +240,21 @@ export default {
     this.getVisitGoal();
   },
   methods: {
+    // 拜访定位
+    location() {
+      this.$toast.loading({
+      message: "正在定位...",
+      forbidClick: true,
+      loadingType: "spinner"
+    });
+      this.handler();
+    },
     handler() {
       let geoLocation = new BMap.Geolocation();
       geoLocation.getCurrentPosition(r => {
         let addr = r.address;
-        this.visit_position =
-          addr.city + addr.district + addr.street + addr.street_number;
-      });
+				this.visit_position = addr.city + addr.district + addr.street + addr.street_number;
+      })
     },
     // 获取拜访数据
     getVistDetail() {
