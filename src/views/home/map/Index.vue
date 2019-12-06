@@ -75,87 +75,18 @@
       :zoom="zoom"
       :mapStyle="mapStyle"
       :scroll-wheel-zoom="true"
+      :inertial-dragging="true"
       @ready="handler"
     >
-      <template v-for="(item, index) in filterHospital">
-        <template v-if="item.hospital_status === 1">
-          <bm-marker
-            :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            @click="clickHandler(item)"
-            v-bind:key="index"
-            :icon="{
-              url: statusIcon.icon_1,
-              size: bmLabelStyle.size
-            }"
-          >
-            <bm-label
-              :content="item.hospital_name"
-              :labelStyle="bmLabelStyle.labelStyle"
-              :offset="bmLabelStyle.offset"
-            />
-          </bm-marker>
-        </template>
-        <template v-else-if="item.hospital_status === 2">
-          <bm-marker
-            :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            @click="clickHandler(item)"
-            v-bind:key="index"
-            :icon="{
-              url: statusIcon.icon_3,
-              size: bmLabelStyle.size
-            }"
-          >
-            <bm-label
-              :content="item.hospital_name"
-              :labelStyle="bmLabelStyle.labelStyle"
-              :offset="bmLabelStyle.offset"
-            />
-          </bm-marker>
-        </template>
-        <template v-else-if="item.hospital_status === 3">
-          <bm-marker
-            :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            @click="clickHandler(item)"
-            v-bind:key="index"
-            :icon="{
-              url: statusIcon.icon_2,
-              size: bmLabelStyle.size
-            }"
-          >
-            <bm-label
-              :content="item.hospital_name"
-              :labelStyle="bmLabelStyle.labelStyle"
-              :offset="bmLabelStyle.offset"
-            />
-          </bm-marker>
-        </template>
-        <template v-else-if="item.hospital_status === 4">
-          <bm-marker
-            :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-            @click="clickHandler(item)"
-            v-bind:key="index"
-            :icon="{
-              url: statusIcon.icon_0,
-              size: bmLabelStyle.size
-            }"
-          >
-            <bm-label
-              :content="item.hospital_name"
-              :labelStyle="bmLabelStyle.labelStyle"
-              :offset="bmLabelStyle.offset"
-            />
-          </bm-marker>
-        </template>
-      </template>
+     <map-marker 
+        v-for="(item, index) in filterHospital"
+        :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+        :item="item"
+        :key="index"
+        @clickHandler="clickHandler">
+      </map-marker>
       <!-- 点击定位当前图标 -->
-      <bm-marker
-        v-show="currentPostion"
-        top
-        :position="{ lng: currentPostion.lng, lat: currentPostion.lat }"
-        :offset="{ width: 7, height: -6 }"
-        :icon="{ url: statusIcon.address, size: { width: 21, height: 27 } }"
-      >
-      </bm-marker>
+      <marker-lighter :position="{ lng: currentPostion.lng, lat: currentPostion.lat }"></marker-lighter>
     </baidu-map>
     <!-- map end -->
     <!-- bottom-nav start -->
@@ -260,14 +191,9 @@
 </template>
 <script>
 import AreaList from "@/js/area"; //省份数据
+import MapMarker from "../../components/MapMarker"
+import MarkerLighter from "../../components/MarkerLighter"
 import { setHospitalLevel, setHospitalType, setHospitalRunType } from "@/js/public";
-// 引入地图覆盖层状态图标
-import statusIcon_0 from "@/assets/image/home_mapicon_0.svg"; //开发中
-import statusIcon_1 from "@/assets/image/home_mapicon_1.svg"; //已开发
-import statusIcon_2 from "@/assets/image/home_mapicon_2.svg"; //空白
-import statusIcon_3 from "@/assets/image/home_mapicon_3.svg"; //不可开发
-import statusIcon_4 from "@/assets/image/home_mapicon_4.svg"; //警告
-import address from "@/assets/image/address.svg";
 import { setPriority } from "os";
 // 定义地图样式
 let mapStyleJson = [
@@ -372,19 +298,7 @@ let mapStyleJson = [
     }
   }
 ];
-// 定义覆盖层字体样式
-let bmLabelStyle = {
-  color: "#a9adaf",
-  fontSize: "10px",
-  border: "none",
-  width: "80px",
-  textAlign: "center",
-  whiteSpace: "normal",
-  background: "transparent"
-};
 
-let bmLabelOffset = { width: -16, height: 32 }; // 定义覆盖层字体位置
-let bmIconSize = { width: 36, height: 36 }; // 定义覆盖层图标大小
 export default {
   name: "index",
   inject: ["reload"], //刷新页面
@@ -421,21 +335,6 @@ export default {
         //地图样式
         styleJson: mapStyleJson
       },
-      statusIcon: {
-        //覆盖层状态图标
-        icon_0: statusIcon_0,
-        icon_1: statusIcon_1,
-        icon_2: statusIcon_2,
-        icon_3: statusIcon_3,
-        icon_4: statusIcon_4,
-        address: address
-      },
-      bmLabelStyle: {
-        //覆盖层样式
-        size: bmIconSize,
-        labelStyle: bmLabelStyle,
-        offset: bmLabelOffset
-      },
       //地图医院点数据
       hospitalData: [],
       //单个医院详细数据
@@ -447,6 +346,10 @@ export default {
       hospitalDetailScrollHeight: 0,
       startY: 0
     };
+  },
+  components: {
+    MapMarker,
+    MarkerLighter
   },
   //过滤
   computed: {
@@ -479,7 +382,12 @@ export default {
     },
     //点击医院获取详细信息
     clickHandler(data) {
-      console.log(data);
+      this.isPopup = true;
+      this.bottomNavIsShow = false;
+      if (data.id == this.current_hospital_id) {
+        return false;
+      }
+      this.current_hospital_id = data.id;
       this.hosSingleData = {}; //数据初始化
       this.hospitalFoldData = []; //
       // console.log(data);
@@ -487,7 +395,7 @@ export default {
       this.visitShow = data.hospital_status;
       this.currentPostion.lng = data.hospital_longtude;
       this.currentPostion.lat = data.hospital_latitude;
-      this.isPopup = true;
+      
       let status = data.hospital_status; // 1-已开发  2-不可开发  3-空白医院  4-开发中
       let params = { hospital_id: data.id };
       if (status == 1) {
@@ -599,11 +507,11 @@ export default {
             console.log(error);
           });
       }
-      this.bottomNavIsShow = false;
     },
     // 关闭医院弹窗
     close_popup() {
       this.isPopup = false;
+      this.bottomNavIsShow = true;
       this.hospitalDetailScrollHeight = "0px";
     },
     //获取个人信息
@@ -934,12 +842,6 @@ export default {
 }
 iframe{
   display: block;
-}
-</style>
-<style scoped>
-.BMap_Marker img {
-  widows: 100%;
-  height: 100%;
 }
 </style>
 <style scoped>
