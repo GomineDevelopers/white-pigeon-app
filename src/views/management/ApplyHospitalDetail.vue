@@ -223,8 +223,7 @@ export default {
 .hospital_adress {
   border-top: 1px solid #eeeeee;
   margin-top: 0.75rem;
-  height: 1.8rem;
-  line-height: 1.8rem;
+  padding: 0.3125rem;
 }
 .hospital_adress img:nth-child(1) {
   width: 0.625rem;
@@ -234,6 +233,7 @@ export default {
 .hospital_adress span:nth-child(1) {
   padding-right: 0.5rem;
   font-size: 0.625rem;
+  flex: 1;
 }
 .hospital_adress span:nth-child(2) i {
   font-style: normal;
