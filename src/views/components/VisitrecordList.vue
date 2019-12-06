@@ -99,7 +99,6 @@ export default {
     },
    //点击每一项
     enterDetail(id, status) {
-      console.log(id,status);
       if (status == 6) {
         this.$router.push({ path: "/visitdetailedit", query: { id: id }});
         
