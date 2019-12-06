@@ -45,9 +45,9 @@
           开始时间
           <i>*</i>
         </van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="mettingStartTimeShow = true">
           <span class="flex_1">{{ mettingStartTime ? mettingStartTime : "开始时间" }}</span>
-          <van-icon name="arrow" @click="mettingStartTimeShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
@@ -64,9 +64,9 @@
           人数
           <i>*</i>
         </van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="userNumShow = true">
           <span class="flex_1">{{ userNum ? userNum : "请选择" }}</span>
-          <van-icon name="arrow" @click="userNumShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <!-- 人员拍照开始 -->
@@ -236,8 +236,6 @@ export default {
       minHour: 10,
       maxHour: 20,
       minDate: new Date(),
-      maxDate: new Date(2019, 10, 1),
-      currentDate: new Date(),
       //会议数据
       productShow: false,
       product: "",
@@ -313,8 +311,25 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
     this.getInfoByProductId();
+    // this.setMinDate();
   },
   methods: {
+    //设置最小时间为当前日期前三天
+    // setMinDate() {
+    //   let now = new Date();
+    //   let startDate = new Date(now.getTime() - 3 * 60 * 60 * 1000);
+    //   console.log(startDate);
+    //   let year = startDate.getFullYear();
+    //   let month =
+    //     startDate.getMonth() + 1 < 10 ? "0" + (startDate.getMonth() + 1) : startDate.getMonth() + 1;
+    //   let day = startDate.getDate() < 10 ? "0" + startDate.getDate() : startDate.getDate();
+    //   var hour = startDate.getHours() < 10 ? "0" + startDate.getHours() : startDate.getHours();
+    //   var minute =
+    //     startDate.getMinutes() < 10 ? "0" + startDate.getMinutes() : startDate.getMinutes();
+    //   console.log(year, month, day);
+    //   this.minDate = new Date(year, month, day);
+    //   console.log(this.minDate);
+    // },
     onBack() {
       history.back();
     },
