@@ -1,6 +1,5 @@
 <template>
   <van-row class="index">
-    <!-- map start -->
     <!-- search 开始 -->
     <van-row class="search" @click="settingEvent($event)">
       <van-row class="search_content flex flex_align_center">
@@ -68,6 +67,7 @@
     </van-popup>
     <!-- <van-popup v-model="show">内容</van-popup> -->
     <!-- 遮罩选择省结束 -->
+    <!-- map start -->
     <baidu-map
       @click="showSetting"
       class="baidu_map_view"
@@ -152,11 +152,11 @@
         <div class="hospital_pull_cont">
           <ul>
             <li class="pull_cell" v-for="(item, index) in hospitalFoldData" :key="index">
-              <div class="pull_cell_head" @click="showContent(index)">
+              <div class="pull_cell_head" @click="contIndex = index">
                 <span class="tit">{{ item.product_name }}</span>
                 <span class="arrow">流向：0盒</span>
               </div>
-              <div class="pull_cell_cont">
+              <div class="pull_cell_cont" :class="{active: index == contIndex}">
                 <p>潜力：一般</p>
                 <p>中标价：{{ item.bidding_price }}</p>
                 <p>主要科室：{{ item.section_name }}</p>
@@ -312,6 +312,7 @@ export default {
       inputShow: false, //输入框隐藏
       tagShow: false, //tag标签模块隐藏
       isPopup: false, //显示医院详情弹窗
+      contIndex: 0, //弹窗详情产品列表显示状态
       keywords: "", //输入框关键字
       hospitalSearchList: [
         // {
@@ -676,24 +677,8 @@ export default {
         this.$toast.fail("请选择您工作区所属省份/直辖市");
       }
     },
-    // 折叠医院详情面板收缩
-    showContent(index) {
-      // console.log($('.pull_cell:eq(index)'))
-      $(".pull_cell").each(function(index2) {
-        if (index2 == index) {
-          $(this)
-            .children(".pull_cell_cont")
-            .slideToggle("fast");
-          $(this)
-            .siblings()
-            .children(".pull_cell_cont")
-            .slideUp("fast");
-        }
-      });
-    },
     // 详情弹窗开始
     touchStart(e) {
-      
       this.startY = e.touches[0].clientY;
       this.hoDetailHeight = this.$refs.hoDetailHeight.offsetHeight;
     },
@@ -714,7 +699,6 @@ export default {
     touchEnd(e) {
       let _this = this;
       let MoveY = e.changedTouches[0].clientY - _this.startY;
-      // console.log(MoveY);
       let MoveYAbs = Math.abs(MoveY);
       if ($(e.target).parents(".hospital_pull_cont").length) { return false};
       if (MoveYAbs >= 20) {
@@ -724,8 +708,6 @@ export default {
           _this.hospitalDetailScrollHeight = "0px";
         }
       }
-
-      // console.log(e.changedTouches[0].clientY);
     },
     //点击申请医院
     applyForHospital() {
@@ -1045,6 +1027,9 @@ iframe{
 .pull_cell_cont {
   display: none;
   padding: 12px 20px;
+}
+.pull_cell_cont.active{
+  display: inline-block;
 }
 .pull_cell_cont >>> p {
   margin: 0 0 6px;
