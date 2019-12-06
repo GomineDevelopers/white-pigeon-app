@@ -20,7 +20,8 @@
           <van-row>
             <ul>
               <li v-for="(item, index) in infomationList" :key="index + 'a'">
-                <a :href="item.company_policy_name" target="_blank">{{ item.title }}.pdf</a>
+                <!-- <a :href="item.company_policy_name" target="_blank">{{ item.title }}.pdf</a> -->
+                <span @click="embedSrc = item.company_policy_name">{{ item.title }}.pdf</span>
               </li>
             </ul>
           </van-row>
@@ -36,6 +37,7 @@
           </van-row>
         </van-row>
       </van-row>
+      <embed :src="embedSrc" type="application/pdf" width="100%" height="height: 520px;" />
     </van-row>
   </van-row>
 </template>
@@ -45,6 +47,7 @@ export default {
   data() {
     return {
       active: true,
+      embedSrc: "",
       infomationList: []
     };
   },

@@ -78,15 +78,18 @@
       :inertial-dragging="true"
       @ready="handler"
     >
-     <map-marker 
+      <map-marker
         v-for="(item, index) in filterHospital"
         :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
         :item="item"
         :key="index"
-        @clickHandler="clickHandler">
+        @clickHandler="clickHandler"
+      >
       </map-marker>
       <!-- 点击定位当前图标 -->
-      <marker-lighter :position="{ lng: currentPostion.lng, lat: currentPostion.lat }"></marker-lighter>
+      <marker-lighter
+        :position="{ lng: currentPostion.lng, lat: currentPostion.lat }"
+      ></marker-lighter>
     </baidu-map>
     <!-- map end -->
     <!-- bottom-nav start -->
@@ -191,8 +194,8 @@
 </template>
 <script>
 import AreaList from "@/js/area"; //省份数据
-import MapMarker from "../../components/MapMarker"
-import MarkerLighter from "../../components/MarkerLighter"
+import MapMarker from "../../components/MapMarker";
+import MarkerLighter from "../../components/MarkerLighter";
 import { setHospitalLevel, setHospitalType, setHospitalRunType } from "@/js/public";
 import { setPriority } from "os";
 // 定义地图样式
@@ -304,6 +307,7 @@ export default {
   inject: ["reload"], //刷新页面
   data() {
     return {
+      userInfo: null,
       dialogShow: false, //省份输入框
       isComplete: null, //用户是否完善信息
       areaList: AreaList, // 指定数据源
@@ -395,7 +399,7 @@ export default {
       this.visitShow = data.hospital_status;
       this.currentPostion.lng = data.hospital_longtude;
       this.currentPostion.lat = data.hospital_latitude;
-      
+
       let status = data.hospital_status; // 1-已开发  2-不可开发  3-空白医院  4-开发中
       let params = { hospital_id: data.id };
       if (status == 1) {
@@ -519,7 +523,8 @@ export default {
       this.$api
         .userInfo()
         .then(res => {
-          console.log(res);
+          console.log("用户信息", res);
+          this.userInfo = res.user; //存下用户信息
           //判断用户是否有工作地城市信息
           if (res.user.province_code == null || res.user.province_code == "") {
             this.dialogShow = true;
@@ -758,77 +763,64 @@ export default {
       event.stopPropagation(); //此区域不受上面方法的影响
     },
 
+    //点击创建拜访 先判断用户是否有银行卡信息
     creatVisit(id) {
-      this.$api
-        .userInfo()
-        .then(res => {
-          //判断用户银行卡信息是否完善
-          if (
-            res.user.account_name == null ||
-            res.user.card_no == null ||
-            res.user.open_bank == null
-          ) {
-            //银行卡信息不完善跳转银行卡完善信息页
-            this.$Dialog
-              .confirm({
-                message: "请先完善银行卡信息！",
-                confirmButtonText: "前往",
-                cancelButtonText: "取消"
-              })
-              .then(() => {
-                this.$router.push({
-                  path: "/bankcard",
-                  query: {
-                    redirect: this.$router.currentRoute.fullPath
-                  }
-                });
-              })
-              .catch(() => {
-                console.log("取消完善银行卡信息！");
-              });
-          } else {
-            this.$router.push({ path: "/developvisit", query: { id: id } });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      //判断用户银行卡信息是否完善
+      if (
+        this.userInfo.account_name == null ||
+        this.userInfo.card_no == null ||
+        this.userInfo.open_bank == null
+      ) {
+        //银行卡信息不完善跳转银行卡完善信息页
+        this.$Dialog
+          .confirm({
+            message: "请先完善银行卡信息！",
+            confirmButtonText: "前往",
+            cancelButtonText: "取消"
+          })
+          .then(() => {
+            this.$router.push({
+              path: "/bankcard",
+              query: {
+                redirect: this.$router.currentRoute.fullPath
+              }
+            });
+          })
+          .catch(() => {
+            console.log("取消完善银行卡信息！");
+          });
+      } else {
+        this.$router.push({ path: "/developvisit", query: { id: id } });
+      }
     },
     creatMetting(data) {
-      this.$api
-        .userInfo()
-        .then(res => {
-          //判断用户银行卡信息是否完善
-          if (
-            res.user.account_name == null ||
-            res.user.card_no == null ||
-            res.user.open_bank == null
-          ) {
-            //银行卡信息不完善跳转银行卡完善信息页
-            this.$Dialog
-              .confirm({
-                message: "请先完善银行卡信息！",
-                confirmButtonText: "前往",
-                cancelButtonText: "取消"
-              })
-              .then(() => {
-                this.$router.push({
-                  path: "/bankcard",
-                  query: {
-                    redirect: this.$router.currentRoute.fullPath
-                  }
-                });
-              })
-              .catch(() => {
-                console.log("取消完善银行卡信息！");
-              });
-          } else {
-            this.$router.push({ path: "/newmetting2", query: { data: data } });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      //判断用户银行卡信息是否完善
+      if (
+        this.userInfo.account_name == null ||
+        this.userInfo.card_no == null ||
+        this.userInfo.open_bank == null
+      ) {
+        //银行卡信息不完善跳转银行卡完善信息页
+        this.$Dialog
+          .confirm({
+            message: "请先完善银行卡信息！",
+            confirmButtonText: "前往",
+            cancelButtonText: "取消"
+          })
+          .then(() => {
+            this.$router.push({
+              path: "/bankcard",
+              query: {
+                redirect: this.$router.currentRoute.fullPath
+              }
+            });
+          })
+          .catch(() => {
+            console.log("取消完善银行卡信息！");
+          });
+      } else {
+        this.$router.push({ path: "/newmetting2", query: { data: data } });
+      }
     }
   }
 };
@@ -840,7 +832,7 @@ export default {
 .search .van-cell:not(:last-child)::after {
   border-bottom: none;
 }
-iframe{
+iframe {
   display: block;
 }
 </style>
@@ -907,6 +899,7 @@ iframe{
 }
 .popup_wrap.popup_show {
   bottom: 0.5rem;
+  z-index: 100;
 }
 .popup_wrap .popup_top {
   position: relative;
@@ -931,7 +924,7 @@ iframe{
   border-radius: 4px;
   background: #e1e1e1;
 }
-.popup_top .close_btn{
+.popup_top .close_btn {
   position: absolute;
   top: 3px;
   right: -5%;
@@ -1229,5 +1222,4 @@ iframe{
   color: #666;
   text-align: center;
 }
-
 </style>

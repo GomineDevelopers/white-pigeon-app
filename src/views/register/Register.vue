@@ -24,8 +24,8 @@
       </van-row>
     </van-row>
     <van-row class="login_protocol flex flex_align_center flex_justify_center">
-      <van-checkbox v-model="checked" shape="square">我已阅读并同意</van-checkbox
-      ><router-link :to="{ path: '/loginprotocol' }">《用户注册协议》</router-link>
+      <van-checkbox v-model="checked" shape="square">我已阅读并同意</van-checkbox>
+      <router-link :to="{ path: '/loginprotocol' }">《用户注册协议》</router-link>
     </van-row>
   </van-row>
 </template>
@@ -148,12 +148,13 @@ export default {
   position: relative;
 }
 .login_protocol {
-  position: absolute;
+  /* position: absolute;
   bottom: 1.875rem;
   left: 0;
-  right: 0;
+  right: 0; */
   text-align: center;
   font-size: 0.625rem;
+  margin-top: 35vh;
 }
 .van-checkbox__icon {
   font-size: 0.75rem;

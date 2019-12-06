@@ -1,172 +1,167 @@
 <template>
   <van-row>
     <van-row class="visit_content">
-        <van-row class="info_module" @click="hospitalShow = true">
-          <van-row class="row_title">医院</van-row>
-          <van-row class="icon_right flex" >
-            <span class="flex_1">{{hospitalValue ? hospitalValue:'请选择'}}</span>
-            <van-icon name="arrow"/>
-          </van-row>
-        </van-row>
-        <van-row class="info_module" @click="customerShow=true">
-          <van-row class="row_title">客户</van-row>
-          <van-row class="icon_right flex">
-            <span class="flex_1">{{customer ? customer:'请选择'}}</span>
-            <van-icon name="arrow" />
-          </van-row>
-        </van-row>
-        <van-row class="info_module" @click="timeShow=true">
-          <van-row class="row_title">开始时间</van-row>
-          <van-row class="icon_right flex">
-            <span class="flex_1">{{startTime ? startTime:'开始时间'}}</span>
-            <van-icon name="arrow" />
-          </van-row>
-        </van-row>
-        <van-row class="info_module" @click="visitPurposeShow=true">
-          <van-row class="row_title">拜访目的</van-row>
-          <van-row class="icon_right flex">
-            <span class="flex_1">{{visitPurpose ? visitPurpose:'请选择'}}</span>
-            <van-icon name="arrow" />
-          </van-row>
-        </van-row>
-        <van-row class="info_module" @click="visitChannelShow=true">
-          <van-row class="row_title">拜访渠道</van-row>
-          <van-row class="icon_right flex">
-            <span class="flex_1">{{visitChannel ? visitChannel:'请选择'}}</span>
-            <van-icon name="arrow" />
-          </van-row>
-        </van-row>
-        <van-row class="info_module" @click="productShow=true" >
-          <van-row class="row_title">产品</van-row>
-          <van-row class="icon_right flex">
-            <span class="flex_1">{{product ? product:'请选择'}}</span>
-            <van-icon name="arrow"/>
-          </van-row>
-        </van-row>
-        <van-row class="info_module">
-          <van-row class="row_title">拜访定位</van-row>
-          <van-row class="icon_right flex">
-            <span class="flex_1">{{visitPostion}}</span>
-            <van-icon name="replay" @click="handler"/>
-          </van-row>
-        </van-row>
-        <van-row class="info_module">
-          <van-row class="row_title">拍照上传</van-row>
-          <van-row class="flex after_camera">
-            <van-row
-              class="visit_img"
-              v-for="(visitPhotoList,index) in visitPhoto"
-              :key="index+'vi'"
-            >
-              <img :src="visitPhotoList" />
-              <van-icon name="clear" class="del_icon" @click="deleteImg(index)" />
-            </van-row>
-            <van-uploader class="upload_btn" v-model="fileList" :preview-image="false" :max-count="3" :after-read="afterRead" capture="camera">
-              <van-row class="flex camera_icon">
-                <van-icon name="photograph" />
-                <span>点击拍照</span>
-              </van-row>
-            </van-uploader>
-          </van-row>
-          </van-row>
-        <van-row class="middle_button flex">
-          <button class="middle_button1" @click="createData">创建</button>
-          <button class="middle_button2" @click="submitData">提交</button>
+      <van-row class="info_module" @click="hospitalShow = true">
+        <van-row class="row_title">医院</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ hospitalValue ? hospitalValue : "请选择" }}</span>
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
+      <van-row class="info_module" @click="customerShow = true">
+        <van-row class="row_title">客户</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ customer ? customer : "请选择" }}</span>
+          <van-icon name="arrow" />
+        </van-row>
+      </van-row>
+      <van-row class="info_module" @click="timeShow = true">
+        <van-row class="row_title">开始时间</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ startTime ? startTime : "开始时间" }}</span>
+          <van-icon name="arrow" />
+        </van-row>
+      </van-row>
+      <van-row class="info_module" @click="visitPurposeShow = true">
+        <van-row class="row_title">拜访目的</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ visitPurpose ? visitPurpose : "请选择" }}</span>
+          <van-icon name="arrow" />
+        </van-row>
+      </van-row>
+      <van-row class="info_module" @click="visitChannelShow = true">
+        <van-row class="row_title">拜访渠道</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ visitChannel ? visitChannel : "请选择" }}</span>
+          <van-icon name="arrow" />
+        </van-row>
+      </van-row>
+      <van-row class="info_module" @click="productShow = true">
+        <van-row class="row_title">产品</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ product ? product : "请选择" }}</span>
+          <van-icon name="arrow" />
+        </van-row>
+      </van-row>
+      <van-row class="info_module">
+        <van-row class="row_title">拜访定位</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ visitPostion }}</span>
+          <van-icon name="replay" @click="handler" />
+        </van-row>
+      </van-row>
+      <van-row class="info_module">
+        <van-row class="row_title">拍照上传</van-row>
+        <van-row class="flex after_camera">
+          <van-row
+            class="visit_img"
+            v-for="(visitPhotoList, index) in visitPhoto"
+            :key="index + 'vi'"
+          >
+            <img :src="visitPhotoList" />
+            <van-icon name="clear" class="del_icon" @click="deleteImg(index)" />
+          </van-row>
+          <van-uploader
+            class="upload_btn"
+            v-model="fileList"
+            :preview-image="false"
+            :max-count="3"
+            :after-read="afterRead"
+            capture="camera"
+          >
+            <van-row class="flex camera_icon">
+              <van-icon name="photograph" />
+              <span>点击拍照</span>
+            </van-row>
+          </van-uploader>
+        </van-row>
+      </van-row>
+      <van-row class="middle_button flex">
+        <button class="middle_button1" @click="createData">创建</button>
+        <button class="middle_button2" @click="submitData">提交</button>
+      </van-row>
+    </van-row>
 
     <baidu-map :center="center" @ready="handler"></baidu-map>
     <!-- 医院选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-popup v-model="hospitalShow" position="bottom">
-          <van-picker
-            show-toolbar
-            title="医院选择"
-            :columns="hospitalList"
-            @cancel="hospitalShow = false"
-            @confirm="onConfirm"
-          />
-        </van-popup>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="hospitalShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="医院选择"
+          :columns="hospitalList"
+          @cancel="hospitalShow = false"
+          @confirm="onConfirm"
+        />
+      </van-popup>
+    </transition>
 
     <!-- 客户选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-popup v-model="customerShow" position="bottom">
-          <van-picker
-            show-toolbar
-            title="客户选择"
-            :columns="customerList"
-            @cancel="customerShow = false"
-            @confirm="customerConfirm"
-          />
-        </van-popup>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="customerShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="客户选择"
+          :columns="customerList"
+          @cancel="customerShow = false"
+          @confirm="customerConfirm"
+        />
+      </van-popup>
+    </transition>
 
     <!-- 时间选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-popup v-model="timeShow" position="bottom">
-          <van-datetime-picker
-            v-model="currentDate"
-            title="时间选择"
-            type="datetime"
-            :min-date="minDate"
-            @cancel="timeShow = false"
-            @confirm="timeConfirm"
-          />
-        </van-popup>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="timeShow" position="bottom">
+        <van-datetime-picker
+          v-model="currentDate"
+          title="时间选择"
+          type="datetime"
+          :min-date="minDate"
+          @cancel="timeShow = false"
+          @confirm="timeConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 拜访目的 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-popup v-model="visitPurposeShow" position="bottom">
-          <van-picker
-            show-toolbar
-            title="拜访目的选择"
-            :columns="visitPurposeList"
-            @cancel="visitPurposeShow = false"
-            @confirm="visitPurposeConfirm"
-          />
-        </van-popup>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="visitPurposeShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="拜访目的选择"
+          :columns="visitPurposeList"
+          @cancel="visitPurposeShow = false"
+          @confirm="visitPurposeConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 拜访渠道 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-popup v-model="visitChannelShow" position="bottom">
-          <van-picker
-            show-toolbar
-            title="拜访渠道选择"
-            :columns="visitChannelList"
-            @cancel="visitChannelShow = false"
-            @confirm="visitChannelConfirm"
-          />
-        </van-popup>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="visitChannelShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="拜访渠道选择"
+          :columns="visitChannelList"
+          @cancel="visitChannelShow = false"
+          @confirm="visitChannelConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 产品 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-popup v-model="productShow" position="bottom">
-          <van-picker
-            show-toolbar
-            title="产品选择"
-            :columns="productList"
-            @cancel="productShow = false"
-            @confirm="productConfirm"
-          />
-        </van-popup>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="productShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="产品选择"
+          :columns="productList"
+          @cancel="productShow = false"
+          @confirm="productConfirm"
+        />
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>
-import { upload } from '@/js/upload'
+import { upload } from "@/js/upload";
 export default {
   name: "visitapplyform",
   data() {
@@ -187,9 +182,7 @@ export default {
       hospitalList: [],
       customerList: [],
       visitPurposeList: [],
-      visitChannelList: [
-        {id: 1, text: "面对面拜访"},
-      ],
+      visitChannelList: [{ id: 1, text: "面对面拜访" }],
       visitPostion: "",
       productList: [],
       minHour: 10,
@@ -198,7 +191,7 @@ export default {
       maxDate: new Date(2019, 10, 1),
       currentDate: new Date(),
       fileList: [],
-      center: {lng: 0, lat: 0},
+      center: { lng: 0, lat: 0 }
     };
   },
   mounted() {
@@ -206,50 +199,53 @@ export default {
     this.getVisitGoal();
   },
   methods: {
-    handler () {
+    handler() {
       let geoLocation = new BMap.Geolocation();
       geoLocation.getCurrentPosition(r => {
         let addr = r.address;
-				this.visitPostion = addr.city + addr.district + addr.street + addr.street_number;
-      })
+        this.visitPostion = addr.city + addr.district + addr.street + addr.street_number;
+      });
     },
     // 获取拜访关联的医院
     getVisitRelation() {
       this.$api
         .visitRelation()
         .then(res => {
-          if(res.code == 200){
+          if (res.code == 200) {
             let hospitalInfo = res.getInfoByHospitalId;
             let productInfo = res.getproductByHospitalId;
-            if(hospitalInfo.length != 0){
+            if (hospitalInfo.length != 0) {
               let currHospitalObj = {};
               this.hospitalInfo = hospitalInfo;
               this.productInfo = productInfo;
-              this.hospitalList = hospitalInfo.reduce((item, next) =>{
-                currHospitalObj[next.hospital_id] ? '' : currHospitalObj[next.hospital_id] = true && item.push({id: next.hospital_id,text: next.hospital_name});
+              this.hospitalList = hospitalInfo.reduce((item, next) => {
+                currHospitalObj[next.hospital_id]
+                  ? ""
+                  : (currHospitalObj[next.hospital_id] =
+                      true && item.push({ id: next.hospital_id, text: next.hospital_name }));
                 return item;
-              },[]);
+              }, []);
             }
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     // 获取拜访目的
     getVisitGoal() {
       this.$api
         .visitGoal()
         .then(res => {
-          if (res.code == 200){
-            this.visitPurposeList = res.visit_goal_list.map( item => {
-              return {id: item.id, text: item.visit_goal}
-            })
+          if (res.code == 200) {
+            this.visitPurposeList = res.visit_goal_list.map(item => {
+              return { id: item.id, text: item.visit_goal };
+            });
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     onBack() {
       history.back();
@@ -265,17 +261,16 @@ export default {
       this.product_id = "";
       this.customerList = [];
       this.productList = [];
-      this.hospitalInfo.map( item => {
+      this.hospitalInfo.map(item => {
         if (item.hospital_id == v.id) {
-          this.customerList.push({id: item.doctor_id, text: item.doctor_name});
+          this.customerList.push({ id: item.doctor_id, text: item.doctor_name });
         }
       });
-      this.productInfo.map( item => {
+      this.productInfo.map(item => {
         if (item.hospital_id == v.id) {
-          this.productList.push({id: item.product_id, text: item.product_name});
+          this.productList.push({ id: item.product_id, text: item.product_name });
         }
       });
-      
     },
     // 选择客户
     customerConfirm(v) {
@@ -293,7 +288,7 @@ export default {
       this.visitPurpose = v.text;
       this.goal_visit_id = v.id;
     },
-     // 拜访渠道选择
+    // 拜访渠道选择
     visitChannelConfirm(v) {
       this.visitChannelShow = false;
       this.visitChannel = v.text;
@@ -307,13 +302,13 @@ export default {
     },
     //拜访拍照上传
     afterRead(file) {
-      upload(file,0).then(res => {
-        this.visitPhoto.push( res);
+      upload(file, 0).then(res => {
+        this.visitPhoto.push(res);
       });
     },
     // 删除图片
     deleteImg(i) {
-      this.visitPhoto.splice(i,1);
+      this.visitPhoto.splice(i, 1);
     },
     // 创建
     createData() {
@@ -326,19 +321,19 @@ export default {
     // 检测上传数据是否为空
     checkData(type) {
       if (this.hospital_id == undefined) {
-        this.$toast("医院不能为空")
+        this.$toast("医院不能为空");
       } else if (this.doctor_id == undefined) {
-        this.$toast("客户不能为空")
+        this.$toast("客户不能为空");
       } else if (!this.startTime) {
-        this.$toast("开始时间不能为空")
+        this.$toast("开始时间不能为空");
       } else if (this.goal_visit_id == undefined) {
-        this.$toast("拜访目的不能为空")
+        this.$toast("拜访目的不能为空");
       } else if (this.visit_channel == undefined) {
-        this.$toast("拜访渠道不能为空")
+        this.$toast("拜访渠道不能为空");
       } else if (this.product_id == undefined) {
-        this.$toast("产品不能为空")
+        this.$toast("产品不能为空");
       } else if (!this.visitPostion) {
-        this.$toast("拜访定位不能为空")
+        this.$toast("拜访定位不能为空");
       } else {
         let data = {
           is_create: type,
@@ -351,27 +346,28 @@ export default {
           visit_position: this.visitPostion,
           visit_image: this.visitPhoto[0] || null,
           visit_image_two: this.visitPhoto[1] || null,
-          visit_image_three: this.visitPhoto[2] || null,
+          visit_image_three: this.visitPhoto[2] || null
         };
         this.upDataToServer(data);
       }
     },
     // 上传数据到服务器
     upDataToServer(data) {
-      this.$api.createVisit(data)
-        .then( res => {
+      this.$api
+        .createVisit(data)
+        .then(res => {
           if (res.code == 200) {
-            this.$toast.success('上传成功');
+            this.$toast.success("上传成功");
             setTimeout(() => {
               this.$router.replace("/visitrecord");
-            },1000)
+            }, 1000);
           } else {
-            this.$toast.fail(res.message)
+            this.$toast.fail(res.message);
           }
         })
-        .catch( err => {
-          console.log(err)
-        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     //时间格式转换
     timeFormat(time) {
@@ -381,10 +377,21 @@ export default {
       let day = time.getDate();
       let hours = time.getHours();
       let minutes = time.getMinutes();
-      return year + "-" + this.timeFill(month) + "-" + this.timeFill(day) + " " + this.timeFill(hours) + ":" + this.timeFill(minutes) + ":00";
+      return (
+        year +
+        "-" +
+        this.timeFill(month) +
+        "-" +
+        this.timeFill(day) +
+        " " +
+        this.timeFill(hours) +
+        ":" +
+        this.timeFill(minutes) +
+        ":00"
+      );
     },
     timeFill(t) {
-      return t < 10 ? '0' + t : t;
+      return t < 10 ? "0" + t : t;
     }
   }
 };
@@ -471,7 +478,7 @@ export default {
   background-color: #fff;
   border-radius: 100%;
 }
-.after_camera .van-uploader{
+.after_camera .van-uploader {
   width: auto !important;
 }
 .after_camera .camera_icon {

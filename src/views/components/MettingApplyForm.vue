@@ -8,9 +8,9 @@
           产品
           <i>*</i>
         </van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="productShow = true">
           <span class="flex_1">{{ product ? product : "请选择" }}</span>
-          <van-icon name="arrow" @click="productShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
@@ -18,16 +18,16 @@
           会议主题
           <i>*</i>
         </van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="conferenceThemeShow = true">
           <span class="flex_1">{{ conferenceTheme ? conferenceTheme : "请选择" }}</span>
-          <van-icon name="arrow" @click="conferenceThemeShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
         <van-row class="row_title">医院</van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="hospitalShow = true">
           <span class="flex_1">{{ hospital ? hospital : "请选择" }}</span>
-          <van-icon name="arrow" @click="hospitalShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
@@ -35,9 +35,9 @@
           所属科室
           <i>*</i>
         </van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="departmentShow = true">
           <span class="flex_1">{{ department ? department : "请选择" }}</span>
-          <van-icon name="arrow" @click="departmentShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
@@ -149,90 +149,78 @@
     <!-- </van-row> -->
     <!-- 以下为会议页的选项 -->
     <!-- 产品 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="productShow">
-          <van-picker
-            show-toolbar
-            title="产品选择"
-            :columns="productList"
-            @cancel="productShow = false"
-            @confirm="productConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="productShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="产品选择"
+          :columns="productList"
+          @cancel="productShow = false"
+          @confirm="productConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 会议主题 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="conferenceThemeShow">
-          <van-picker
-            show-toolbar
-            title="会议主题选择"
-            :columns="conferenceThemeList"
-            @cancel="conferenceThemeShow = false"
-            @confirm="conferenceThemeConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="conferenceThemeShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="会议主题选择"
+          :columns="conferenceThemeList"
+          @cancel="conferenceThemeShow = false"
+          @confirm="conferenceThemeConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 医院 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="hospitalShow">
-          <van-picker
-            show-toolbar
-            title="医院选择"
-            :columns="hospitalList"
-            @cancel="hospitalShow = false"
-            @confirm="hospitalListConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="hospitalShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="医院选择"
+          :columns="hospitalList"
+          @cancel="hospitalShow = false"
+          @confirm="hospitalListConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 所属科室 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="departmentShow">
-          <van-picker
-            show-toolbar
-            title="所属科室选择"
-            :columns="departmentList"
-            @cancel="departmentShow = false"
-            @confirm="departmentConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="departmentShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="所属科室选择"
+          :columns="departmentList"
+          @cancel="departmentShow = false"
+          @confirm="departmentConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 时间选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="mettingStartTimeShow">
-          <van-datetime-picker
-            v-model="mettingDate"
-            title="时间选择"
-            type="datetime"
-            :min-date="minDate"
-            @cancel="mettingStartTimeShow = false"
-            @confirm="mettingTimeConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="mettingStartTimeShow" position="bottom">
+        <van-datetime-picker
+          v-model="mettingDate"
+          title="时间选择"
+          type="datetime"
+          :min-date="minDate"
+          @cancel="mettingStartTimeShow = false"
+          @confirm="mettingTimeConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 人数选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="userNumShow">
-          <van-picker
-            show-toolbar
-            title="人数选择"
-            :columns="userNumList"
-            @cancel="userNumShow = false"
-            @confirm="userNumConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="userNumShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="人数选择"
+          :columns="userNumList"
+          @cancel="userNumShow = false"
+          @confirm="userNumConfirm"
+        />
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>

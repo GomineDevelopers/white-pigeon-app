@@ -102,7 +102,6 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
-    this.getInformation(1);
   },
   methods: {
     onBack() {
@@ -120,6 +119,7 @@ export default {
 }
 .top_content {
   text-indent: 1.5rem;
+  font-size: 0.6875rem;
 }
 .loginprotocol_title {
   color: #000;
@@ -127,5 +127,6 @@ export default {
 }
 .loginprotocol_content {
   font-size: 0.625rem;
+  font-size: 0.6875rem;
 }
 </style>

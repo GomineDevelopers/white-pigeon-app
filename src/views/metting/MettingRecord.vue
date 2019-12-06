@@ -78,9 +78,9 @@
       <!-- <van-row class="more">查看更多</van-row> -->
     </van-row>
     <!-- 会议产品筛选 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="mettingFiltrate">
+    <transition name="van-slide-up">
+      <van-popup v-model="mettingFiltrate" position="bottom">
+        <van-row>
           <van-picker
             show-toolbar
             title="产品筛选"
@@ -92,8 +92,8 @@
             @confirm="productConfirm"
           />
         </van-row>
-      </transition>
-    </van-row>
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>

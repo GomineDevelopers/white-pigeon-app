@@ -10,7 +10,7 @@ import jquery from "jquery";
 import "@/js/rem";
 import "@/js/vant.js";
 import "@/css/public.css";
-import { List } from "vant";
+import { List, Toast } from "vant";
 
 Vue.use(List);
 Vue.use(BaiduMap, {
@@ -33,13 +33,19 @@ Vue.prototype.$Cookie = Cookie;
 router.beforeEach((to, from, next) => {
   let token = localStorage.getItem("token"); //从localStorage中取用户uid
   //以下几个路由无需token
-  if (to.path == "/retrievePassword" || to.path == "/loginsms" || to.path == "/register") {
+  if (
+    to.path == "/retrievePassword" ||
+    to.path == "/loginsms" ||
+    to.path == "/register" ||
+    to.path == "/loginprotocol"
+  ) {
     next();
   } else {
     if (token) {
       store.commit("setToken", token);
       next();
     } else {
+      Toast("请先登录！");
       if (to.path == "/loginpassword") {
         next(); //注意在router.beforeEach中一定要用next()来跳出导航循环
       } else {

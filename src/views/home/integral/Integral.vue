@@ -8,9 +8,7 @@
       <van-row class="integral_content">
         <van-row class="integral_total">
           <span>累计积分总额</span>
-          <span>
-            <i>0</i>分
-          </span>
+          <span> <i>0</i>分 </span>
         </van-row>
         <van-row class="integral_detail">
           <span class="integral_detail_title">积分明细</span>
@@ -45,6 +43,19 @@ export default {
   name: "integral",
   data() {
     return {};
+  },
+  created() {
+    // H5 plus事件处理
+    function plusReady() {
+      // 设置系统状态栏背景为白色
+      plus.navigator.setStatusBarBackground("#FFF");
+      plus.navigator.setStatusBarStyle("dark");
+    }
+    if (window.plus) {
+      plusReady();
+    } else {
+      document.addEventListener("plusready", plusReady, false);
+    }
   }
 };
 </script>

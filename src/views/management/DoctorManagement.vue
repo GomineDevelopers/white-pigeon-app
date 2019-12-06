@@ -68,9 +68,9 @@
       </van-row>
     </van-row>
     <!-- 筛选 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="hospitalShow">
+    <transition name="van-slide-up">
+      <van-popup v-model="hospitalShow" position="bottom">
+        <van-row>
           <van-picker
             show-toolbar
             :columns="hospitalList"
@@ -78,8 +78,8 @@
             @confirm="onConfirm"
           />
         </van-row>
-      </transition>
-    </van-row>
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>

@@ -63,14 +63,18 @@
 
     <!-- 身份证时间选择 -->
     <transition name="van-slide-up">
-      <van-row class="area_option" v-show="IDdateShow">
-        <van-datetime-picker
-          v-model="currentDate"
-          type="date"
-          @confirm="dateConfirmFn"
-          @cancel="IDdateShow = false"
-        />
-      </van-row>
+      <van-popup v-model="IDdateShow" position="bottom">
+        <van-row class="area_option">
+          <van-datetime-picker
+            v-model="currentDate"
+            type="date"
+            :min-date="minDate"
+            :max-date="maxDate"
+            @confirm="dateConfirmFn"
+            @cancel="IDdateShow = false"
+          />
+        </van-row>
+      </van-popup>
     </transition>
   </van-row>
 </template>
@@ -85,6 +89,8 @@ export default {
       // areaList: AreaList, // 指定数据源
       // areaListShow: false,
       // areaValue: "",
+      minDate: new Date(),
+      maxDate: new Date(2039, 10, 1),
       IDdateShow: false,
       currentDate: new Date(),
       IDcardFlag: null,
@@ -108,6 +114,8 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+
+    this.setMaxDate();
   },
   methods: {
     //地区选择确认
@@ -128,6 +136,15 @@ export default {
     //     SelectCountyName
     //   );
     // },
+    setMaxDate() {
+      let now = new Date();
+      let endDate = new Date(now.setFullYear(now.getFullYear() + 30));
+      var year = endDate.getFullYear();
+      var month =
+        endDate.getMonth() + 1 < 10 ? "0" + (endDate.getMonth() + 1) : endDate.getMonth() + 1;
+      var day = endDate.getDate() < 10 ? "0" + endDate.getDate() : endDate.getDate();
+      this.maxDate = new Date(year, month, day);
+    },
 
     //日期选择确定
     dateConfirmFn(event) {
