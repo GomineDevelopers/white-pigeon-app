@@ -349,11 +349,8 @@ export function minutesTimeFormat(time) {
 }
 
 // 开始时间为当前时间的前三天
-export function minDate(){
-    let minDate = new Date(new Date() - 259200000);
-    let year = minDate.getFullYear();
-    let month = minDate.getMonth() + 1;
-    let day = minDate.getDate();
-    let time = new Date(`${year}-${month}-${day} 00:00:00`);
-    return time;
+export function minDate() {
+  let minDate = new Date(new Date() - 259200000);
+  let time = new Date(minDate);
+  return time;
 }
