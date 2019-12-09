@@ -42,9 +42,9 @@
           性别
           <i>*</i>
         </van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="sexShow = true">
           <span class="flex_1">{{ sexValue ? sexValue : "请选择" }}</span>
-          <van-icon name="arrow" @click="sexShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
@@ -52,9 +52,9 @@
           客户状态
           <i>*</i>
         </van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="customerStatusShow = true">
           <span class="flex_1">{{ customerStatus ? customerStatus : "请选择" }}</span>
-          <van-icon name="arrow" @click="customerStatusShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
@@ -72,23 +72,23 @@
       </van-row>
       <van-row class="info_module">
         <van-row class="row_title">学历</van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="educationShow = true">
           <span class="flex_1">{{ educationValue ? educationValue : "请选择" }}</span>
-          <van-icon name="arrow" @click="educationShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
         <van-row class="row_title">专业人士分类</van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="professionShow = true">
           <span class="flex_1">{{ professionValue ? professionValue : "请选择" }}</span>
-          <van-icon name="arrow" @click="professionShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
         <van-row class="row_title">学术头衔</van-row>
-        <van-row class="icon_right flex">
+        <van-row class="icon_right flex" @click="academicShow = true">
           <span class="flex_1">{{ academicValue ? academicValue : "请选择" }}</span>
-          <van-icon name="arrow" @click="academicShow = true" />
+          <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="public_btn" @click="create">
@@ -125,33 +125,29 @@
       </transition>
     </van-row>
     <!-- 性别选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="sexShow">
-          <van-picker
-            show-toolbar
-            title="性别选择"
-            :columns="sexList"
-            @cancel="sexShow = false"
-            @confirm="sexConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="sexShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="性别选择"
+          :columns="sexList"
+          @cancel="sexShow = false"
+          @confirm="sexConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 客户状态选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="customerStatusShow">
-          <van-picker
-            show-toolbar
-            title="状态选择"
-            :columns="customerStatusList"
-            @cancel="customerStatusShow = false"
-            @confirm="statusConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="customerStatusShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="状态选择"
+          :columns="customerStatusList"
+          @cancel="customerStatusShow = false"
+          @confirm="statusConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 职务选择 -->
     <van-row class="showbank">
       <transition name="van-slide-up">
@@ -167,47 +163,41 @@
       </transition>
     </van-row>
     <!-- 学历选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="educationShow">
-          <van-picker
-            show-toolbar
-            title="学历选择"
-            :columns="educationList"
-            @cancel="educationShow = false"
-            @confirm="educationConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="educationShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="学历选择"
+          :columns="educationList"
+          @cancel="educationShow = false"
+          @confirm="educationConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 专业人士选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="professionShow">
-          <van-picker
-            show-toolbar
-            title="专业人士分类选择"
-            :columns="professionList"
-            @cancel="professionShow = false"
-            @confirm="professionConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="professionShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="专业人士分类选择"
+          :columns="professionList"
+          @cancel="professionShow = false"
+          @confirm="professionConfirm"
+        />
+      </van-popup>
+    </transition>
     <!-- 学术头衔选择 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="academicShow">
-          <van-picker
-            show-toolbar
-            title="学术头衔选择"
-            :columns="academicList"
-            @cancel="academicShow = false"
-            @confirm="academicConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="academicShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="学术头衔选择"
+          :columns="academicList"
+          @cancel="academicShow = false"
+          @confirm="academicConfirm"
+        />
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>
@@ -229,8 +219,7 @@ export default {
       sexShow: false,
       sexList: [
         { id: 1, text: "男" },
-        { id: 2, text: "女" },
-        { id: 3, text: "保密" }
+        { id: 2, text: "女" }
       ],
       customerStatus: "",
       customerStatusId: "",

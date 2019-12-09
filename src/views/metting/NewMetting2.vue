@@ -11,9 +11,9 @@
             产品
             <i>*</i>
           </van-row>
-          <van-row class="icon_right flex">
+          <van-row class="icon_right flex" @click="productShow = true">
             <span class="flex_1">{{ product ? product : "请选择" }}</span>
-            <van-icon name="arrow" @click="productShow = true" />
+            <van-icon name="arrow" />
           </van-row>
         </van-row>
         <van-row class="info_module">
@@ -21,9 +21,9 @@
             会议主题
             <i>*</i>
           </van-row>
-          <van-row class="icon_right flex">
+          <van-row class="icon_right flex" @click="conferenceThemeShow = true">
             <span class="flex_1">{{ conferenceTheme ? conferenceTheme : "请选择" }}</span>
-            <van-icon name="arrow" @click="conferenceThemeShow = true" />
+            <van-icon name="arrow" />
           </van-row>
         </van-row>
         <van-row class="info_module">
@@ -38,9 +38,9 @@
             所属科室
             <i>*</i>
           </van-row>
-          <van-row class="icon_right flex">
+          <van-row class="icon_right flex" @click="departmentShow = true">
             <span class="flex_1">{{ department ? department : "请选择" }}</span>
-            <van-icon name="arrow" @click="departmentShow = true" />
+            <van-icon name="arrow" />
           </van-row>
         </van-row>
         <van-row class="info_module">
@@ -48,9 +48,9 @@
             开始时间
             <i>*</i>
           </van-row>
-          <van-row class="icon_right flex">
+          <van-row class="icon_right flex" @click="mettingStartTimeShow = true">
             <span class="flex_1">{{ mettingStartTime ? mettingStartTime : "开始时间" }}</span>
-            <van-icon name="arrow" @click="mettingStartTimeShow = true" />
+            <van-icon name="arrow" />
           </van-row>
         </van-row>
         <van-row class="info_module">
@@ -67,9 +67,9 @@
             人数
             <i>*</i>
           </van-row>
-          <van-row class="icon_right flex">
+          <van-row class="icon_right flex" @click="userNumShow = true">
             <span class="flex_1">{{ userNum ? userNum : "请选择" }}</span>
-            <van-icon name="arrow" @click="userNumShow = true" />
+            <van-icon name="arrow" />
           </van-row>
         </van-row>
         <!-- 人员拍照开始 -->
