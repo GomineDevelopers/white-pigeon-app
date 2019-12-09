@@ -63,6 +63,7 @@
       :inertial-dragging="true"
       @ready="handler"
     >
+    <template v-if="markerReset">
       <map-marker
         v-for="(item, index) in filterHospital"
         :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
@@ -71,6 +72,7 @@
         @clickHandler="clickHandler"
       >
       </map-marker>
+      </template>
       <!-- 点击定位当前图标 -->
       <marker-lighter
         :position="{ lng: currentPostion.lng, lat: currentPostion.lat }"
@@ -316,6 +318,7 @@ export default {
         lng: "",
         lat: ""
       },
+      markerReset: true,
       bottomNavIsShow: true,
       center: { lng: 121.536019, lat: 31.222785 }, //当前定位
       zoom: 14,
@@ -348,9 +351,6 @@ export default {
         return this.hospitalData;
       } else {
         return this.hospitalData.filter(value => {
-          if (value.hospital_status == this.currentTagStatus) {
-            console.log(value);
-          }
           return value.hospital_status == this.currentTagStatus;
         });
       }
@@ -362,18 +362,23 @@ export default {
   mounted() {},
   methods: {
     handler({ BMap, map }) {
-      // this.center.lng = 121.536019;
-      // this.center.lat = 31.222785;
-      let geoLocation = new BMap.Geolocation();
-      geoLocation.getCurrentPosition(r => {
-        console.log(r);
+      // let geoLocation = new BMap.Geolocation();
+      // geoLocation.getCurrentPosition(r => {
         // this.center = { lng: r.longitude, lat: r.latitude}
-      });
+      // });
       this.zoom = 13;
     },
     //点击地图下部筛选医院类型
     handleActiveTag(type) {
-      this.currentTagStatus = type;
+      if (this.currentTagStatus == type){
+        return false;
+      }
+      this.markerReset = false;
+      this.$nextTick(() => {
+        this.markerReset = true;
+        this.currentTagStatus = type;
+      })
+      
 
       // this.handler({ BMap, map });
     },
@@ -381,6 +386,8 @@ export default {
     clickHandler(data) {
       this.isPopup = true;
       this.bottomNavIsShow = false;
+      this.currentPostion.lng = data.hospital_longtude;
+      this.currentPostion.lat = data.hospital_latitude;
       if (data.id == this.current_hospital_id) {
         return false;
       }
@@ -390,8 +397,6 @@ export default {
       // console.log(data);
       //设置当前定位点
       this.visitShow = data.hospital_status;
-      this.currentPostion.lng = data.hospital_longtude;
-      this.currentPostion.lat = data.hospital_latitude;
       let status = data.hospital_status; // 1-已开发  2-不可开发  3-空白医院  4-开发中
       let params = { hospital_id: data.id };
       if (status == 1) {
@@ -509,6 +514,10 @@ export default {
       this.isPopup = false;
       this.bottomNavIsShow = true;
       this.hospitalDetailScrollHeight = "0px";
+      this.currentPostion = {
+        lng: 0,
+        lat: 0
+      }
     },
     //获取个人信息
     getUserInfo() {
