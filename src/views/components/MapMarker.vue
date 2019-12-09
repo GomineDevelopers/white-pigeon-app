@@ -1,5 +1,5 @@
 <template>
-  <bm-overlay ref="customOverlay" class="map_marker" pane="labelPane" @draw="draw">
+  <bm-overlay ref="customOverlay" class="map_marker" pane="labelPane" @initialize="draw">
     <img
       v-if="item.hospital_status == 1"
       src="@/assets/image/home_mapicon_1.svg"
@@ -76,19 +76,11 @@ export default {
       deep: true
     }
   },
-  computed: {
-    item1: function() {
-      console.log(this.item);
-    }
-  },
   methods: {
     handleClick(item) {
-      console.log(item);
       this.$emit("clickHandler", item);
     },
     draw({ el, BMap, map }) {
-      console.log("~~~~~~", this.item);
-      console.log("~~~~~~", this.position);
       const { lng, lat } = this.position;
       const pixel = map.pointToOverlayPixel(new BMap.Point(lng, lat));
       el.style.left = pixel.x - 34 + "px";
