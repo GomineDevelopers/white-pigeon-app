@@ -117,3 +117,61 @@ function uploadToQiniuyun( file, token, domain, resolve ) {
     });
   
 }
+
+export function photograph() {
+
+  return new Promise((resolve, reject) => {
+    let cmr = plus.camera.getCamera();
+    let res = cmr.supportedImageResolutions[0];
+    let fmt = cmr.supportedImageFormats[0];
+    cmr.captureImage(
+      (path) => {
+        plus.io.resolveLocalFileSystemURL(
+          path,
+          (entry) => {
+            entry.file((file) => {
+              let filename = file.name;
+              let reader = new plus.io.FileReader();
+              reader.onload = function(res){
+                  let base64Img = res.target.result;
+                  let files = base64ToFile(filename,base64Img);
+                  console.log({ content: base64Img, file: files })
+                  resolve({ content: base64Img, file: files });
+                  
+              };
+              reader.readAsDataURL(file);
+            }, (e) => {
+              console.log('读取文件失败')
+              reject('读取文件失败')
+            })
+          }, (e) => {
+            console.log(e)
+            reject(e.message);
+          }
+        );
+      }, (error) => {
+        console.log("拍摄失败",error.message)
+        reject("拍摄失败: " + error.message);
+      }, {
+        resolution: res,
+        format: fmt
+      }
+    );
+  })
+}
+
+function base64ToFile(name,dataurl) {
+  let fileName = name.split(".")[0];
+  let arr = dataurl.split(",");
+  let mime = arr[0].match(/:(.*?);/)[1];
+  let suffix = mime.split("/")[1];
+  let bstr = atob(arr[1]);
+  let n = bstr.length;
+  let u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], `${fileName}.${suffix}`, {
+    type: mime
+  });
+}

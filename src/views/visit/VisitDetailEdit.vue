@@ -66,20 +66,10 @@
               <img :src="visitPhotoList" />
               <van-icon name="clear" class="del_icon" @click="deleteImg(index)" />
             </van-row>
-            <van-uploader
-              v-show="visitPhoto.length < 3"
-              class="upload_btn"
-              v-model="fileList"
-              :preview-image="false"
-              :max-count="3"
-              :after-read="afterRead"
-              capture="camera"
-            >
-              <van-row class="flex camera_icon">
-                <van-icon name="photograph" />
-                <span>点击拍照</span>
-              </van-row>
-            </van-uploader>
+            <van-row class="flex camera_icon" v-show="visitPhoto.length < 3" @click="camera">
+              <van-icon name="photograph" />
+              <span>点击拍照</span>
+            </van-row>
           </van-row>
         </van-row>
         <van-row class="middle_button flex">
@@ -178,7 +168,7 @@
   </van-row>
 </template>
 <script>
-import { upload } from "@/js/upload";
+import { upload, photograph } from "@/js/upload";
 import {minDate,minutesTimeFormat } from "@/js/public";
 export default {
   name: "visitdetailedit",
@@ -213,7 +203,6 @@ export default {
       minDate: new Date(),
       maxDate: new Date(2019, 10, 1),
       currentDate: new Date(),
-      fileList: [],
       center: { lng: 0, lat: 0 }
     };
   },
@@ -410,10 +399,15 @@ export default {
       this.product_id = v.id;
     },
     //拜访拍照上传
-    afterRead(file) {
-      upload(file, 0).then(res => {
-        this.visitPhoto.push(res);
-      });
+    camera() {
+      photograph().then(res => {
+        console.log("305",res)
+        upload(res, 0).then(res => {
+          this.visitPhoto.push(res);
+        })
+      }).catch(err => {
+        console.log("310",err)
+      })
     },
     // 删除图片
     deleteImg(i) {
