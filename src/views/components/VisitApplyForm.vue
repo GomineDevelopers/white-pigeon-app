@@ -162,6 +162,8 @@
 </template>
 <script>
 import { upload } from "@/js/upload";
+import {minDate,minutesTimeFormat } from "@/js/public";
+import { format } from 'path';
 export default {
   name: "visitapplyform",
   data() {
@@ -197,6 +199,7 @@ export default {
   mounted() {
     this.getVisitRelation();
     this.getVisitGoal();
+    this.minDate = minDate();
   },
   methods: {
     // 拜访定位
@@ -256,9 +259,6 @@ export default {
           console.log(err);
         });
     },
-    onBack() {
-      history.back();
-    },
     // 选择医院
     onConfirm(v) {
       this.hospitalShow = false;
@@ -289,7 +289,7 @@ export default {
     },
     timeConfirm(v) {
       this.timeShow = false;
-      this.startTime = this.timeFormat(v);
+      this.startTime = minutesTimeFormat(v)
     },
     // 选择拜访目的
     visitPurposeConfirm(v) {
@@ -377,30 +377,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    },
-    //时间格式转换
-    timeFormat(time) {
-      // 时间格式化 2019-09-08 12:12
-      let year = time.getFullYear();
-      let month = time.getMonth() + 1;
-      let day = time.getDate();
-      let hours = time.getHours();
-      let minutes = time.getMinutes();
-      return (
-        year +
-        "-" +
-        this.timeFill(month) +
-        "-" +
-        this.timeFill(day) +
-        " " +
-        this.timeFill(hours) +
-        ":" +
-        this.timeFill(minutes) +
-        ":00"
-      );
-    },
-    timeFill(t) {
-      return t < 10 ? "0" + t : t;
     }
   }
 };

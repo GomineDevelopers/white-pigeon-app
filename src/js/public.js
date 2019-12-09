@@ -347,3 +347,13 @@ export function minutesTimeFormat(time) {
   var minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
   return year + "-" + month + "-" + date + "  " + hour + ":" + minute + ":" + "00";
 }
+
+// 开始时间为当前时间的前三天
+export function minDate(){
+    let minDate = new Date(new Date() - 259200000);
+    let year = minDate.getFullYear();
+    let month = minDate.getMonth() + 1;
+    let day = minDate.getDate();
+    let time = new Date(`${year}-${month}-${day} 00:00:00`);
+    return time;
+}

@@ -155,6 +155,7 @@
 </template>
 <script>
 import { upload } from "@/js/upload";
+import {minDate,minutesTimeFormat } from "@/js/public";
 export default {
   name: "visitdetailedit",
   data() {
@@ -203,6 +204,7 @@ export default {
     let id = this.$route.query.id;
     this.getVisitGoal();
     this.getVisitRelation(id);
+    this.minDate = minDate();
   },
   methods: {
     // 拜访定位
@@ -269,9 +271,10 @@ export default {
       this.doctor_name = v.text;
       this.doctor_id = v.id;
     },
+    // 时间选择
     timeConfirm(v) {
       this.timeShow = false;
-      this.start_time = this.timeFormat(v);
+      this.start_time = minutesTimeFormat(v)
     },
     // 选择拜访目的
     visitPurposeConfirm(v) {
@@ -357,30 +360,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    },
-    //时间格式转换
-    timeFormat(time) {
-      // 时间格式化 2019-09-08 12:12
-      let year = time.getFullYear();
-      let month = time.getMonth() + 1;
-      let day = time.getDate();
-      let hours = time.getHours();
-      let minutes = time.getMinutes();
-      return (
-        year +
-        "-" +
-        this.timeFill(month) +
-        "-" +
-        this.timeFill(day) +
-        " " +
-        this.timeFill(hours) +
-        ":" +
-        this.timeFill(minutes) +
-        ":00"
-      );
-    },
-    timeFill(t) {
-      return t < 10 ? "0" + t : t;
     },
     onBack() {
       history.back();
