@@ -1,7 +1,7 @@
 <template>
   <van-row class="submitapplications">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="提交申请" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="提交开发" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body">
       <van-row class="applications_info">
@@ -14,9 +14,9 @@
         </van-row>
         <van-row class="flex bgm_white padding_3 border_bom">
           <span class="title">完成时间<i>*</i></span>
-          <span class="icon_right flex flex_1 flex_align_center">
+          <span class="icon_right flex flex_1 flex_align_center" @click="timeShow = true">
             <span class="flex_1 time_select">{{ time ? time : "请选择" }}</span>
-            <van-icon name="arrow" @click="timeShow = true" />
+            <van-icon name="arrow" />
           </span>
         </van-row>
         <van-row class="know_more padding_3">
@@ -62,24 +62,22 @@
         </van-row>
       </van-row>
       <van-row class="public_btn">
-        <button @click="goApproveindex">提交申请</button>
+        <button @click="goApproveindex">提交开发</button>
       </van-row>
     </van-row>
     <!-- 以下为会议页的选项 -->
     <!-- 产品 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="timeShow">
-          <van-picker
-            show-toolbar
-            title="完成时间选择"
-            :columns="timeOption"
-            @cancel="timeShow = false"
-            @confirm="timeConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="timeShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="完成时间选择"
+          :columns="timeOption"
+          @cancel="timeShow = false"
+          @confirm="timeConfirm"
+        />
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>
@@ -127,7 +125,6 @@ export default {
     //接收路由数据
     getRouterData() {
       this.productData = this.$route.query.data;
-      // console.log("提交申请data", this.productData);
     },
     timeConfirm(value) {
       // console.log(value);
@@ -148,12 +145,12 @@ export default {
     goApproveindex() {
       if (this.sales && this.time && this.message) {
         this.$toast.loading({
-          message: "申请提交中...",
+          message: "开发提交中...",
           forbidClick: true,
           duration: 0,
           loadingType: "spinner"
         });
-        // console.log("准备提交申请");
+        // console.log("准备提交开发");
         let postData = {
           hospital_id: this.productData.hospitalId,
           product_id: this.productData.productId,

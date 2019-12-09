@@ -9,7 +9,7 @@ import router from ".././router";
 if (process.env.NODE_ENV == "development") {
   axios.defaults.baseURL = "http://localhost:8080";
 } else if (process.env.NODE_ENV == "production") {
-  axios.defaults.baseURL = "http://tjj.edgrng.com/api";
+  axios.defaults.baseURL = "http://swj.edgrng.com/api";
 }
 
 axios.defaults.timeout = 10000; //设置请求超时

@@ -1,14 +1,14 @@
 <template>
   <van-row class="approve_content">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="申请详情" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="开发详情" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body">
       <van-row class="approve_detail">
         <van-row class="approve_product_name">{{ detailContent.product_name }}</van-row>
         <ul>
           <li class="flex_li">
-            <span>申请医院：</span>
+            <span>开发医院：</span>
             <span>{{ detailContent.hospital_name }}</span>
           </li>
           <li class="flex_li">

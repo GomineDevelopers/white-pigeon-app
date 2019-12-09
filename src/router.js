@@ -22,20 +22,19 @@ export default new Router({
           path: "/home/visit",
           name: "visit",
           component: () => import(/* webpackChunkName: "home" */ "./views/home/visit/Visit.vue")
-        },
-        {
-          path: "/home/productapply",
-          name: "productapply",
-          component: () =>
-            import(/* webpackChunkName: "home" */ "./views/home/productapply/ProductApply.vue")
-        },
-        {
-          path: "/home/integral",
-          name: "integral",
-          component: () =>
-            import(/* webpackChunkName: "home" */ "./views/home/integral/Integral.vue")
         }
       ]
+    },
+    {
+      path: "/productapply",
+      name: "productapply",
+      component: () =>
+        import(/* webpackChunkName: "home" */ "./views/home/productapply/ProductApply.vue")
+    },
+    {
+      path: "/integral",
+      name: "integral",
+      component: () => import(/* webpackChunkName: "home" */ "./views/home/integral/Integral.vue")
     },
     {
       path: "/visitrecord",

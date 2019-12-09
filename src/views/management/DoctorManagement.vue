@@ -22,7 +22,7 @@
           <van-row class="optionNavItem">
             <span class="flex flex_align_center" @click="doctorApplyList">
               <img src="../../assets/image/record_con.png" />
-              申请记录
+              开发记录
             </span>
           </van-row>
         </van-row>

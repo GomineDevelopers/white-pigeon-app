@@ -12,9 +12,9 @@
       >
         <van-row class="notify_date">{{ notifyItem.modify_time }}</van-row>
         <van-row class="notify_content">
-          <van-row class="notify_title">您有一个新申请已通过</van-row>
+          <van-row class="notify_title">您有一个新开发已通过</van-row>
           <van-row class="notify_text"
-            >您申请的{{ notifyItem.hospital_name }}已于{{
+            >您开发的{{ notifyItem.hospital_name }}已于{{
               notifyItem.modify_time
             }}已经通过审核，请您及时查看！</van-row
           >

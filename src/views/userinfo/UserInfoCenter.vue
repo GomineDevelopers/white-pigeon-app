@@ -11,7 +11,7 @@
           <van-row class="user_info">
             <span class="user_name">{{ user.name }}</span>
             <br />
-            <span class="user_detail">{{user.address}}</span>
+            <span class="user_detail">{{ user.address }}</span>
           </van-row>
         </van-row>
         <van-row>
@@ -21,22 +21,21 @@
       </van-row>
       <van-row class="header_user_other">
         <van-col span="6" class="other_list_info">
-          <span>{{statistics.meeting_total_count}}</span>
+          <span>{{ statistics.meeting_total_count }}</span>
           <span>会议</span>
         </van-col>
         <van-col span="6" class="other_list_info">
-          <span>{{statistics.visit_record_num}}</span>
+          <span>{{ statistics.visit_record_num }}</span>
           <span>拜访</span>
         </van-col>
         <van-col span="6" class="other_list_info">
-          <span>{{statistics.hospital_product_num}}</span>
-          <span>申请</span>
+          <span>{{ statistics.hospital_product_num }}</span>
+          <span>开发</span>
         </van-col>
         <van-col span="6" class="other_list_info">
-          <span>216371</span>
+          <span>0</span>
           <span class="jifen flex flex_align_center">
             积分
-            <!-- <van-icon name="eye" class="eye_icon" /> -->
           </span>
         </van-col>
       </van-row>
@@ -67,7 +66,11 @@ export default {
     return {
       active: true,
       user: {},
-      statistics: {}
+      statistics: {
+        meeting_total_count: "-",
+        visit_record_num: "-",
+        hospital_product_num: "-"
+      }
     };
   },
   created() {
@@ -99,13 +102,15 @@ export default {
               name: res.user.name,
               address: res.user.id_address
             };
-            if (res.user.is_complete == 2){
-              this.$dialog.alert({
-                message: "您还未完善信息",
-                confirmButtonText: "完善信息"
-              }).then( () => {
-                this.$router.push('/improvepersonalinfo')
-              })
+            if (res.user.is_complete == 2) {
+              this.$dialog
+                .alert({
+                  message: "您还未完善信息",
+                  confirmButtonText: "完善信息"
+                })
+                .then(() => {
+                  this.$router.push("/improvepersonalinfo");
+                });
             }
           }
         })
@@ -113,7 +118,7 @@ export default {
           console.log(error);
         });
     },
-     // 获取会议、拜访、申请、积分统计
+    // 获取会议、拜访、开发、积分统计
     getStatistics() {
       this.$api
         .userCenterStatistics()
@@ -123,7 +128,7 @@ export default {
               meeting_total_count: res.meeting_total_count,
               visit_record_num: res.visit_record_num,
               hospital_product_num: res.hospital_product_num
-              };
+            };
           }
         })
         .catch(error => {

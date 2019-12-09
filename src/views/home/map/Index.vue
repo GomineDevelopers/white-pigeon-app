@@ -79,7 +79,7 @@
     <!-- map end -->
     <!-- bottom-nav start 1-已开发  2-不可开发  3-空白医院  4-开发中-->
     <div v-show="bottomNavIsShow" class="van-tabbar--fixed van-tabbar bottom_bar">
-      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(3)">
+      <!-- <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(3)">
         <img src="@/assets/image/develop_0.png" />
         <span>空白</span>
       </a>
@@ -96,6 +96,26 @@
         <span>不可开发</span>
       </a>
       <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(5)">
+        <img src="@/assets/image/develop_4.png" />
+        <span>警告</span>
+      </a> -->
+      <a class="bottom_bar_item" href="javascript:;">
+        <img src="@/assets/image/develop_0.png" />
+        <span>空白</span>
+      </a>
+      <a class="bottom_bar_item" href="javascript:;">
+        <img src="@/assets/image/develop_1.png" />
+        <span>开发中</span>
+      </a>
+      <a class="bottom_bar_item" href="javascript:;">
+        <img src="@/assets/image/develop_2.png" />
+        <span>已开发</span>
+      </a>
+      <a class="bottom_bar_item" href="javascript:;">
+        <img src="@/assets/image/develop_3.png" />
+        <span>不可开发</span>
+      </a>
+      <a class="bottom_bar_item" href="javascript:;">
         <img src="@/assets/image/develop_4.png" />
         <span>警告</span>
       </a>
@@ -128,7 +148,7 @@
       <!-- 拉出详情 start -->
       <div class="hospital_pull_detail" v-show="visitShow == 2">
         <div class="hospital_pull_cont">
-          <span class="pull_cont_notice">对不起，此医院产品已被申请完，您暂时无法申请！</span>
+          <span class="pull_cont_notice">对不起，此医院产品已被开发完，您暂时无法开发！</span>
         </div>
       </div>
       <div
@@ -154,7 +174,7 @@
             </li>
           </ul>
         </div>
-        <van-button class="apply_btn" size="large" @click="applyForHospital()">申请医院</van-button>
+        <van-button class="apply_btn" size="large" @click="applyForHospital()">开发医院</van-button>
       </div>
       <!-- 此处医院状态为已开发医院时显示 -->
       <van-row class="pull_developed" v-show="visitShow == 1">
@@ -684,13 +704,13 @@ export default {
         }
       }
     },
-    //点击申请医院
+    //点击开发医院
     applyForHospital() {
       if (!this.isComplete) {
         // console.log("未完善信息")
         this.$Dialog
           .confirm({
-            message: "请您完善个人信息，再进行申请操作。",
+            message: "请您完善个人信息，再进行开发操作。",
             confirmButtonText: "前往", //改变确认按钮上显示的文字
             cancelButtonText: "取消" //改变取消按钮上显示的文字
           })

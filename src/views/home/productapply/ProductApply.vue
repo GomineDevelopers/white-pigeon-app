@@ -1,5 +1,8 @@
 <template>
   <van-row class="productapply">
+    <van-row class="top_nav_bar nav_bgm">
+      <van-nav-bar title="开发" left-arrow @click-left="onBack()" />
+    </van-row>
     <van-row class="top_nav border_bom">
       <van-col
         :class="index === navActive ? 'active' : ''"
@@ -76,14 +79,28 @@ export default {
     };
   },
   created() {
+    // H5 plus事件处理
+    function plusReady() {
+      // 设置系统状态栏背景为蓝色
+      plus.navigator.setStatusBarBackground("#2A76FF");
+      plus.navigator.setStatusBarStyle("light");
+    }
+    if (window.plus) {
+      plusReady();
+    } else {
+      document.addEventListener("plusready", plusReady, false);
+    }
     this.hospitalApplyRecord();
   },
   methods: {
+    onBack() {
+      history.back();
+    },
     navHandle(index, status) {
       this.navActive = index;
       this.status = status;
     },
-    //获取申请记录各分类条数
+    //获取开发记录各分类条数
     hospitalApplyRecord() {
       this.$api
         .hospitalApplyRecord()
@@ -119,7 +136,7 @@ export default {
 }
 .top_nav {
   font-size: 0.6875rem;
-  padding: 0.9375rem 0rem 0.4rem 0rem;
+  padding: 0.4rem 0rem 0.4rem 0rem;
 }
 .top_nav .van-col {
   text-align: center;

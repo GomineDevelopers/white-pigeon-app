@@ -39,7 +39,7 @@
     <!-- aside结束 -->
     <van-row class="home_nav_bar flex flex_align_center">
       <van-col
-        span="3"
+        span="4"
         class="left_nav flex flex_align_center flex_justify_center"
         @click="asideShow = true"
       >
@@ -59,7 +59,7 @@
         > -->
       </van-col>
       <van-col
-        span="3"
+        span="4"
         class="notify_col left_nav flex flex_align_center flex_justify_center"
         @click="goNotify"
       >
@@ -84,10 +84,10 @@ export default {
       asideShow: false,
       navActive: 0,
       navList: [
-        { name: "地图", link: "/", span: "4" },
-        { name: "拜访/会议", link: "/home/visit", span: "6" },
-        { name: "申请", link: "/home/productapply", span: "4" },
-        { name: "积分", link: "/home/integral", span: "4" }
+        { name: "地图", link: "/", span: "7" },
+        { name: "拜访/会议", link: "/home/visit", span: "9" }
+        // { name: "开发", link: "/home/productapply", span: "4" },
+        // { name: "积分", link: "/home/integral", span: "4" }
       ],
       //左侧导航栏
       asideNav: [
@@ -103,14 +103,14 @@ export default {
           link: "/mettingrecord"
         },
         {
-          name: "申请",
+          name: "开发",
           src: require("../assets/image/sq.png"),
-          link: "/home/productapply"
+          link: "/productapply"
         },
         {
           name: "积分",
           src: require("../assets/image/jj.png"),
-          link: "/home/integral"
+          link: "/integral"
         },
         {
           name: "医生",
@@ -222,7 +222,7 @@ export default {
     },
     link(path) {
       this.asideShow = false;
-      this.$router.push({ path});
+      this.$router.push({ path });
     },
     goSetting() {
       this.$router.push({ path: "/usersetting" });

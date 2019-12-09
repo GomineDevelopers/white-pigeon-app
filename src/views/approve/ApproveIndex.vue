@@ -15,7 +15,7 @@
       v-show="active == 0"
       v-model="proLoading"
       :finished="proFinished"
-      finished-text="无更多的产品申请"
+      finished-text="无更多的产品开发"
       @load="getProductData"
     >
       <div
@@ -26,7 +26,7 @@
       >
         <div class="approve_item_detail">
           <ul>
-            <li>{{ item.name }}提交的产品申请</li>
+            <li>{{ item.name }}提交的产品开发</li>
             <li class="flex justify_start">
               <span>医院名：</span>
               <span>{{ item.hospital_name }}</span>
@@ -36,7 +36,7 @@
               <span>{{ item.product_name }} {{ item.promise_sales }}/月</span>
             </li>
             <li class="flex justify_start">
-              <span>申请时间：</span>
+              <span>开发时间：</span>
               <span>{{ item.create_time }}</span>
             </li>
           </ul>
@@ -64,7 +64,7 @@
       >
         <div class="approve_item_detail">
           <ul>
-            <li>{{ item.user_name }}提交的医生申请</li>
+            <li>{{ item.user_name }}提交的医生开发</li>
             <li class="flex justify_start">
               <span>医院名：</span>
               <span>{{ item.hospital_name }}</span>
@@ -74,7 +74,7 @@
               <span>{{ item.doctor_name }}</span>
             </li>
             <li class="flex justify_start">
-              <span>申请时间：</span>
+              <span>开发时间：</span>
               <span>{{ item.create_time }}</span>
             </li>
           </ul>

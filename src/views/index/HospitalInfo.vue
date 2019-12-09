@@ -26,7 +26,7 @@
         </van-row>
       </van-row>
       <van-row v-if="hospitalData.awaitApplyProduct.length != 0">
-        <van-row class="await_develop_title">待申请产品</van-row>
+        <van-row class="await_develop_title">待开发产品</van-row>
         <van-row class="await_develop_product hospital_module">
           <van-row class="await_develop_product_list">
             <van-radio-group v-model="product">
@@ -44,9 +44,9 @@
         </van-row>
       </van-row>
 
-      <!-- 已申请产品开始 -->
+      <!-- 已开发产品开始 -->
       <van-row v-if="hospitalData.developmentProduct.length != 0">
-        <van-row class="await_develop_title">已申请产品</van-row>
+        <van-row class="await_develop_title">已开发产品</van-row>
         <van-row class="already_develop_product hospital_module">
           <van-row class="already_develop_title">
             <van-col span="12" :class="isShow ? 'active' : ''" @click="isShow = !isShow"
@@ -85,7 +85,7 @@
           </van-row>
         </van-row>
       </van-row>
-      <!-- 已申请产品结束 -->
+      <!-- 已开发产品结束 -->
       <van-row class="public_btn">
         <button @click="submitApplications">确&nbsp;定</button>
       </van-row>
@@ -157,7 +157,7 @@ export default {
           });
       } else {
         if (this.hospitalData.awaitApplyProduct.length == 0) {
-          this.$toast.fail("当前没有可申请产品");
+          this.$toast.fail("当前没有可开发产品");
         } else {
           this.$toast.fail("请选择产品");
         }
@@ -174,7 +174,7 @@ export default {
         })
         .then(() => {
           let callHref = "tel://" + mobile;
-          window.location.href = 'tel://'+mobile
+          window.location.href = "tel://" + mobile;
           console.log(callHref);
         })
         .catch(() => {

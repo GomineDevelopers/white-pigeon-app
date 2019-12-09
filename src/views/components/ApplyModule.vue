@@ -20,7 +20,7 @@
                 <span>{{ item.hospital_name }}</span>
               </li>
               <li class="flex justify_start flex_align_center">
-                <span>申请时间：</span>
+                <span>开发时间：</span>
                 <span>{{ item.create_time }}</span>
               </li>
             </ul>

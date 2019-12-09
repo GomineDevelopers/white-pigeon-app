@@ -1,7 +1,7 @@
 <template>
   <van-row>
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="申请记录" left-arrow @click-left="onBack()"> </van-nav-bar>
+      <van-nav-bar title="开发记录" left-arrow @click-left="onBack()"> </van-nav-bar>
     </van-row>
     <van-row class="main_body">
       <van-row class="approve_content">
@@ -23,7 +23,7 @@
                     <span>{{ item.hospital_name }}</span>
                   </li>
                   <li class="flex justify_start flex_align_center">
-                    <span>申请时间：</span>
+                    <span>开发时间：</span>
                     <span>{{ item.create_time }}</span>
                   </li>
                 </ul>
