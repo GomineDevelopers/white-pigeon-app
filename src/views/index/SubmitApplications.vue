@@ -167,10 +167,16 @@ export default {
             .then(res => {
               console.log(res);
               if (res.code == 200) {
-                this.$toast.success("提交成功！");
-                setTimeout(() => {
-                  this.$router.push({ path: "/home/productapply" });
-                }, 1500);
+                this.$toast.clear();
+                this.$dialog
+                  .alert({
+                    title: "提示",
+                    message:
+                      "您的申请已提交成功！工作人员将在三个工作日内与您取得联系，请保持手机畅通，谢谢！"
+                  })
+                  .then(() => {
+                    this.$router.push({ path: "/productapply" });
+                  });
               } else {
                 this.$toast.fail(res.message);
                 setTimeout(() => {
@@ -188,10 +194,16 @@ export default {
             .then(res => {
               console.log(res);
               if (res.code == 200) {
-                this.$toast.success("提交成功！");
-                setTimeout(() => {
-                  this.$router.push({ path: "/home/productapply" });
-                }, 1500);
+                this.$toast.clear();
+                this.$dialog
+                  .alert({
+                    title: "提示",
+                    message:
+                      "您的申请已提交成功！工作人员将在三个工作日内与您取得联系，请保持手机畅通，谢谢！"
+                  })
+                  .then(() => {
+                    this.$router.push({ path: "/productapply" });
+                  });
               } else {
                 this.$toast.fail(res.message);
                 setTimeout(() => {
@@ -209,10 +221,16 @@ export default {
             .then(res => {
               console.log(res);
               if (res.code == 200) {
-                this.$toast.success("提交成功！");
-                setTimeout(() => {
-                  this.$router.push({ path: "/home/productapply" });
-                }, 1500);
+                this.$toast.clear();
+                this.$dialog
+                  .alert({
+                    title: "提示",
+                    message:
+                      "您的申请已提交成功！工作人员将在三个工作日内与您取得联系，请保持手机畅通，谢谢！"
+                  })
+                  .then(() => {
+                    this.$router.push({ path: "/productapply" });
+                  });
               } else {
                 this.$toast.fail(res.message);
                 setTimeout(() => {

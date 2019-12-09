@@ -63,56 +63,10 @@ export default {
       phone: "",
       questionList: [
         {
-          questionTitle: "可用来注册的是",
-          questionOption: ["通用名", "商用名", "化学名"],
-          questionAnswer: "",
-          answer: "商品名"
-        },
-        {
-          questionTitle: "目前我国生物制药企业最大的问题是",
-          questionOption: [
-            "生产企业数量少",
-            "缺乏具有自主知识产权的产品",
-            "生产规模小",
-            "以上说法都不正确"
-          ],
-          questionAnswer: "",
-          answer: "缺乏具有自主知识产权的产品"
-        },
-        {
-          questionTitle: "药品生产质量管理规范的英文缩写为",
-          questionOption: ["WHO", "OTC", "GMP", "FDA"],
-          questionAnswer: "",
-          answer: "GMP"
-        },
-        {
           questionTitle: "非处方药的英文缩写",
           questionOption: ["WHO", "OTC", "GMP", "GSP"],
           questionAnswer: "",
           answer: "OTC"
-        },
-        {
-          questionTitle: "一般情况下，对患者的诊断治疗等具有最终决定权的是",
-          questionOption: ["主任医师", "教授", "科主任", "院长"],
-          questionAnswer: "",
-          answer: "科主任"
-        },
-        {
-          questionTitle: "药品供应质量管理规范的英文缩写",
-          questionOption: ["WHO", "OTC", "GMP", "GSP"],
-          questionAnswer: "",
-          answer: "GSP"
-        },
-        {
-          questionTitle: "药物滥用指的是",
-          questionOption: [
-            "医生用药不当",
-            "长期大量食用某种药物",
-            "未掌握药物适用症",
-            "无病情依据的长期自我用药"
-          ],
-          questionAnswer: "",
-          answer: "无病情依据的长期自我用药"
         },
         {
           questionTitle: "建立新的医疗机构分类管理制度，将医疗机构分为___和___两类进行管理",
@@ -121,26 +75,80 @@ export default {
           answer: "非营利性，营利性"
         },
         {
-          questionTitle: "药品的通用名是指",
-          questionOption: [
-            "按中国药典委员会的药品命名原则制定的药品名称",
-            "不同厂家生产的同一药物制剂可以起不同的名字",
-            "世界卫生组织制定的药物（原料药）的国际药名",
-            "别名"
-          ],
+          questionTitle: "2018版国家基药的数量",
+          questionOption: ["685", "715", "558", "680"],
           questionAnswer: "",
-          answer: "按中国药典委员会的药品命名原则制定的药品名称"
+          answer: "685"
         },
         {
-          questionTitle: "药品是指",
+          questionTitle: "一品双规",
           questionOption: [
-            "用于预防人疾病的物质",
-            "用于诊断人疾病的物质",
-            "用于治疗人疾病的物质",
-            "用于预防，诊断，治疗人疾病的物质"
+            "一个品种两种定价标准同时存在",
+            "一个品种两个规格同时存在",
+            "一个品种双项规定同时存在",
+            "一个品种两个成本规定同时存在"
           ],
           questionAnswer: "",
-          answer: "用于预防，诊断，治疗人疾病的物质"
+          answer: "一个品种两个规格同时存在"
+        },
+        {
+          questionTitle: "下列名词与医药行业相关的是",
+          questionOption: ["4+7带量采购", "两票制", "一致性评价", "以上都是"],
+          questionAnswer: "",
+          answer: "以上都是"
+        },
+        {
+          questionTitle: "DRGs是什么意思",
+          questionOption: ["医保目录", "按病组付费", "国家基药", "病床周转率"],
+          questionAnswer: "",
+          answer: "按病组付费"
+        },
+        {
+          questionTitle: "最新的医保目录是哪一年的",
+          questionOption: ["2016年", "2017年", "2018年", "2019年"],
+          questionAnswer: "",
+          answer: "2019年"
+        },
+        {
+          questionTitle: "“三明模式”是哪个省提出的",
+          questionOption: ["山东", "福建", "江苏", "广东"],
+          questionAnswer: "",
+          answer: "福建"
+        },
+        {
+          questionTitle: "医药行业的685一般指什么",
+          questionOption: [
+            "2017年医保目录产品",
+            "2018年国家基药",
+            "通过欧盟认证的产品",
+            "竞争少的产品"
+          ],
+          questionAnswer: "",
+          answer: "2018年国家基药"
+        },
+        {
+          questionTitle: "以下属于医药行业大型配送公司的是",
+          questionOption: ["国控", "飞送", "迅达", "药通"],
+          questionAnswer: "",
+          answer: "国控"
+        },
+        {
+          questionTitle: "直接向医生推广产品信息的人员一般称为什么",
+          questionOption: ["合规专员", "客户专员", "医药代表", "医药配送员"],
+          questionAnswer: "",
+          answer: "医药代表"
+        },
+        {
+          questionTitle: "下面不属于医生职称的是",
+          questionOption: ["住院医师", "主治医师", "药剂科主任", "副主任医师"],
+          questionAnswer: "",
+          answer: "药剂科主任"
+        },
+        {
+          questionTitle: "医药行业的GPO什么意思",
+          questionOption: ["枪手医生", "带量采购", "服务供应商", "配送商"],
+          questionAnswer: "",
+          answer: "带量采购"
         }
       ]
     };
@@ -175,7 +183,7 @@ export default {
         }
       });
       console.log(score);
-      let identify_status = score >= 8 ? "1" : "2";
+      let identify_status = score >= 10 ? "1" : "2";
       console.log(identify_status);
       let params = { identify_status: identify_status };
       this.$api
@@ -289,6 +297,10 @@ export default {
   height: 1.75rem;
   line-height: 1.75rem;
 }
+/* .Answer .van-field__control {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+} */
 </style>
 <style scoped>
 .answer_item {

@@ -43,7 +43,8 @@
         class="left_nav flex flex_align_center flex_justify_center"
         @click="asideShow = true"
       >
-        <van-icon name="wap-nav" />
+        <img class="notify_icon" src="../assets/image/nav_icon.png" />
+        <!-- <van-icon name="wap-nav" /> -->
       </van-col>
       <van-col
         :span="navItem.span"
