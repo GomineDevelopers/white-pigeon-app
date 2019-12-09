@@ -3,27 +3,27 @@
     <img
       v-if="item.hospital_status == 1"
       src="@/assets/image/home_mapicon_1.svg"
-     v-tap="{method: handleClick,params:item}"
+      v-tap="{ method: handleClick, params: item }"
     />
     <img
       v-if="item.hospital_status == 2"
       src="@/assets/image/home_mapicon_3.svg"
-     v-tap="{method: handleClick,params:item}"
+      v-tap="{ method: handleClick, params: item }"
     />
     <img
       v-if="item.hospital_status == 3"
       src="@/assets/image/home_mapicon_2.svg"
-     v-tap="{method: handleClick,params:item}"
+      v-tap="{ method: handleClick, params: item }"
     />
     <img
       v-if="item.hospital_status == 4"
       src="@/assets/image/home_mapicon_0.svg"
-     v-tap="{method: handleClick,params:item}"
+      v-tap="{ method: handleClick, params: item }"
     />
     <div
       class="map_marker_label"
       v-text="item.hospital_name"
-      v-tap="{method: handleClick,params:item}"
+      v-tap="{ method: handleClick, params: item }"
     ></div>
   </bm-overlay>
 </template>
@@ -76,11 +76,19 @@ export default {
       deep: true
     }
   },
+  computed: {
+    item1: function() {
+      console.log(this.item);
+    }
+  },
   methods: {
     handleClick(item) {
+      console.log(item);
       this.$emit("clickHandler", item);
     },
     draw({ el, BMap, map }) {
+      console.log("~~~~~~", this.item);
+      console.log("~~~~~~", this.position);
       const { lng, lat } = this.position;
       const pixel = map.pointToOverlayPixel(new BMap.Point(lng, lat));
       el.style.left = pixel.x - 34 + "px";

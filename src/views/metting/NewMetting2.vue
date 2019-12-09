@@ -227,7 +227,7 @@
   </van-row>
 </template>
 <script>
-import { minutesTimeFormat } from "../../js/public";
+import { minutesTimeFormat, minDate } from "../../js/public";
 import { upload } from "@/js/upload";
 export default {
   name: "visit",
@@ -265,9 +265,6 @@ export default {
       userNumShow: false,
       userNum: "",
       userNumList: [
-        "1",
-        "2",
-        "3",
         "4",
         "5",
         "6",
@@ -283,21 +280,8 @@ export default {
         "16",
         "17",
         "18",
-        "20",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "29",
-        "30",
-        "31",
-        "32",
-        "33",
-        "34",
-        "35"
+        "19",
+        "20"
       ],
       personnelPhoto: [],
       signPhoto: []
@@ -316,6 +300,7 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
     this.getInfoByProductId();
+    this.minDate = minDate();
 
     // console.log(this.$route.query.data);
     //初始化从首页已开发医院点击创建会议的医院的名称，id

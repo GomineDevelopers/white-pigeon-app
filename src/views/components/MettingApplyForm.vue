@@ -224,7 +224,7 @@
   </van-row>
 </template>
 <script>
-import { minutesTimeFormat } from "../../js/public";
+import { minutesTimeFormat, minDate } from "../../js/public";
 import { upload } from "@/js/upload";
 export default {
   name: "visit",
@@ -260,9 +260,6 @@ export default {
       userNumShow: false,
       userNum: "",
       userNumList: [
-        "1",
-        "2",
-        "3",
         "4",
         "5",
         "6",
@@ -278,21 +275,8 @@ export default {
         "16",
         "17",
         "18",
-        "20",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "29",
-        "30",
-        "31",
-        "32",
-        "33",
-        "34",
-        "35"
+        "19",
+        "20"
       ],
       personnelPhoto: [],
       signPhoto: []
@@ -312,24 +296,11 @@ export default {
     }
     this.getInfoByProductId();
     // this.setMinDate();
+    this.minDate = minDate();
   },
   methods: {
     //设置最小时间为当前日期前三天
-    // setMinDate() {
-    //   let now = new Date();
-    //   let startDate = new Date(now.getTime() - 3 * 60 * 60 * 1000);
-    //   console.log(startDate);
-    //   let year = startDate.getFullYear();
-    //   let month =
-    //     startDate.getMonth() + 1 < 10 ? "0" + (startDate.getMonth() + 1) : startDate.getMonth() + 1;
-    //   let day = startDate.getDate() < 10 ? "0" + startDate.getDate() : startDate.getDate();
-    //   var hour = startDate.getHours() < 10 ? "0" + startDate.getHours() : startDate.getHours();
-    //   var minute =
-    //     startDate.getMinutes() < 10 ? "0" + startDate.getMinutes() : startDate.getMinutes();
-    //   console.log(year, month, day);
-    //   this.minDate = new Date(year, month, day);
-    //   console.log(this.minDate);
-    // },
+
     onBack() {
       history.back();
     },
