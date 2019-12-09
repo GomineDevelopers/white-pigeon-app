@@ -81,7 +81,7 @@
     <!-- map end -->
     <!-- bottom-nav start 1-已开发  2-不可开发  3-空白医院  4-开发中-->
     <div v-show="bottomNavIsShow" class="van-tabbar--fixed van-tabbar bottom_bar">
-      <!-- <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(3)">
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(3)">
         <img src="@/assets/image/develop_0.png" />
         <span>空白</span>
       </a>
@@ -98,26 +98,6 @@
         <span>不可开发</span>
       </a>
       <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(5)">
-        <img src="@/assets/image/develop_4.png" />
-        <span>警告</span>
-      </a> -->
-      <a class="bottom_bar_item" href="javascript:;">
-        <img src="@/assets/image/develop_0.png" />
-        <span>空白</span>
-      </a>
-      <a class="bottom_bar_item" href="javascript:;">
-        <img src="@/assets/image/develop_1.png" />
-        <span>开发中</span>
-      </a>
-      <a class="bottom_bar_item" href="javascript:;">
-        <img src="@/assets/image/develop_2.png" />
-        <span>已开发</span>
-      </a>
-      <a class="bottom_bar_item" href="javascript:;">
-        <img src="@/assets/image/develop_3.png" />
-        <span>不可开发</span>
-      </a>
-      <a class="bottom_bar_item" href="javascript:;">
         <img src="@/assets/image/develop_4.png" />
         <span>警告</span>
       </a>
@@ -390,6 +370,7 @@ export default {
     },
     //点击地图下部筛选医院类型
     handleActiveTag(type) {
+      console.log(3)
       if (this.currentTagStatus == type){
         return false;
       }
