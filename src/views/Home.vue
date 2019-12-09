@@ -4,10 +4,10 @@
     <!-- <van-cell></van-cell> -->
     <van-popup v-model="asideShow" position="left" :style="{ height: '100%', width: '70%' }">
       <van-row class="aside_nav">
-        <van-row class="top_image flex flex_align_center border_bom">
-          <img src="https://img.yzcdn.cn/vant/cat.jpeg" @click="goUserInfo" />
+        <van-row class="top_image flex flex_align_center border_bom" @click="goUserInfo">
+          <img src="https://img.yzcdn.cn/vant/cat.jpeg" />
           <van-row class="user_info">
-            <span class="user_name" @click="goUserInfo">{{ user.name }}</span>
+            <span class="user_name">{{ user.name }}</span>
             <br />
             <span class="user_detail">{{ user.address }}</span>
           </van-row>
@@ -17,9 +17,11 @@
             class="asideNavitem flex flex_align_center"
             v-for="(asideNavItem, index1) in asideNav"
             :key="index1 + 'as'"
+            @click="link(asideNavItem.link)"
           >
             <img :src="asideNavItem.src" />
-            <router-link :to="{ path: asideNavItem.link }">{{ asideNavItem.name }}</router-link>
+            <span>{{ asideNavItem.name }}</span>
+            <!-- <router-link :to="{ path: asideNavItem.link }">{{ asideNavItem.name }}</router-link> -->
           </van-row>
           <van-row class="bottom_nav">
             <van-col span="12" class="flex flex_align_center" @click="goSetting">
@@ -217,6 +219,10 @@ export default {
           break;
       }
       // console.log(routePath);
+    },
+    link(path) {
+      this.asideShow = false;
+      this.$router.push({ path});
     },
     goSetting() {
       this.$router.push({ path: "/usersetting" });
