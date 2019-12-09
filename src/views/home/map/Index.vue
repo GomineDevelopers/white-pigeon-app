@@ -884,7 +884,7 @@ iframe {
 }
 .popup_wrap.popup_show {
   bottom: 0.5rem;
-  z-index: 100;
+  z-index: 500;
 }
 .popup_wrap .popup_top {
   position: relative;
