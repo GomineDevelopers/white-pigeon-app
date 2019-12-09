@@ -39,7 +39,7 @@
     <!-- aside结束 -->
     <van-row class="home_nav_bar flex flex_align_center">
       <van-col
-        span="4"
+        span="5"
         class="left_nav flex flex_align_center flex_justify_center"
         @click="asideShow = true"
       >
@@ -59,7 +59,7 @@
         > -->
       </van-col>
       <van-col
-        span="4"
+        span="5"
         class="notify_col left_nav flex flex_align_center flex_justify_center"
         @click="goNotify"
       >
@@ -85,7 +85,7 @@ export default {
       navActive: 0,
       navList: [
         { name: "地图", link: "/", span: "7" },
-        { name: "拜访/会议", link: "/home/visit", span: "9" }
+        { name: "拜访/会议", link: "/home/visit", span: "7" }
         // { name: "开发", link: "/home/productapply", span: "4" },
         // { name: "积分", link: "/home/integral", span: "4" }
       ],
@@ -209,12 +209,12 @@ export default {
         case "/home/visit":
           this.navActive = 1;
           break;
-        case "/home/productapply":
-          this.navActive = 2;
-          break;
-        case "/home/integral":
-          this.navActive = 3;
-          break;
+        // case "/home/productapply":
+        //   this.navActive = 2;
+        //   break;
+        // case "/home/integral":
+        //   this.navActive = 3;
+        //   break;
         default:
           break;
       }
@@ -340,7 +340,7 @@ export default {
   white-space: nowrap;
 }
 .asideNavitem {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   font-size: 0.6875rem;
 }
 .asideNavitem img {
@@ -367,7 +367,7 @@ export default {
 .notify_col .notify {
   position: absolute;
   top: -0.125rem;
-  right: 0.2rem;
+  right: 0.8rem;
   background: red;
   color: #fff;
   width: 0.7rem;
