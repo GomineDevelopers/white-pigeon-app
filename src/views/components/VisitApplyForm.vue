@@ -42,12 +42,12 @@
           <span class="flex_1">{{ product ? product : "请选择" }}</span>
           <van-icon name="arrow" />
         </van-row>
-        <van-row class="info_module">
-          <van-row class="row_title">拜访定位</van-row>
-          <van-row class="icon_right flex">
-            <span class="flex_1">{{ visitPostion }}</span>
-            <van-icon name="replay" @click="location" />
-          </van-row>
+      </van-row>
+      <van-row class="info_module">
+        <van-row class="row_title">拜访定位</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ visitPostion }}</span>
+          <van-icon name="replay" @click="location" />
         </van-row>
       </van-row>
       <van-row class="info_module">

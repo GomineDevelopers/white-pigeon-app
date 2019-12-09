@@ -27,6 +27,7 @@
               <img v-if="item.status == 3" src="@/assets/image/shz.png" />
               <img v-if="item.status == 4" src="@/assets/image/yhx.png" />
               <img v-if="item.status == 5" src="@/assets/image/ysx.png" />
+              <img v-if="item.status == 6" src="@/assets/image/wtj.png" />
             </div>
           </div>
         </div>
