@@ -18,6 +18,12 @@
         </van-row>
       </van-row>
       <van-row class="flex card_item border_bom">
+        <span class="title">开户行支行</span>
+        <span class="flex_1 sales_input">
+          <van-field v-model="bankBranch" placeholder="请输入" />
+        </span>
+      </van-row>
+      <van-row class="flex card_item border_bom">
         <span>银行卡号</span>
         <span class="flex_1 sales_input">
           <van-field
@@ -35,19 +41,17 @@
     </van-row>
     <!-- 开户行选择 -->
     <!-- 上滑进入 -->
-    <van-row class="showbank">
-      <transition name="van-slide-up">
-        <van-row v-show="openingBankShow">
-          <van-picker
-            show-toolbar
-            title="开户行选择"
-            :columns="openingBank"
-            @cancel="openingBankShow = false"
-            @confirm="onConfirm"
-          />
-        </van-row>
-      </transition>
-    </van-row>
+    <transition name="van-slide-up">
+      <van-popup v-model="openingBankShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="开户行选择"
+          :columns="openingBank"
+          @cancel="openingBankShow = false"
+          @confirm="onConfirm"
+        />
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>
@@ -61,6 +65,7 @@ export default {
       openingBank: [],
       name: "",
       bankCard: "",
+      bankBranch: "",
       openingBankValue: ""
     };
   },
@@ -189,7 +194,7 @@ export default {
   font-size: 0.75rem;
 }
 .flex span:nth-child(1) {
-  width: 3rem;
+  width: 3.9rem;
   text-align: left;
 }
 .openingBank {

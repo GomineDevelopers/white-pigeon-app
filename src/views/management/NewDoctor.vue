@@ -459,43 +459,55 @@ export default {
         this.$toast.fail("请填写完整必填信息");
         return false;
       }
+      this.$dialog
+        .confirm({
+          message: "请确定您填写的医生信息是否正确？",
+          confirmButtonText: "确认", //改变确认按钮上显示的文字
+          cancelButtonText: "修改" //改变取消按钮上显示的文字
+        })
+        .then(() => {
+          this.$toast.loading({
+            message: "创建中...",
+            forbidClick: true,
+            duration: 0,
+            loadingType: "spinner"
+          });
+          let postData = {
+            doctor_name: this.doctorName,
+            hospital_id: this.hospitalId,
+            section_id: this.dutyId,
+            sex: this.sexId,
+            doctor_status: this.customerStatusId,
+            duty: this.officeId,
+            educate: this.educationId,
+            doctor_type: this.professionId,
+            academic_title: this.academicId
+          };
+          this.$api
+            .createDoctor(postData)
+            .then(res => {
+              console.log(res);
+              if (res.code == 200) {
+                this.$toast.success("创建成功");
+                setTimeout(() => {
+                  this.$router.push({ path: "/doctormanagement" });
+                }, 1500);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(() => {
+          console.log("返回修改信息！");
+          return false;
+        });
       // console.log("this.doctorName", this.doctorName);
       // console.log("this.hospitalId", this.hospitalId, this.hospitalValue);
       // console.log("this.dutyId", this.dutyId, this.dutyValue);
       // console.log("this.sexId", this.sexId, this.sexValue);
       // console.log("this.customerStatusId", this.customerStatusId, this.customerStatus);
       // console.log("this.officeId", this.officeId, this.officeValue);
-      this.$toast.loading({
-        message: "创建中...",
-        forbidClick: true,
-        duration: 0,
-        loadingType: "spinner"
-      });
-      let postData = {
-        doctor_name: this.doctorName,
-        hospital_id: this.hospitalId,
-        section_id: this.dutyId,
-        sex: this.sexId,
-        doctor_status: this.customerStatusId,
-        duty: this.officeId,
-        educate: this.educationId,
-        doctor_type: this.professionId,
-        academic_title: this.academicId
-      };
-      this.$api
-        .createDoctor(postData)
-        .then(res => {
-          console.log(res);
-          if (res.code == 200) {
-            this.$toast.success("创建成功");
-            setTimeout(() => {
-              this.$router.push({ path: "/doctormanagement" });
-            }, 2000);
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
     }
   }
 };
