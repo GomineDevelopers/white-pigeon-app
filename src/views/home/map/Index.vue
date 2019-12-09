@@ -6,7 +6,7 @@
         <van-row class="search_input flex flex_align_center" v-show="inputShow">
           <van-icon name="arrow-left" @click="inputHidden" />
           <van-field v-model="keywords" placeholder="请输入" @input="handleInput" />
-          <span class="search_text" @click="handleTag">筛选</span>
+          <!-- <span class="search_text" @click="handleTag">筛选</span> -->
         </van-row>
         <van-row class="search_icon flex flex_align_center" @click="showInput">
           <van-icon name="search" />
@@ -27,21 +27,6 @@
           <van-row class="none_hospital_data" v-if="noneHospitalList">无数据</van-row>
         </van-row>
       </transition>
-      <van-row class="hospital_tag">
-        <van-row class="tag_item flex">
-          <span
-            :class="activeTag === tagItem ? 'active' : ''"
-            v-for="(tagItem, index) in hospital_tag"
-            :key="index + 'tag'"
-            @click="activeTag = tagItem"
-            >{{ tagItem }}</span
-          >
-        </van-row>
-        <van-row class="tag_btn flex">
-          <button @click="reset">重置</button>
-          <button @click="submitTag">确定</button>
-        </van-row>
-      </van-row>
     </van-row>
     <!-- search 结束 -->
     <!-- 遮罩选择省开始 -->
@@ -92,25 +77,25 @@
       ></marker-lighter>
     </baidu-map>
     <!-- map end -->
-    <!-- bottom-nav start -->
+    <!-- bottom-nav start 1-已开发  2-不可开发  3-空白医院  4-开发中-->
     <div v-show="bottomNavIsShow" class="van-tabbar--fixed van-tabbar bottom_bar">
-      <a class="bottom_bar_item" href="javascript:;">
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(3)">
         <img src="@/assets/image/develop_0.png" />
         <span>空白</span>
       </a>
-      <a class="bottom_bar_item" href="javascript:;">
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(4)">
         <img src="@/assets/image/develop_1.png" />
         <span>开发中</span>
       </a>
-      <a class="bottom_bar_item" href="javascript:;">
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(1)">
         <img src="@/assets/image/develop_2.png" />
         <span>已开发</span>
       </a>
-      <a class="bottom_bar_item" href="javascript:;">
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(2)">
         <img src="@/assets/image/develop_3.png" />
         <span>不可开发</span>
       </a>
-      <a class="bottom_bar_item" href="javascript:;">
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(5)">
         <img src="@/assets/image/develop_4.png" />
         <span>警告</span>
       </a>
@@ -159,7 +144,7 @@
                 <span class="tit">{{ item.product_name }}</span>
                 <span class="arrow">流向：0盒</span>
               </div>
-              <div class="pull_cell_cont" :class="{active: index == contIndex}">
+              <div class="pull_cell_cont" :class="{ active: index == contIndex }">
                 <p>潜力：一般</p>
                 <p>中标价：{{ item.bidding_price }}</p>
                 <p>主要科室：{{ item.section_name }}</p>
@@ -325,9 +310,7 @@ export default {
         // }
       ],
       noneHospitalList: false, //无数据的展示
-      activeTag: "",
-      currentTagStatus: "", //筛选医院标签
-      hospital_tag: ["空白", "开发中", "已开发", "不可开发", "警告"],
+      currentTagStatus: "", //当前筛选医院标签
       //点击医院是当前坐标
       currentPostion: {
         lng: "",
@@ -360,11 +343,14 @@ export default {
   computed: {
     //搜索filter过滤筛选
     filterHospital() {
-      // console.log(this.currentTagStatus)
+      // console.log(this.currentTagStatus);
       if (this.currentTagStatus == "") {
         return this.hospitalData;
       } else {
         return this.hospitalData.filter(value => {
+          if (value.hospital_status == this.currentTagStatus) {
+            console.log(value);
+          }
           return value.hospital_status == this.currentTagStatus;
         });
       }
@@ -385,6 +371,12 @@ export default {
       });
       this.zoom = 13;
     },
+    //点击地图下部筛选医院类型
+    handleActiveTag(type) {
+      this.currentTagStatus = type;
+
+      // this.handler({ BMap, map });
+    },
     //点击医院获取详细信息
     clickHandler(data) {
       this.isPopup = true;
@@ -400,7 +392,6 @@ export default {
       this.visitShow = data.hospital_status;
       this.currentPostion.lng = data.hospital_longtude;
       this.currentPostion.lat = data.hospital_latitude;
-
       let status = data.hospital_status; // 1-已开发  2-不可开发  3-空白医院  4-开发中
       let params = { hospital_id: data.id };
       if (status == 1) {
@@ -623,31 +614,6 @@ export default {
       this.inputHidden();
       this.hosSingleData = {};
     },
-    //标签筛选
-    submitTag() {
-      switch (this.activeTag) {
-        case "空白":
-          this.currentTagStatus = 3;
-          break;
-        case "开发中":
-          this.currentTagStatus = 4;
-          break;
-        case "已开发":
-          this.currentTagStatus = 1;
-          break;
-        case "不可开发":
-          this.currentTagStatus = 2;
-          break;
-        case "警告":
-          this.currentTagStatus = 5;
-          break;
-        default:
-          break;
-      }
-      this.inputHidden();
-      // console.log(this.activeTag)
-      // console.log(this.currentTagStatus)
-    },
     //弹框省市确认
     provinceConfirm(value) {
       // console.log(value)
@@ -693,7 +659,9 @@ export default {
       let MoveY = e.touches[0].clientY - _this.startY;
       let MoveYAbs = Math.abs(MoveY);
       let pullDownMoveY;
-      if ($(e.target).parents(".hospital_pull_cont").length) { return false};
+      if ($(e.target).parents(".hospital_pull_cont").length) {
+        return false;
+      }
       if (MoveY < 0 && _this.hoDetailHeight === 0) {
         _this.hospitalDetailScrollHeight = `${MoveYAbs}px`;
       } else if (MoveY > 0 && _this.hoDetailHeight > 0) {
@@ -705,7 +673,9 @@ export default {
       let _this = this;
       let MoveY = e.changedTouches[0].clientY - _this.startY;
       let MoveYAbs = Math.abs(MoveY);
-      if ($(e.target).parents(".hospital_pull_cont").length) { return false};
+      if ($(e.target).parents(".hospital_pull_cont").length) {
+        return false;
+      }
       if (MoveYAbs >= 20) {
         if (MoveY < 0) {
           _this.hospitalDetailScrollHeight = "100%";
@@ -1021,7 +991,7 @@ iframe {
   display: none;
   padding: 12px 20px;
 }
-.pull_cell_cont.active{
+.pull_cell_cont.active {
   display: inline-block;
 }
 .pull_cell_cont >>> p {
