@@ -37,7 +37,6 @@
           </van-row>
         </van-row>
       </van-row>
-      <!-- <embed :src="embedSrc" type="application/pdf" width="100%" height="height: 520px;" /> -->
     </van-row>
   </van-row>
 </template>
