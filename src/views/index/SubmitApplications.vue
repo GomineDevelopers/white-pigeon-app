@@ -6,15 +6,19 @@
     <van-row class="main_body">
       <van-row class="applications_info">
         <van-row class="drug_name bgm_white">{{ productData.productName }}</van-row>
-        <van-row class="flex flex_align_center bgm_white padding_3 border_bom">
-          <span class="title">承诺销量<i>*</i></span>
-          <span class="flex_1 sales_input">
+        <van-row class="flex_align_center bgm_white padding_3 border_bom">
+          <span class="title">承诺销量<i>*</i><van-icon name="question" @click="readTips(0)"/>
+          <p class="tips" :class="{active: tips == 0}">请按实际情况填写，此项目为重点评估项，避免因填写不当影响申请结果。</p>
+          </span>
+          <span class="sales_input">
             <van-field v-model="sales" type="number" placeholder="请输入" />
           </span>
         </van-row>
-        <van-row class="flex bgm_white padding_3 border_bom">
-          <span class="title">完成时间<i>*</i></span>
-          <span class="icon_right flex flex_1 flex_align_center" @click="timeShow = true">
+        <van-row class="bgm_white padding_3 border_bom">
+          <span class="title">预估开发时间<i>*</i><van-icon name="question"  @click="readTips(1)"/>
+            <p class="tips" :class="{active: tips == 1}" style="left: 5.4rem">请按实际开发情况填写，此项目为重点评估项，避免因填写不当影响申请结果。</p>
+          </span>
+          <span class="icon_right flex flex_align_center" @click="timeShow = true">
             <span class="flex_1 time_select">{{ time ? time : "请选择" }}</span>
             <van-icon name="arrow" />
           </span>
@@ -93,6 +97,7 @@ export default {
       timeOption: ["1个月", "2个月", "3个月", "4个月", "5个月", "6个月", "7个月", "8个月", "9个月"],
       date: "", //完成时间
       message: "",
+      tips: -1,
       hospitallTag: [
         "十分清楚竞品信息",
         "十分清楚此医院适用科室信息",
@@ -121,6 +126,10 @@ export default {
   methods: {
     onBack() {
       history.back();
+    },
+    // 查看提示
+    readTips(id) {
+      this.tips == id ? this.tips = -1 :  this.tips = id;
     },
     //接收路由数据
     getRouterData() {
@@ -235,9 +244,12 @@ export default {
 .sales_input .van-cell {
   font-size: 0.625rem !important;
 }
+.title .van-icon,
+.title2 .van-icon,
 .padding_3 .van-icon {
-  color: #d2d7de;
+  color: #d2d7de !important;
   font-size: 0.75rem;
+  vertical-align: -2px;
 }
 .submitapplications .van-field__control {
   color: #969799;
@@ -275,9 +287,29 @@ export default {
 }
 .title,
 .title2 {
-  white-space: nowrap;
+  position: relative;
+  display: block;
   margin-right: 0.375rem;
+  margin-bottom: 0.2rem;
   font-size: 0.625rem;
+}
+.title  .tips,
+.title2 .tips{
+  font-size: 0.5rem;
+  position: absolute;
+  margin: 0;
+  left: 4.2rem;
+  z-index: 10;
+  top: -5px;
+  width: 56%;
+  background: #fff;
+  padding: .2rem;
+  border: 1px solid #e5e5e5;
+  display: none;
+}
+.title  .tips.active,
+.title2 .tips.active{
+  display: inline-block
 }
 .van-cell {
   padding: 0rem;
