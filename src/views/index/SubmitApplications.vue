@@ -7,16 +7,22 @@
       <van-row class="applications_info">
         <van-row class="drug_name bgm_white">{{ productData.productName }}</van-row>
         <van-row class="flex_align_center bgm_white padding_3 border_bom">
-          <span class="title">承诺销量<i>*</i><van-icon name="question" @click="readTips(0)"/>
-          <p class="tips" :class="{active: tips == 0}">请按实际情况填写，此项目为重点评估项，避免因填写不当影响申请结果。</p>
+          <span class="title"
+            >承诺销量<i>*</i><van-icon name="question" @click="readTips(0)" />
+            <p class="tips" :class="{ active: tips == 0 }">
+              请按实际情况填写，此项目为重点评估项，避免因填写不当影响申请结果。
+            </p>
           </span>
           <span class="sales_input">
             <van-field v-model="sales" type="number" placeholder="请输入" />
           </span>
         </van-row>
         <van-row class="bgm_white padding_3 border_bom">
-          <span class="title">预估开发时间<i>*</i><van-icon name="question"  @click="readTips(1)"/>
-            <p class="tips" :class="{active: tips == 1}" style="left: 5.4rem">请按实际开发情况填写，此项目为重点评估项，避免因填写不当影响申请结果。</p>
+          <span class="title"
+            >预估开发时间<i>*</i><van-icon name="question" @click="readTips(1)" />
+            <p class="tips" :class="{ active: tips == 1 }" style="left: 5.4rem">
+              请按实际开发情况填写，此项目为重点评估项，避免因填写不当影响申请结果。
+            </p>
           </span>
           <span class="icon_right flex flex_align_center" @click="timeShow = true">
             <span class="flex_1 time_select">{{ time ? time : "请选择" }}</span>
@@ -26,7 +32,7 @@
         <van-row class="know_more padding_3">
           <van-row class="flex flex_align_center competing_goods">
             <span class="title2">医院了解<i>*</i></span>
-            <van-icon name="question" />
+            <!-- <van-icon name="question" /> -->
           </van-row>
           <van-row class="bgm_white">
             <van-cell-group>
@@ -51,7 +57,7 @@
         <van-row class="padding_3">
           <van-row class="flex flex_align_center competing_goods">
             <span class="title">竞品了解</span>
-            <van-icon name="question" />
+            <!-- <van-icon name="question" /> -->
           </van-row>
           <van-row class="bgm_white message2">
             <van-cell-group>
@@ -129,7 +135,7 @@ export default {
     },
     // 查看提示
     readTips(id) {
-      this.tips == id ? this.tips = -1 :  this.tips = id;
+      this.tips == id ? (this.tips = -1) : (this.tips = id);
     },
     //接收路由数据
     getRouterData() {
@@ -311,8 +317,8 @@ export default {
   margin-bottom: 0.2rem;
   font-size: 0.625rem;
 }
-.title  .tips,
-.title2 .tips{
+.title .tips,
+.title2 .tips {
   font-size: 0.5rem;
   position: absolute;
   margin: 0;
@@ -321,13 +327,14 @@ export default {
   top: -5px;
   width: 56%;
   background: #fff;
-  padding: .2rem;
+  padding: 0.2rem;
   border: 1px solid #e5e5e5;
+  border-radius: 0.1875rem;
   display: none;
 }
-.title  .tips.active,
-.title2 .tips.active{
-  display: inline-block
+.title .tips.active,
+.title2 .tips.active {
+  display: inline-block;
 }
 .van-cell {
   padding: 0rem;

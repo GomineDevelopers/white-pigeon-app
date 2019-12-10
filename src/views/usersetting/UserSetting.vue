@@ -16,9 +16,19 @@
         <span class="flex_1">关于小白</span>
         <van-icon name="arrow" class="right_icon" />
       </van-row>
+      <van-row class="setting_item flex flex_align_center justify_between" @click="goNotice">
+        <span class="flex_1">平台公告</span>
+        <van-icon name="arrow" class="right_icon" />
+      </van-row>
       <van-row class="public_btn">
         <!-- <button @click="loginOut">退出登录</button> -->
-        <van-button @click="loginOut" :loading="loading" type="info" :loading-text="loadingText" text="退出登录" />
+        <van-button
+          @click="loginOut"
+          :loading="loading"
+          type="info"
+          :loading-text="loadingText"
+          text="退出登录"
+        />
       </van-row>
     </van-row>
   </van-row>
@@ -50,24 +60,28 @@ export default {
     loginOut() {
       this.loading = true;
       this.$api
-      .loginOut()
-      .then(res => {
-        console.log(res);
-        this.loading = false;
-        this.$store.commit("setToken", null);
-        this.$dialog.alert({
-          message: res.message
-        }).then(res => {
-          this.$router.replace("/loginpassword");
+        .loginOut()
+        .then(res => {
+          console.log(res);
+          this.loading = false;
+          this.$store.commit("setToken", null);
+          this.$dialog
+            .alert({
+              message: res.message
+            })
+            .then(res => {
+              this.$router.replace("/loginpassword");
+            });
         })
-      })
-      .catch(err => {
-        this.$dialog.alert({
-          message: '请先登录'
-        }).then(res => {
-          this.$router.replace("/loginpassword");
-        })
-      })
+        .catch(err => {
+          this.$dialog
+            .alert({
+              message: "请先登录"
+            })
+            .then(res => {
+              this.$router.replace("/loginpassword");
+            });
+        });
     },
 
     onBack() {
@@ -81,6 +95,9 @@ export default {
     },
     goBankCard() {
       this.$router.push({ path: "/bankcard" });
+    },
+    goNotice() {
+      this.$router.push({ path: "/notice" });
     }
   }
 };

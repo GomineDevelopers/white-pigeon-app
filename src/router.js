@@ -304,6 +304,15 @@ export default new Router({
         )
     },
     {
+      path: "/notice",
+      name: "notice",
+      component: () =>
+        import(
+          /* webpackChunkName: "usersetting" */
+          "./views/usersetting/Notice.vue"
+        )
+    },
+    {
       path: "/help",
       name: "help",
       component: () =>

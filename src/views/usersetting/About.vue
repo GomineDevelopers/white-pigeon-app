@@ -41,9 +41,6 @@ export default {
   methods: {
     onBack() {
       history.back();
-    },
-    editPassword() {
-      this.$router.push({ path: "/changepassword" });
     }
   }
 };
