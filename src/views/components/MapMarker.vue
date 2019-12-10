@@ -1,5 +1,5 @@
 <template>
-  <bm-overlay ref="customOverlay" class="map_marker" pane="labelPane" @draw="draw">
+  <bm-overlay ref="customOverlay" class="map_marker" pane="labelPane" @initialize="draw">
     <img
       v-if="item.hospital_status == 1"
       src="@/assets/image/home_mapicon_1.svg"

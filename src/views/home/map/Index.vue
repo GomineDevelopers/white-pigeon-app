@@ -52,15 +52,17 @@
     </van-popup>
     <!-- <van-popup v-model="show">内容</van-popup> -->
     <!-- 遮罩选择省结束 -->
-    <!-- map start -->
+    <!-- map start :inertial-dragging="true "-->
     <baidu-map
       @click="showSetting"
       class="baidu_map_view"
+      ref="baidu_map"
       :center="center"
       :zoom="zoom"
       :mapStyle="mapStyle"
       :scroll-wheel-zoom="true"
-      :inertial-dragging="true"
+      @moveend="drag"
+      @zoomend="drag"
       @ready="handler"
     >
     <template v-if="markerReset">
@@ -335,7 +337,8 @@ export default {
       hospitalFoldData: [],
       hospitalRouteParams: {}, //用户选中的医院ID
       hospitalDetailScrollHeight: 0,
-      startY: 0
+      startY: 0,
+      HospitalList: []
     };
   },
   components: {
@@ -348,9 +351,9 @@ export default {
     filterHospital() {
       // console.log(this.currentTagStatus);
       if (this.currentTagStatus == "") {
-        return this.hospitalData;
+        return this.HospitalList;
       } else {
-        return this.hospitalData.filter(value => {
+        return this.HospitalList.filter(value => {
           return value.hospital_status == this.currentTagStatus;
         });
       }
@@ -367,6 +370,28 @@ export default {
         // this.center = { lng: r.longitude, lat: r.latitude}
       // });
       this.zoom = 13;
+    },
+    // 显示可视区域医院数据
+    drag() {
+      const bs = this.$refs.baidu_map.map.getBounds();   //获取可视区域
+      const bssw = bs.getSouthWest();   //可视区域左下角
+      const bsne = bs.getNorthEast();   //可视区域右上角
+      const topLat = bsne.lat;
+      const bottomLat = bssw.lat;
+      const leftLng = bssw.lng;
+      const rightLng = bsne.lng;
+      let templateHospital = [];
+      this.hospitalData.forEach( item => {
+        if (item.hospital_longtude > leftLng && item.hospital_latitude > bottomLat && item.hospital_longtude < rightLng && item.hospital_latitude < topLat){
+          templateHospital.push(item)
+        }
+      });
+      this.markerReset = false;
+      this.$nextTick(() => {
+        this.markerReset = true;
+        this.HospitalList = templateHospital;
+        templateHospital = [];
+      })
     },
     //点击地图下部筛选医院类型
     handleActiveTag(type) {
@@ -539,6 +564,7 @@ export default {
                 // console.log(res)
                 if (res.code == 200) {
                   this.hospitalData = res.data;
+                  this.drag();
                 }
               })
               .catch(error => {
