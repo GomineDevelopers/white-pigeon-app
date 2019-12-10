@@ -5,7 +5,7 @@
     </van-row>
     <van-row class="setting_body">
       <van-row>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为维护本平台及平台用户合法利益，促进平台高效、安全、稳定运行，，现拟定以下政策。政策自注册日起生效，请所有用户自觉遵守。
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为维护本平台及平台用户合法利益，促进平台高效、安全、稳定运行，，现拟定以下政策。政策自注册日起生效，请所有用户自觉遵守。
         <br />
         1.
         用户须自觉遵守国家法律法规及行业规范，推广过程中严格按照推广活动审核标准执行活动，提交活动材料须保证真实有效，不得弄虚作假。
@@ -18,7 +18,7 @@
       </van-row>
       <van-row class="notice_title">推广活动审核标准</van-row>
       <van-row>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目前平台开放审核的推广活动有两项：专家拜访、科室会议。活动具体审核标准如下。
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目前平台开放审核的推广活动有两项：专家拜访、科室会议。活动具体审核标准如下。
         <br />
         <i>1. 专家拜访审核标准</i>
         （1）签到位置：拜访签到位置须与乙方医院位置相距1千米以内。
