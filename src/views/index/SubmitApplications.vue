@@ -131,7 +131,7 @@ export default {
   },
   methods: {
     onBack() {
-      history.back();
+      this.$router.push({ path: "/" });
     },
     // 查看提示
     readTips(id) {
