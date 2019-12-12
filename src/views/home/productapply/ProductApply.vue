@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     onBack() {
-      history.back();
+      this.$router.push({ path: "/" });
     },
     navHandle(index, status) {
       this.navActive = index;

@@ -9,31 +9,30 @@
           <span :class="active ? 'active' : ''" @click="getInformation(1)">公司政策</span>
           <span :class="active ? '' : 'active'" @click="getInformation(2)">产品资料</span>
         </van-row>
-        <van-loading
+        <!-- <van-loading
           class="show_loading"
           type="spinner"
           color="#1989fa"
           v-show="infomationList.length == 0"
-        />
+        /> -->
         <van-row class="self_study_content" v-show="active">
-          <!-- <span class="self_study_title" v-show="infomationList.length > 0">公司政策</span> -->
           <van-row>
-            <ul>
+            <!-- <ul>
               <li v-for="(item, index) in infomationList" :key="index + 'a'">
                 <a :href="item.company_policy_name" target="_blank">{{ item.title }}.pdf</a>
-                <!-- <span @click="embedSrc = item.company_policy_name">{{ item.title }}.pdf</span> -->
               </li>
-            </ul>
+            </ul> -->
+            <van-collapse v-model="activeName1" accordion>
+              <van-collapse-item title="公司政策2" name="2">内容</van-collapse-item>
+            </van-collapse>
           </van-row>
         </van-row>
         <van-row class="self_study_content" v-show="!active">
-          <!-- <span class="self_study_title" v-show="infomationList.length > 0">产品资料</span> -->
           <van-row>
-            <ul>
-              <li v-for="(item2, index2) in infomationList" :key="index2 + 'b'">
-                <a :href="item2.company_policy_name" target="_blank">{{ item2.title }}.pdf</a>
-              </li>
-            </ul>
+            <van-collapse v-model="activeName2" accordion>
+              <van-collapse-item title="产品资料1" name="1">内容</van-collapse-item>
+              <van-collapse-item title="产品资料2" name="2">内容</van-collapse-item>
+            </van-collapse>
           </van-row>
         </van-row>
       </van-row>
@@ -46,7 +45,10 @@ export default {
   data() {
     return {
       active: true,
-      embedSrc: "",
+      // embedSrc: "",
+      activeName1: "",
+      activeName2: "",
+      activeName3: "",
       infomationList: []
     };
   },
@@ -91,19 +93,33 @@ export default {
   }
 };
 </script>
+<style>
+.van-cell__title span {
+  font-size: 0.6875rem !important;
+}
+</style>
 <style scoped>
 .self_study {
   text-align: left;
 }
 .self_study_body {
-  padding: 0.8rem 0.5rem 1.5rem 0.5rem;
   min-height: 75vh;
+  padding: 0.8rem 0rem;
+}
+.self_study_title {
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  color: #000;
+}
+.self_study_content {
+  padding: 0rem 0.5rem;
 }
 .top_nav {
   margin-bottom: 1.2rem;
 }
 .top_nav span {
-  margin-right: 1.2rem;
+  margin-left: 1rem;
   color: #8898ab;
 }
 .top_nav span.active {
@@ -119,29 +135,5 @@ export default {
   width: 1rem;
   height: 0.125rem;
   border-bottom: 2px solid #3399ff;
-}
-.self_study_content .self_study_title {
-  display: block;
-  text-align: center;
-}
-.self_study_content ul li {
-  list-style: none;
-  font-size: 0.625rem;
-  margin-top: 0.8rem;
-  color: #333;
-}
-.self_study_content ul li::before {
-  content: "·";
-  color: #333;
-  height: 0.3125rem;
-  font-size: 1.125rem;
-  vertical-align: middle;
-  line-height: 0.3125rem;
-  margin-right: 0.1rem;
-}
-.show_loading {
-  text-align: center;
-  height: 50vh;
-  line-height: 50vh;
 }
 </style>

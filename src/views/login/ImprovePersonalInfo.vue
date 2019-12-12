@@ -1,7 +1,7 @@
 <template>
   <van-row class="improvepersonalinfo">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="完善信息" />
+      <van-nav-bar title="完善信息" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body">
       <!--<van-row class="info_module">
@@ -116,6 +116,7 @@ export default {
     }
 
     this.setMaxDate();
+    console.log("路由传参", this.$route.query.data);
   },
   methods: {
     //地区选择确认
@@ -136,6 +137,9 @@ export default {
     //     SelectCountyName
     //   );
     // },
+    onBack() {
+      this.$router.push({ path: "/" });
+    },
     setMaxDate() {
       let now = new Date();
       let endDate = new Date(now.setFullYear(now.getFullYear() + 30));
@@ -224,7 +228,18 @@ export default {
         .then(res => {
           if (res.code === 200) {
             _this.$toast.success(res.message);
-            _this.$router.push({ path: "/" });
+            setTimeout(() => {
+              if (_this.$route.query.data) {
+                _this.$router.replace({
+                  path: "/hospitalinfo",
+                  query: {
+                    data: _this.$route.query.data
+                  }
+                });
+              } else {
+                _this.$router.push({ path: "/userinfocenter" });
+              }
+            }, 1500);
           } else {
             _this.$toast.fail(res.message);
           }

@@ -126,10 +126,12 @@ export default {
       this.$api
         .register(postData)
         .then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             this.$toast.success("注册成功！");
-            this.$router.push({ path: "/" });
+            setTimeout(() => {
+              this.$router.push({ path: "/loginpassword" });
+            }, 1500);
           } else {
             this.$toast.fail(res.message);
           }

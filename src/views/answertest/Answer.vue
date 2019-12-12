@@ -131,25 +131,25 @@ export default {
           questionOption: ["国控", "飞送", "迅达", "药通"],
           questionAnswer: "",
           answer: "国控"
-        },
-        {
-          questionTitle: "直接向医生推广产品信息的人员一般称为什么",
-          questionOption: ["合规专员", "客户专员", "医药代表", "医药配送员"],
-          questionAnswer: "",
-          answer: "医药代表"
-        },
-        {
-          questionTitle: "下面不属于医生职称的是",
-          questionOption: ["住院医师", "主治医师", "药剂科主任", "副主任医师"],
-          questionAnswer: "",
-          answer: "药剂科主任"
-        },
-        {
-          questionTitle: "医药行业的GPO什么意思",
-          questionOption: ["枪手医生", "带量采购", "服务供应商", "配送商"],
-          questionAnswer: "",
-          answer: "带量采购"
         }
+        // {
+        //   questionTitle: "直接向医生推广产品信息的人员一般称为什么",
+        //   questionOption: ["合规专员", "客户专员", "医药代表", "医药配送员"],
+        //   questionAnswer: "",
+        //   answer: "医药代表"
+        // },
+        // {
+        //   questionTitle: "下面不属于医生职称的是",
+        //   questionOption: ["住院医师", "主治医师", "药剂科主任", "副主任医师"],
+        //   questionAnswer: "",
+        //   answer: "药剂科主任"
+        // },
+        // {
+        //   questionTitle: "医药行业的GPO什么意思",
+        //   questionOption: ["枪手医生", "带量采购", "服务供应商", "配送商"],
+        //   questionAnswer: "",
+        //   answer: "带量采购"
+        // }
       ]
     };
   },
@@ -183,7 +183,7 @@ export default {
         }
       });
       console.log(score);
-      let identify_status = score >= 10 ? "1" : "2";
+      let identify_status = score >= 8 ? "1" : "2";
       console.log(identify_status);
       let params = { identify_status: identify_status };
       this.$api
@@ -225,13 +225,20 @@ export default {
               this.$router.push({ path: "/" });
             }, 1000);
           } else if (res.code == 9002) {
-            this.$toast.fail("输入的推荐码有误！");
-            this.$router.push({ path: "/answer" });
+            this.$toast.fail("输入的推荐码有误");
+            setTimeout(() => {
+              this.reload();
+            }, 1500);
           } else if (res.code == 9004) {
             this.$toast.fail("你已经提交过了,请勿重复提交");
             setTimeout(() => {
               this.$router.push({ path: "/" });
             }, 1000);
+          } else {
+            this.$toast.fail("请填写推荐码");
+            setTimeout(() => {
+              this.reload();
+            }, 1500);
           }
         })
         .catch(error => {

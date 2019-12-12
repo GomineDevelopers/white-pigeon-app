@@ -84,31 +84,38 @@ export default {
         .then(res => {
           // console.log(res);
           if (res.code == 200) {
-            this.$toast.success("登录成功！");
             this.$store.commit("setToken", res.token); //设置store中token
             localStorage.setItem("token", res.token);
             this.$api
               .userInfo()
               .then(res => {
-                // console.log(res);
-                if (res.user.is_regional_mangager == 1) {
-                  localStorage.setItem("role", 1); //本地存储区域经理的角色  1-经理  2-普通用户
-                  this.$router.replace({ path: "/approveindex" });
-                } else {
-                  localStorage.setItem("role", 2);
-                  if (
-                    (res.user.invite_code == null || res.user.invite_code == "") &&
-                    res.user.identify_status != 1
-                  ) {
-                    this.$router.replace({ path: "/answer" });
+                // console.log("用户信息", res);
+                if (res.code == 200) {
+                  if (res.user.status != 1) {
+                    this.$toast.fail("该账号已注销");
+                    return false;
                   } else {
-                    if (this.$route.query.redirect) {
-                      console.log("重定向地址", this.$route.query.redirect);
-                      this.$router.replace({
-                        path: decodeURIComponent(this.$route.query.redirect)
-                      });
+                    this.$toast.success("登录成功！");
+                    if (res.user.is_regional_mangager == 1) {
+                      localStorage.setItem("role", 1); //本地存储区域经理的角色  1-经理  2-普通用户
+                      this.$router.replace({ path: "/approveindex" });
                     } else {
-                      this.$router.replace({ path: "/" });
+                      localStorage.setItem("role", 2);
+                      if (
+                        (res.user.invite_code == null || res.user.invite_code == "") &&
+                        res.user.identify_status != 1
+                      ) {
+                        this.$router.replace({ path: "/answer" });
+                      } else {
+                        if (this.$route.query.redirect) {
+                          console.log("重定向地址", this.$route.query.redirect);
+                          this.$router.replace({
+                            path: decodeURIComponent(this.$route.query.redirect)
+                          });
+                        } else {
+                          this.$router.replace({ path: "/" });
+                        }
+                      }
                     }
                   }
                 }

@@ -136,7 +136,7 @@ export default {
         });
     },
     onBack() {
-      history.back();
+      this.$router.push({ path: "/" });
     },
     goUserInfoDetail() {
       this.$router.push({ path: "/userinfodetail" });

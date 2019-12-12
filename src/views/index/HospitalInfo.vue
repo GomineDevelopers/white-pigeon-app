@@ -118,7 +118,7 @@ export default {
   },
   methods: {
     onBack() {
-      history.back();
+      this.$router.push({ path: "/" });
     },
     getRouterData() {
       // 只是改了query，其他都不变

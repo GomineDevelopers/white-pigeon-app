@@ -1,7 +1,7 @@
 <template>
   <van-row class="bankcard">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="设置" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="银行卡设置" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="bankcard_content">
       <van-row class="flex card_item border_bom">
@@ -64,9 +64,10 @@ export default {
       bankList: bankList,
       openingBank: [],
       name: "",
-      bankCard: "",
-      bankBranch: "",
-      openingBankValue: ""
+      bankCard: "", //卡号
+      bankBranch: "", //支行
+      openingBankValue: "", //开户行 银行卡中文  中国工商银行
+      openingBankId: "" //银行卡简称 ICBC
     };
   },
   created() {
@@ -93,32 +94,44 @@ export default {
     },
     onConfirm(value) {
       this.openingBankShow = false;
-      this.openingBankValue = value;
+      this.openingBankValue = value.text;
+      this.openingBankId = value.id;
     },
     // 获取银行列表
     getBankList() {
       let temp = [];
       this.bankList.bankList.forEach(value => {
-        temp.push(value.text);
+        temp.push({ text: value.text, id: value.value });
       });
       this.openingBank = temp;
-      // console.log(temp);
+      console.log(this.openingBank);
     },
     // 获取银行卡信息
     getBankInfo() {
       this.$api
         .userInfo()
         .then(res => {
+          console.log(res);
           this.name = res.user.account_name || "";
           this.bankCard = res.user.card_no || "";
-          this.openingBankValue = res.user.open_bank || "";
+          this.bankList.bankList.forEach(item => {
+            if (item.value == res.user.open_bank) {
+              this.openingBankValue = item.text;
+            }
+          });
+          this.bankBranch = res.user.bank_branch || "";
         })
         .catch(error => {
           console.log(error);
         });
     },
     goContract() {
-      if (this.name == "" || this.bankCard == "" || this.openingBankValue == "") {
+      if (
+        this.name == "" ||
+        this.bankCard == "" ||
+        this.openingBankValue == "" ||
+        this.openingBankId == ""
+      ) {
         this.$toast.fail("请填写完整信息");
         return false;
       }
@@ -132,8 +145,9 @@ export default {
           // console.log("已确认信息无误！");
           let params = {
             account_name: this.name,
-            open_bank: this.openingBankValue,
-            card_no: this.bankCard
+            open_bank: this.openingBankId,
+            card_no: this.bankCard,
+            bank_branch: this.bankBranch
           };
           this.$api
             .bankFill(params)

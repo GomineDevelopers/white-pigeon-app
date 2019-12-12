@@ -22,7 +22,9 @@ import {
   Toast,
   List,
   Loading,
-  Checkbox
+  Checkbox,
+  Collapse,
+  CollapseItem
 } from "vant";
 
 Vue.use(Button);
@@ -48,5 +50,7 @@ Vue.use(Toast);
 Vue.use(List);
 Vue.use(Loading);
 Vue.use(Checkbox);
+Vue.use(Collapse);
+Vue.use(CollapseItem);
 
 Vue.prototype.$Dialog = Dialog;

@@ -145,7 +145,7 @@
 </template>
 <script>
 import { upload, photograph } from "@/js/upload";
-import {minDate,minutesTimeFormat } from "@/js/public";
+import { minDate, minutesTimeFormat } from "@/js/public";
 export default {
   name: "visitdetailedit",
   data() {
@@ -191,6 +191,7 @@ export default {
   },
   mounted() {
     let id = this.$route.query.id;
+    console.log("id", id);
     this.getVisitGoal();
     this.getVisitRelation(id);
     this.minDate = minDate();
@@ -221,6 +222,17 @@ export default {
           if (res.code == 200) {
             let hospitalInfo = res.getInfoByHospitalId;
             let productInfo = res.getproductByHospitalId;
+            if (hospitalInfo.length == 0) {
+              this.$dialog
+                .alert({
+                  title: "提示",
+                  message: "该医院目前没有审核通过的医生信息，不可以申请拜访"
+                })
+                .then(() => {
+                  this.$router.push({ path: "/" });
+                });
+              return false;
+            }
             this.hospital_id = hospitalInfo[0].hospital_id;
             this.hospital_name = hospitalInfo[0].hospital_name;
             hospitalInfo.map(item => {
@@ -263,7 +275,7 @@ export default {
     // 时间选择
     timeConfirm(v) {
       this.timeShow = false;
-      this.start_time = minutesTimeFormat(v)
+      this.start_time = minutesTimeFormat(v);
     },
     // 选择拜访目的
     visitPurposeConfirm(v) {
@@ -284,14 +296,16 @@ export default {
       this.product_id = v.id;
     },
     camera() {
-      photograph().then(res => {
-        console.log("305",res)
-        upload(res, 0).then(res => {
-          this.visitPhoto.push(res);
+      photograph()
+        .then(res => {
+          console.log("305", res);
+          upload(res, 0).then(res => {
+            this.visitPhoto.push(res);
+          });
         })
-      }).catch(err => {
-        console.log("310",err)
-      })
+        .catch(err => {
+          console.log("310", err);
+        });
     },
     // 删除图片
     deleteImg(i) {

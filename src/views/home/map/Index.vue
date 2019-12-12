@@ -30,7 +30,7 @@
     </van-row>
     <!-- search 结束 -->
     <!-- 遮罩选择省开始 -->
-    <van-popup class="province_dialog" v-model="dialogShow">
+    <van-popup class="province_dialog" :close-on-click-overlay="propFalse" v-model="dialogShow">
       <van-row class="province_select">
         <van-row class="province_select_title">请选择工作所属省份/直辖市</van-row>
         <van-row class="province_select_text flex" @click="provinceShow = !provinceShow">
@@ -65,15 +65,15 @@
       @zoomend="drag"
       @ready="handler"
     >
-    <template v-if="markerReset">
-      <map-marker
-        v-for="(item, index) in filterHospital"
-        :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
-        :item="item"
-        :key="index"
-        @clickHandler="clickHandler"
-      >
-      </map-marker>
+      <template v-if="markerReset">
+        <map-marker
+          v-for="(item, index) in filterHospital"
+          :position="{ lng: item.hospital_longtude, lat: item.hospital_latitude }"
+          :item="item"
+          :key="index"
+          @clickHandler="clickHandler"
+        >
+        </map-marker>
       </template>
       <!-- 点击定位当前图标 -->
       <marker-lighter
@@ -296,6 +296,7 @@ export default {
   inject: ["reload"], //刷新页面
   data() {
     return {
+      propFalse: false,
       userInfo: null,
       dialogShow: false, //省份输入框
       isComplete: null, //用户是否完善信息
@@ -367,23 +368,28 @@ export default {
     handler({ BMap, map }) {
       // let geoLocation = new BMap.Geolocation();
       // geoLocation.getCurrentPosition(r => {
-        // this.center = { lng: r.longitude, lat: r.latitude}
+      // this.center = { lng: r.longitude, lat: r.latitude}
       // });
       this.zoom = 13;
     },
     // 显示可视区域医院数据
     drag() {
-      const bs = this.$refs.baidu_map.map.getBounds();   //获取可视区域
-      const bssw = bs.getSouthWest();   //可视区域左下角
-      const bsne = bs.getNorthEast();   //可视区域右上角
+      const bs = this.$refs.baidu_map.map.getBounds(); //获取可视区域
+      const bssw = bs.getSouthWest(); //可视区域左下角
+      const bsne = bs.getNorthEast(); //可视区域右上角
       const topLat = bsne.lat;
       const bottomLat = bssw.lat;
       const leftLng = bssw.lng;
       const rightLng = bsne.lng;
       let templateHospital = [];
-      this.hospitalData.forEach( item => {
-        if (item.hospital_longtude > leftLng && item.hospital_latitude > bottomLat && item.hospital_longtude < rightLng && item.hospital_latitude < topLat){
-          templateHospital.push(item)
+      this.hospitalData.forEach(item => {
+        if (
+          item.hospital_longtude > leftLng &&
+          item.hospital_latitude > bottomLat &&
+          item.hospital_longtude < rightLng &&
+          item.hospital_latitude < topLat
+        ) {
+          templateHospital.push(item);
         }
       });
       this.markerReset = false;
@@ -391,20 +397,19 @@ export default {
         this.markerReset = true;
         this.HospitalList = templateHospital;
         templateHospital = [];
-      })
+      });
     },
     //点击地图下部筛选医院类型
     handleActiveTag(type) {
-      console.log(3)
-      if (this.currentTagStatus == type){
+      console.log(3);
+      if (this.currentTagStatus == type) {
         return false;
       }
       this.markerReset = false;
       this.$nextTick(() => {
         this.markerReset = true;
         this.currentTagStatus = type;
-      })
-      
+      });
 
       // this.handler({ BMap, map });
     },
@@ -543,7 +548,7 @@ export default {
       this.currentPostion = {
         lng: 0,
         lat: 0
-      }
+      };
     },
     //获取个人信息
     getUserInfo() {
@@ -616,8 +621,8 @@ export default {
     },
     //搜索医院结果
     getSearchResult() {
-      if (this.keywords.length > 4) {
-        console.log("开始搜索");
+      if (this.keywords.length > 1) {
+        // console.log("开始搜索");
         let params = {
           key: this.keywords
         };
@@ -723,7 +728,6 @@ export default {
     //点击开发医院
     applyForHospital() {
       if (!this.isComplete) {
-        // console.log("未完善信息")
         this.$Dialog
           .confirm({
             message: "请您完善个人信息，再进行开发操作。",
@@ -731,7 +735,12 @@ export default {
             cancelButtonText: "取消" //改变取消按钮上显示的文字
           })
           .then(() => {
-            this.$router.push({ path: "/improvepersonalinfo" }); //去完善信息
+            this.$router.replace({
+              path: "/improvepersonalinfo",
+              query: {
+                data: this.hospitalRouteParams
+              }
+            }); //去完善信息
           })
           .catch(() => {
             console.log("取消完善信息！");
@@ -756,6 +765,8 @@ export default {
 
     //点击创建拜访 先判断用户是否有银行卡信息
     creatVisit(id) {
+      console.log(id);
+      // return;
       //判断用户银行卡信息是否完善
       if (
         this.userInfo.account_name == null ||
