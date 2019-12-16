@@ -4,26 +4,25 @@
       <van-row class="hospital_list">
         <van-row
           class="hospital_item border_bom"
-          v-for="(item,index) in hospitalList"
+          v-for="(item, index) in hospitalList"
           :key="index"
         >
-          <van-row class="hospital_name">{{item.hospital_name}}</van-row>
+          <van-row class="hospital_name">{{ item.hospital_name }}</van-row>
           <van-row class="hospital_tag">
-            <span class="compositive">{{setHospitalType(item.hospital_type)}}</span>
-            <span class="three_level">{{setHospitalLevel(item.hospital_level)}}</span>
-            <span class="public">{{setHospitalRunType(item.hospital_run_type)}}</span>
+            <span class="compositive">{{ setHospitalType(item.hospital_type) }}</span>
+            <span class="three_level">{{ setHospitalLevel(item.hospital_level) }}</span>
+            <span class="public">{{ setHospitalRunType(item.hospital_run_type) }}</span>
           </van-row>
           <van-row class="product_list">
-            <span
-              v-for="(product,index3) in item.product"
-              :key="index3 +'b'"
-            >{{product.product_name+"&nbsp;&nbsp;&nbsp;"}}</span>
+            <span v-for="(product, index3) in item.product" :key="index3 + 'b'">{{
+              product.product_name + "&nbsp;&nbsp;&nbsp;"
+            }}</span>
           </van-row>
-          <van-row class="hospital_address">{{item.hospital_address}}</van-row>
+          <van-row class="hospital_address">{{ item.hospital_address }}</van-row>
         </van-row>
       </van-row>
       <van-row class="more" @click="getHospitalData()">
-          {{ finished ? '数据加载完成' : loading ? '数据加载中...' : loadingText}}
+        {{ finished ? "数据加载完成" : loading ? "数据加载中..." : loadingText }}
       </van-row>
     </van-row>
   </van-row>
@@ -44,18 +43,19 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-        this.getHospitalData();
-    })
+      this.getHospitalData();
+    });
   },
   methods: {
     // 获取我的医院数据
     getHospitalData() {
-      if (!this.loading && !this.finished){
+      if (!this.loading && !this.finished) {
         this.loading = true;
-        let data = {page: this.page, row: this.row};
+        let data = { page: this.page, row: this.row };
         this.$api
           .userCenterHospital(data)
           .then(res => {
+            console.log(res);
             switch (res.code) {
               case 200:
                 let list = res.hospital_data;
@@ -66,30 +66,29 @@ export default {
                 } else {
                   this.loading = true;
                   this.finished = true;
-                };
+                }
                 break;
               case 3001:
+                this.finished = true;
                 this.loadingText = res.message;
                 break;
-            } 
+            }
           })
-          .catch(err => {
-
-          })
-        }
+          .catch(err => {});
+      }
     },
     // 判断医院类型
-    setHospitalType(id){
-      return setHospitalType(id)
+    setHospitalType(id) {
+      return setHospitalType(id);
     },
     // 判断医院等级
-    setHospitalLevel(id){
-      return setHospitalLevel(id)
+    setHospitalLevel(id) {
+      return setHospitalLevel(id);
     },
     // 判断医院经营方式
-    setHospitalRunType(id){
-      return setHospitalRunType(id)
-    },
+    setHospitalRunType(id) {
+      return setHospitalRunType(id);
+    }
     // goApplyHospitalDetail() {
     //   this.$router.push({ path: "/applyhospitaldetail" });
     // }

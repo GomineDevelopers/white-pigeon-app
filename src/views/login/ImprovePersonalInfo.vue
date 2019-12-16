@@ -117,6 +117,7 @@ export default {
 
     this.setMaxDate();
     console.log("路由传参", this.$route.query.data);
+    console.log("重定向地址", this.$route.query.redirect);
   },
   methods: {
     //地区选择确认
@@ -236,8 +237,10 @@ export default {
                     data: _this.$route.query.data
                   }
                 });
-              } else {
-                _this.$router.push({ path: "/userinfocenter" });
+              } else if (_this.$route.query.redirect) {
+                _this.$router.replace({
+                  path: decodeURIComponent(_this.$route.query.redirect)
+                });
               }
             }, 1500);
           } else {

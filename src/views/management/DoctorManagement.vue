@@ -209,7 +209,40 @@ export default {
       this.finished = false; //初始化完成状态  @load="getDoctorList" 自动加载
     },
     newDoctor() {
-      this.$router.push({ path: "/newdoctor" });
+      this.$api
+        .userInfo()
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            if (!res.user.isComplete) {
+              this.$Dialog
+                .confirm({
+                  message: "请您完善个人信息，再进行开发操作。",
+                  confirmButtonText: "前往", //改变确认按钮上显示的文字
+                  cancelButtonText: "取消" //改变取消按钮上显示的文字
+                })
+                .then(() => {
+                  this.$router.replace({
+                    path: "/improvepersonalinfo",
+                    query: {
+                      redirect: this.$router.currentRoute.fullPath
+                    }
+                  }); //去完善信息
+                })
+                .catch(() => {
+                  console.log("取消完善信息！");
+                });
+            } else {
+              this.$router.push({
+                path: "/newdoctor"
+              });
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      // this.$router.push({ path: "/newdoctor" });
     },
     doctorDetail(id) {
       console.log("医生id", id);

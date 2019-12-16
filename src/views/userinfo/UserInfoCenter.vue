@@ -43,8 +43,8 @@
     <!-- 头部用户信息结束 -->
     <van-row class="user_body">
       <van-row class="my_product_nav">
-        <span :class="active ? 'activeLink' : ''" @click="active = !active">我的医院</span>
-        <span :class="active ? '' : 'activeLink'" @click="active = !active">我的产品</span>
+        <span :class="active ? 'activeLink' : ''" @click="active = true">我的医院</span>
+        <span :class="active ? '' : 'activeLink'" @click="active = false">我的产品</span>
       </van-row>
       <van-row>
         <my-hospital v-show="active"></my-hospital>
@@ -109,7 +109,13 @@ export default {
                   confirmButtonText: "完善信息"
                 })
                 .then(() => {
-                  this.$router.push("/improvepersonalinfo");
+                  // this.$router.push("/improvepersonalinfo");
+                  this.$router.replace({
+                    path: "/improvepersonalinfo",
+                    query: {
+                      redirect: this.$router.currentRoute.fullPath
+                    }
+                  }); //去完善信息
                 });
             }
           }
