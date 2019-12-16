@@ -6,26 +6,39 @@
     <van-row class="approve_content_body">
       <van-row class="approve_detail">
         <ul>
-          <li>
+          <li class="flex_li">
             <span>开发人：</span>
             <span>{{ detail.name }}</span>
           </li>
-          <li>
+          <li class="flex_li">
+            <span>电话：</span>
+            <span>{{ detail.email }}</span>
+          </li>
+          <li class="flex_li">
             <span>医院：</span>
             <span>{{ detail.hospital_name }}</span>
           </li>
-          <li>
+          <li class="flex_li">
             <span>承诺销量：</span>
             <span>{{ detail.product_name }} {{ detail.promise_sales }}/月</span>
           </li>
-          <li>
+          <li class="flex_li">
             <span>开发时间：</span>
             <span>{{ detail.create_time }}</span>
+          </li>
+          <li>
+            <span>医院了解</span>
+            <span class="know_more">{{ detail.hospital_know }}</span>
+          </li>
+          <li>
+            <span>竞品了解：</span>
+            <span class="know_more" v-if="!detail.commodity_know">暂无</span>
+            <span class="know_more" v-if="detail.commodity_know">{{ detail.commodity_know }}</span>
           </li>
         </ul>
       </van-row>
     </van-row>
-    <van-row class="handle">
+    <van-row class="handle" v-if="detail.status == 3">
       <span>
         <button class="refuse" @click="showRefuse">拒绝</button>
       </span>
@@ -87,6 +100,7 @@ export default {
       this.$api
         .regionProDetial({ hospitl_product_id: this.id })
         .then(res => {
+          // console.log(res);
           if (res.code == 200) {
             this.detail = res.regional_hospital_product_detail;
           } else {
@@ -200,12 +214,14 @@ export default {
   padding: 0rem 1rem;
 }
 .approve_detail ul li {
-  display: -webkit-flex;
-  display: flex;
-  justify-content: space-between;
   border-bottom: 1px solid #ecf1f8;
   text-align: left;
   padding: 0.625rem 0rem;
+}
+.approve_detail ul li.flex_li {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
 }
 .approve_detail ul li span {
   font-size: 0.75rem;
@@ -213,11 +229,18 @@ export default {
 .approve_detail ul li span:nth-child(1) {
   flex: 1;
   white-space: nowrap;
-  /* font-weight: bold; */
 }
 .approve_detail ul li span:nth-child(2) {
   text-align: right;
   color: #a8aec1;
+}
+.approve_detail ul li span.know_more {
+  display: block;
+  text-align: left;
+  font-size: 0.625rem;
+  color: #a8aec1;
+  line-height: 1rem;
+  margin-top: 0.2rem;
 }
 .handle {
   display: -webkit-flex;

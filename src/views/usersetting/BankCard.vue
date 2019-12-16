@@ -104,7 +104,6 @@ export default {
         temp.push({ text: value.text, id: value.value });
       });
       this.openingBank = temp;
-      console.log(this.openingBank);
     },
     // 获取银行卡信息
     getBankInfo() {
@@ -120,6 +119,7 @@ export default {
             }
           });
           this.bankBranch = res.user.bank_branch || "";
+          this.openingBankId = res.user.open_bank || "";
         })
         .catch(error => {
           console.log(error);
@@ -137,7 +137,7 @@ export default {
       }
       this.$Dialog
         .confirm({
-          message: "请确定提交信息是否正确，银行卡绑定是否与本人信息一致！",
+          message: "为保证付款顺利，请务必确认银行卡信息与本人账户信息一致！",
           confirmButtonText: "确定", //改变确认按钮上显示的文字
           cancelButtonText: "修改" //改变取消按钮上显示的文字
         })

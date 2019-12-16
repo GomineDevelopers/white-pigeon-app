@@ -11,6 +11,10 @@
             <span>{{ detail.user_name }}</span>
           </li>
           <li>
+            <span>电话：</span>
+            <span>{{ detail.email }}</span>
+          </li>
+          <li>
             <span>医院：</span>
             <span>{{ detail.hospital_name }}</span>
           </li>
@@ -25,7 +29,7 @@
         </ul>
       </van-row>
     </van-row>
-    <van-row class="handle">
+    <van-row class="handle" v-if="detail.status == 3">
       <span>
         <button class="refuse" @click="showRefuse">拒绝</button>
       </span>
@@ -81,6 +85,7 @@ export default {
       this.$api
         .regionDoctorDetail({ doctor_id: this.id })
         .then(res => {
+          console.log(res);
           if (res.code == 200) {
             this.detail = res.regional_doctor_detail;
           } else {

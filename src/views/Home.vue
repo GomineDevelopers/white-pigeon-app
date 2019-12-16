@@ -30,7 +30,7 @@
             </van-col>
             <van-col span="12" class="flex flex_align_center" @click="goHelp">
               <van-icon name="question" />
-              <span>帮助反馈</span>
+              <span>系统帮助</span>
             </van-col>
           </van-row>
         </van-row>

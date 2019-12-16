@@ -48,7 +48,7 @@
           />
         </van-row>
       </transition>
-      <van-row class="province_button" @click="provinceSubmit"><span>确&nbsp;定</span></van-row>
+      <!-- <van-row class="province_button" @click="provinceSubmit"><span>确&nbsp;定</span></van-row> -->
     </van-popup>
     <!-- <van-popup v-model="show">内容</van-popup> -->
     <!-- 遮罩选择省结束 -->
@@ -563,13 +563,21 @@ export default {
           } else {
             this.dialogShow = false;
             //在此处获取医院信息
+            this.$toast.loading({
+              message: "数据加载中...",
+              forbidClick: true,
+              duration: 0,
+              loadingType: "spinner"
+            });
             this.$api
               .hospitalinit()
               .then(res => {
-                // console.log(res)
+                this.$toast.clear();
                 if (res.code == 200) {
                   this.hospitalData = res.data;
                   this.drag();
+                } else {
+                  this.$toast.fail(res.message);
                 }
               })
               .catch(error => {
@@ -660,11 +668,18 @@ export default {
       // console.log(value)
       this.provinceValue = value;
       this.provinceShow = false;
+      this.provinceSubmit();
     },
     //提交省数据
     provinceSubmit() {
       // console.log(this.provinceValue);
       if (this.provinceValue[0].code) {
+        this.$toast.loading({
+          message: "信息提交中...",
+          forbidClick: true,
+          duration: 0,
+          loadingType: "spinner"
+        });
         let params = { province_code: this.provinceValue[0].code };
         this.$api
           .selectProvice(params)

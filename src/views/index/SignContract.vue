@@ -202,7 +202,7 @@
           >
           <van-row class="sign_moudle">
             <van-row class="first_company font_11">
-              <span>甲方：上海臣邦医药科技股份有限公司</span>
+              <span>甲方：{{ firstPartyName }}</span>
               <br />
               <span>日期：{{ startTime }}</span>
             </van-row>
@@ -387,7 +387,7 @@ export default {
     },
     // base64编码的图片
     base64ToFile(dataurl) {
-      let filename = "usersign" + this.$route.query.id;
+      let filename = "usersign" + this.$route.query.id + new Date().getTime();
       let arr = dataurl.split(",");
       let mime = arr[0].match(/:(.*?);/)[1];
       let suffix = mime.split("/")[1];
