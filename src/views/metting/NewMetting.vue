@@ -85,18 +85,18 @@
               <van-icon name="close" class="delete_img" @click="deletePhoto(1, index)" />
             </van-row>
             <van-row class="flex camera_icon" v-show="personnelPhoto.length < 2">
-              <van-uploader
+              <!-- <van-uploader
                 class="photoUpload flex flex_align_center flex_justify_center"
                 :after-read="uploadPersonPhoto"
               >
                 <van-row class="flex camera_icon">
                   <van-icon name="photograph" />
                 </van-row>
-              </van-uploader>
+              </van-uploader> -->
             </van-row>
           </van-row>
           <van-row class="camera" v-if="personnelPhoto.length == 0">
-            <van-uploader
+            <!-- <van-uploader
               class="photoUpload flex flex_align_center flex_justify_center"
               :after-read="uploadPersonPhoto"
             >
@@ -104,7 +104,7 @@
                 <van-icon name="photograph" />
                 <span>点击拍照</span>
               </van-row>
-            </van-uploader>
+            </van-uploader> -->
           </van-row>
           <van-row class="notice">温馨提示：需要参会人员与PPT同框</van-row>
         </van-row>
@@ -121,18 +121,18 @@
               <van-icon name="close" class="delete_img" @click="deletePhoto(2, index)" />
             </van-row>
             <van-row class="flex camera_icon" v-show="signPhoto.length < 1">
-              <van-uploader
+              <!-- <van-uploader
                 class="photoUpload flex flex_align_center flex_justify_center"
                 :after-read="uploadSignPhoto"
               >
                 <van-row class="flex camera_icon">
                   <van-icon name="photograph" />
                 </van-row>
-              </van-uploader>
+              </van-uploader> -->
             </van-row>
           </van-row>
           <van-row class="camera" v-if="signPhoto.length == 0">
-            <van-uploader
+            <!-- <van-uploader
               class="photoUpload flex flex_align_center flex_justify_center"
               :after-read="uploadSignPhoto"
             >
@@ -140,7 +140,11 @@
                 <van-icon name="photograph" />
                 <span>点击拍照</span>
               </van-row>
-            </van-uploader>
+            </van-uploader> -->
+            <van-row class="flex camera_icon" @click="singCamera">
+              <van-icon name="photograph" />
+              <span>点击拍照</span>
+            </van-row>
           </van-row>
           <van-row class="notice">温馨提示：拍取签到表</van-row>
         </van-row>
@@ -228,7 +232,7 @@
 </template>
 <script>
 import { minutesTimeFormat, minDate } from "../../js/public";
-import { upload } from "@/js/upload";
+import { upload, photograph } from "@/js/upload";
 export default {
   name: "visit",
   data() {
@@ -410,24 +414,40 @@ export default {
       this.userNumShow = false;
     },
     //人员拍照
-    uploadPersonPhoto(file) {
-      if (this.personnelPhoto.length >= 2) {
-        this.$toast.fail("此处最多可传2张照片");
-      } else {
-        upload(file, 0).then(res => {
-          this.personnelPhoto.push(res);
+    // uploadPersonPhoto(file) {
+    //   if (this.personnelPhoto.length >= 2) {
+    //     this.$toast.fail("此处最多可传2张照片");
+    //   } else {
+    //     upload(file, 0).then(res => {
+    //       this.personnelPhoto.push(res);
+    //     });
+    //   }
+    // },
+    // uploadSignPhoto(file) {
+    //   if (this.signPhoto.length >= 1) {
+    //     this.$toast.fail("此处最多可传1张照片");
+    //   } else {
+    //     upload(file, 0).then(res => {
+    //       this.signPhoto.push(res);
+    //     });
+    //   }
+    // },
+
+    //会议人员拍照上传
+    camera() {
+      photograph()
+        .then(res => {
+          console.log("305", res);
+          upload(res, 0).then(res => {
+            this.personnelPhoto.push(res);
+          });
+        })
+        .catch(err => {
+          console.log("310", err);
         });
-      }
     },
-    uploadSignPhoto(file) {
-      if (this.signPhoto.length >= 1) {
-        this.$toast.fail("此处最多可传1张照片");
-      } else {
-        upload(file, 0).then(res => {
-          this.signPhoto.push(res);
-        });
-      }
-    },
+
+    //调用手机摄像头拍照上传
     //删除照片
     deletePhoto(type, index) {
       // console.log(type, index);

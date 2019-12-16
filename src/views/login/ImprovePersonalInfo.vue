@@ -116,8 +116,8 @@ export default {
     }
 
     this.setMaxDate();
-    console.log("路由传参", this.$route.query.data);
-    console.log("重定向地址", this.$route.query.redirect);
+    // console.log("路由传参", this.$route.query.data);
+    // console.log("重定向地址", this.$route.query.redirect);
   },
   methods: {
     //地区选择确认
