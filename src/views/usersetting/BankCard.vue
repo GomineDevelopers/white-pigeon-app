@@ -139,7 +139,7 @@ export default {
         .confirm({
           message: "为保证付款顺利，请务必确认银行卡信息与本人账户信息一致！",
           confirmButtonText: "确定", //改变确认按钮上显示的文字
-          cancelButtonText: "修改" //改变取消按钮上显示的文字
+          cancelButtonText: "返回" //改变取消按钮上显示的文字
         })
         .then(() => {
           // console.log("已确认信息无误！");

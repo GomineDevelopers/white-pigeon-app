@@ -196,7 +196,7 @@ export default {
         });
     },
     onBack() {
-      history.back();
+      this.$router.push("/");
     },
     onConfirm(value) {
       this.keyWords = value.text;
@@ -214,7 +214,7 @@ export default {
         .then(res => {
           console.log(res);
           if (res.code == 200) {
-            if (!res.user.isComplete) {
+            if (res.user.is_complete != 1) {
               this.$Dialog
                 .confirm({
                   message: "请您完善个人信息，再进行开发操作。",

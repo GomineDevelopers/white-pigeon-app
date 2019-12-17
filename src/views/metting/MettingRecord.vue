@@ -142,7 +142,7 @@ export default {
   },
   methods: {
     onBack() {
-      history.back();
+      this.$router.push("/");
     },
     //获取会议总次数和人数
     getMettingNum() {
@@ -270,7 +270,10 @@ export default {
     getDetail(status, id) {
       console.log(status);
       if (status == 6) {
-        this.$router.push({ path: "/mettingdetailedit", query: { id: id } });
+        this.$router.replace({
+          path: "/mettingdetailedit",
+          query: { id: id, redirect: this.$router.currentRoute.fullPath }
+        });
       } else {
         this.$router.push({ path: "/mettingdetailcontent", query: { id: id } });
       }

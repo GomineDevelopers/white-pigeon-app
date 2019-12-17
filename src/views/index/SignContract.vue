@@ -286,6 +286,7 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
     this.getContractInfo();
+    console.log(this.$route.query.redirect);
   },
   mounted() {
     let canvas = this.$refs.canvasCont;
@@ -445,7 +446,13 @@ export default {
             if (res.code == 200) {
               this.$toast.success("合同提交成功");
               setTimeout(() => {
-                this.$router.push({ path: "/" });
+                if (this.$route.query.redirect) {
+                  this.$router.replace({
+                    path: decodeURIComponent(this.$route.query.redirect)
+                  });
+                } else {
+                  this.$router.push({ path: "/" });
+                }
               }, 2000);
             } else {
               this.$toast.fail(res.message);

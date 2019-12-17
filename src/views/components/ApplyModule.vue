@@ -129,7 +129,10 @@ export default {
                   });
               } else {
                 //银行卡信息完善跳转签约
-                this.$router.push({ path: "/signcontract", query: { id: id } });
+                this.$router.replace({
+                  path: "/signcontract",
+                  query: { id: id, redirect: this.$router.currentRoute.fullPath }
+                });
               }
             })
             .catch(error => {
