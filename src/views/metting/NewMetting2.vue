@@ -85,18 +85,26 @@
               <van-icon name="close" class="delete_img" @click="deletePhoto(1, index)" />
             </van-row>
             <van-row class="flex camera_icon" v-show="personnelPhoto.length < 2">
-              <van-uploader
+              <van-row class="flex camera_icon" @click="personCamera">
+                <van-icon name="photograph" />
+                <span>点击拍照</span>
+              </van-row>
+              <!-- <van-uploader
                 class="photoUpload flex flex_align_center flex_justify_center"
                 :after-read="uploadPersonPhoto"
               >
                 <van-row class="flex camera_icon">
                   <van-icon name="photograph" />
                 </van-row>
-              </van-uploader>
+              </van-uploader> -->
             </van-row>
           </van-row>
           <van-row class="camera" v-if="personnelPhoto.length == 0">
-            <van-uploader
+            <van-row class="flex camera_icon" @click="personCamera">
+              <van-icon name="photograph" />
+              <span>点击拍照</span>
+            </van-row>
+            <!-- <van-uploader
               class="photoUpload flex flex_align_center flex_justify_center"
               :after-read="uploadPersonPhoto"
             >
@@ -104,7 +112,7 @@
                 <van-icon name="photograph" />
                 <span>点击拍照</span>
               </van-row>
-            </van-uploader>
+            </van-uploader> -->
           </van-row>
           <van-row class="notice">温馨提示：需要参会人员与PPT同框</van-row>
         </van-row>
@@ -120,19 +128,13 @@
               <img :src="signPhotoList" />
               <van-icon name="close" class="delete_img" @click="deletePhoto(2, index)" />
             </van-row>
-            <van-row class="flex camera_icon" v-show="signPhoto.length < 1">
-              <van-uploader
-                class="photoUpload flex flex_align_center flex_justify_center"
-                :after-read="uploadSignPhoto"
-              >
-                <van-row class="flex camera_icon">
-                  <van-icon name="photograph" />
-                </van-row>
-              </van-uploader>
-            </van-row>
           </van-row>
           <van-row class="camera" v-if="signPhoto.length == 0">
-            <van-uploader
+            <van-row class="flex camera_icon" @click="singCamera">
+              <van-icon name="photograph" />
+              <span>点击拍照</span>
+            </van-row>
+            <!-- <van-uploader
               class="photoUpload flex flex_align_center flex_justify_center"
               :after-read="uploadSignPhoto"
             >
@@ -140,7 +142,7 @@
                 <van-icon name="photograph" />
                 <span>点击拍照</span>
               </van-row>
-            </van-uploader>
+            </van-uploader> -->
           </van-row>
           <van-row class="notice">温馨提示：拍取签到表</van-row>
         </van-row>
@@ -206,6 +208,7 @@
           v-model="mettingDate"
           title="时间选择"
           type="datetime"
+          :formatter="formatter"
           :min-date="minDate"
           @cancel="mettingStartTimeShow = false"
           @confirm="mettingTimeConfirm"
@@ -228,7 +231,7 @@
 </template>
 <script>
 import { minutesTimeFormat, minDate } from "../../js/public";
-import { upload } from "@/js/upload";
+import { upload, photograph } from "@/js/upload";
 export default {
   name: "visit",
   data() {
@@ -308,6 +311,20 @@ export default {
     this.hospitalId = this.$route.query.data.infomation.hospital_id;
   },
   methods: {
+    formatter(type, value) {
+      if (type === "year") {
+        return `${value}年`;
+      } else if (type === "month") {
+        return `${value}月`;
+      } else if (type === "day") {
+        return `${value}日`;
+      } else if (type === "hour") {
+        return `${value}时`;
+      } else if (type === "minute") {
+        return `${value}分`;
+      }
+      return value;
+    },
     onBack() {
       history.back();
     },
@@ -414,25 +431,52 @@ export default {
       this.userNum = value;
       this.userNumShow = false;
     },
+    //会议人员拍照上传
+    personCamera() {
+      photograph()
+        .then(res => {
+          console.log("305", res);
+          upload(res, 0).then(res => {
+            this.personnelPhoto.push(res);
+          });
+        })
+        .catch(err => {
+          console.log("310", err);
+        });
+    },
+
+    //签到表拍照
+    singCamera() {
+      photograph()
+        .then(res => {
+          console.log("305", res);
+          upload(res, 0).then(res => {
+            this.signPhoto.push(res);
+          });
+        })
+        .catch(err => {
+          console.log("310", err);
+        });
+    },
     //人员拍照
-    uploadPersonPhoto(file) {
-      if (this.personnelPhoto.length >= 2) {
-        this.$toast.fail("此处最多可传2张照片");
-      } else {
-        upload(file, 0).then(res => {
-          this.personnelPhoto.push(res);
-        });
-      }
-    },
-    uploadSignPhoto(file) {
-      if (this.signPhoto.length >= 1) {
-        this.$toast.fail("此处最多可传1张照片");
-      } else {
-        upload(file, 0).then(res => {
-          this.signPhoto.push(res);
-        });
-      }
-    },
+    // uploadPersonPhoto(file) {
+    //   if (this.personnelPhoto.length >= 2) {
+    //     this.$toast.fail("此处最多可传2张照片");
+    //   } else {
+    //     upload(file, 0).then(res => {
+    //       this.personnelPhoto.push(res);
+    //     });
+    //   }
+    // },
+    // uploadSignPhoto(file) {
+    //   if (this.signPhoto.length >= 1) {
+    //     this.$toast.fail("此处最多可传1张照片");
+    //   } else {
+    //     upload(file, 0).then(res => {
+    //       this.signPhoto.push(res);
+    //     });
+    //   }
+    // },
     //删除照片
     deletePhoto(type, index) {
       // console.log(type, index);
