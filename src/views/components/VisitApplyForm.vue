@@ -18,7 +18,14 @@
       <van-row class="info_module" @click="timeShow = true">
         <van-row class="row_title">开始时间</van-row>
         <van-row class="icon_right flex">
-          <span class="flex_1">{{ startTime ? startTime : "开始时间" }}</span>
+          <span class="flex_1">{{ startTime ? startTime : "选择开始时间" }}</span>
+          <van-icon name="arrow" />
+        </van-row>
+      </van-row>
+      <van-row class="info_module" @click="productShow = true">
+        <van-row class="row_title">产品</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ product ? product : "请选择" }}</span>
           <van-icon name="arrow" />
         </van-row>
       </van-row>
@@ -33,13 +40,6 @@
         <van-row class="row_title">拜访渠道</van-row>
         <van-row class="icon_right flex">
           <span class="flex_1">{{ visitChannel ? visitChannel : "请选择" }}</span>
-          <van-icon name="arrow" />
-        </van-row>
-      </van-row>
-      <van-row class="info_module" @click="productShow = true">
-        <van-row class="row_title">产品</van-row>
-        <van-row class="icon_right flex">
-          <span class="flex_1">{{ product ? product : "请选择" }}</span>
           <van-icon name="arrow" />
         </van-row>
       </van-row>
@@ -68,7 +68,7 @@
         </van-row>
       </van-row>
       <van-row class="middle_button flex">
-        <button class="middle_button1" @click="createData">创建</button>
+        <button class="middle_button2" @click="createData">保存</button>
         <button class="middle_button2" @click="submitData">提交</button>
       </van-row>
     </van-row>
@@ -108,6 +108,7 @@
           title="时间选择"
           type="datetime"
           :min-date="minDate"
+          :formatter="formatter"
           @cancel="timeShow = false"
           @confirm="timeConfirm"
         />
@@ -188,7 +189,7 @@ export default {
   },
   mounted() {
     this.getVisitRelation();
-    this.getVisitGoal();
+    // this.getVisitGoal();
     this.minDate = minDate();
   },
   methods: {
@@ -208,6 +209,23 @@ export default {
         this.visitPostion = addr.city + addr.district + addr.street + addr.street_number;
       });
     },
+
+    // 开始时间添加单位
+    formatter(type, value) {
+      if (type === 'year') {
+        return `${value}年`;
+      } else if (type === 'month') {
+        return `${value}月`
+      } else if (type === 'day') {
+        return `${value}日`
+      } else if (type === 'hour') {
+        return `${value}点`
+      } else if (type === 'minute') {
+        return `${value}分`
+      }
+      return value;
+    },
+
     // 获取拜访关联的医院
     getVisitRelation() {
       this.$api
@@ -216,10 +234,12 @@ export default {
           if (res.code == 200) {
             let hospitalInfo = res.getInfoByHospitalId;
             let productInfo = res.getproductByHospitalId;
+            let goalInfo = res.getvisitGoalByHospitalId;
             if (hospitalInfo.length != 0) {
               let currHospitalObj = {};
               this.hospitalInfo = hospitalInfo;
               this.productInfo = productInfo;
+              this.goalInfo = goalInfo;
               this.hospitalList = hospitalInfo.reduce((item, next) => {
                 currHospitalObj[next.hospital_id]
                   ? ""
@@ -235,20 +255,20 @@ export default {
         });
     },
     // 获取拜访目的
-    getVisitGoal() {
-      this.$api
-        .visitGoal()
-        .then(res => {
-          if (res.code == 200) {
-            this.visitPurposeList = res.visit_goal_list.map(item => {
-              return { id: item.id, text: item.visit_goal };
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
+    // getVisitGoal() {
+    //   this.$api
+    //     .visitGoal()
+    //     .then(res => {
+    //       if (res.code == 200) {
+    //         this.visitPurposeList = res.visit_goal_list.map(item => {
+    //           return { id: item.id, text: item.visit_goal };
+    //         });
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // },
     // 选择医院
     onConfirm(v) {
       this.hospitalShow = false;
@@ -258,8 +278,11 @@ export default {
       this.doctor_id = "";
       this.product = "";
       this.product_id = "";
+      this.visitPurpose = "";
+      this.goal_visit_id = "";
       this.customerList = [];
       this.productList = [];
+      this.visitPurposeList= [];
       this.hospitalInfo.map(item => {
         if (item.hospital_id == v.id) {
           this.customerList.push({ id: item.doctor_id, text: item.doctor_name });
@@ -277,9 +300,17 @@ export default {
       this.customer = v.text;
       this.doctor_id = v.id;
     },
+
     timeConfirm(v) {
-      this.timeShow = false;
-      this.startTime = minutesTimeFormat(v)
+      let prevTime = localStorage.getItem('prevTime');
+      let time = v.getTime() - new Date(prevTime);
+      if (prevTime == null || time < -300000 || time > 300000) {
+          this.timeShow = false;
+          this.prevTime = v;
+          this.startTime = minutesTimeFormat(v);
+      } else {
+        this.$toast({message:"开始时间不能为上一次创建的前后5分钟，请重新选择",duration:3000})
+      }
     },
     // 选择拜访目的
     visitPurposeConfirm(v) {
@@ -298,6 +329,14 @@ export default {
       this.productShow = false;
       this.product = v.text;
       this.product_id = v.id;
+      this.visitPurpose = "";
+      this.goal_visit_id = "";
+      this.visitPurposeList= [];
+      this.goalInfo.map(item => {
+        if (item.product_id == v.id) {
+          this.visitPurposeList.push({ id: item.id, text: item.visit_goal });
+        }
+      });
     },
     //拜访拍照上传
     camera() {
@@ -352,11 +391,18 @@ export default {
           visit_image_two: this.visitPhoto[1] || null,
           visit_image_three: this.visitPhoto[2] || null
         };
+        localStorage.setItem('prevTime',this.prevTime);
         this.upDataToServer(data);
       }
     },
     // 上传数据到服务器
     upDataToServer(data) {
+      this.$toast.loading({
+        message: '数据提交中...',
+        forbidClick: true,
+        duration: 0,
+        loadingType: 'spinner'
+      });
       this.$api
         .createVisit(data)
         .then(res => {
@@ -367,9 +413,11 @@ export default {
             }, 1000);
           } else {
             this.$toast.fail(res.message);
-          }
+          };
+          this.$toast.clear();
         })
         .catch(err => {
+          this.$toast.clear();
           console.log(err);
         });
     }
