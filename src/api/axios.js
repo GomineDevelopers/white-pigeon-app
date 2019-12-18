@@ -40,6 +40,7 @@ let api = {
   doctorDetail: params => post("/doctorManager/doctorDetail", params), //申请医生详情
   meetingGetInfoByProductId: params => post("/meetingManager/meetingGetInfoByProductId", params), //会议通过产品关联
   createMeeting: params => post("/meetingManager/createMeeting", params), //创建/提交会议
+  meetingGetSection: params => post("/meetingManager/meetingGetSection", params), //通过产品获取科室信息
   meetingTotalNumber: params => post("/meetingManager/meetingTotalNumber", params), //会议总次数
   meetingSumPeople: params => post("/meetingManager/meetingSumPeople", params), //会议总人数
   createList: params => post("/meetingManager/createList", params), //会议列表

@@ -26,7 +26,8 @@ import {
   Collapse,
   CollapseItem,
   Sidebar,
-  SidebarItem
+  SidebarItem,
+  CheckboxGroup
 } from "vant";
 
 Vue.use(Button);
@@ -51,10 +52,11 @@ Vue.use(Notify);
 Vue.use(Toast);
 Vue.use(List);
 Vue.use(Loading);
-Vue.use(Checkbox);
 Vue.use(Collapse);
 Vue.use(CollapseItem);
 Vue.use(Sidebar);
 Vue.use(SidebarItem);
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
 
 Vue.prototype.$Dialog = Dialog;

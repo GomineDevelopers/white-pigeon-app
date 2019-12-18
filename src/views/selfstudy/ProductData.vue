@@ -26,7 +26,7 @@
             <img src="../../assets/image/pdf2x.png" />
             <van-row class="flex_1">
               <span>{{ item.title }}</span>
-              <span>{{ item.create_time }}</span>
+              <span>{{ item.create_time.split(" ")[0] }}</span>
             </van-row>
           </a>
         </van-row>
