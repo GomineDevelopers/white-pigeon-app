@@ -9,29 +9,16 @@
         <span :class="active ? '' : 'active'" @click="active = false">公司政策</span>
       </van-row>
       <van-row class="product_list" gutter="20" v-show="active">
-        <van-col span="12" @click="golist">
+        <van-col
+          v-for="(item, index) in prodtctList"
+          :key="index"
+          span="12"
+          @click="golist(item.id, item.product_name)"
+        >
           <div>
-            <img src="../../assets/image/product1.png" />
+            <img :src="item.product_image" />
           </div>
-          <span>臣康安®头孢丙烯分散片</span>
-        </van-col>
-        <van-col span="12" @click="golist">
-          <div>
-            <img src="../../assets/image/product2.png" />
-          </div>
-          <span>美唯宁®枸橼莫沙必利胶囊</span>
-        </van-col>
-        <van-col span="12" @click="golist">
-          <div>
-            <img src="../../assets/image/product3.png" />
-          </div>
-          <span>兰美欣®注射用兰索拉唑</span>
-        </van-col>
-        <van-col span="12" @click="golist">
-          <div>
-            <img src="../../assets/image/product4.png" />
-          </div>
-          <span>立维宁®乌苯美司片</span>
+          <span>{{ item.product_name }}</span>
         </van-col>
       </van-row>
       <van-row class="setting_body" v-show="!active">
@@ -76,7 +63,8 @@ export default {
   name: "selfstudy",
   data() {
     return {
-      active: true
+      active: true,
+      prodtctList: []
     };
   },
   created() {
@@ -91,12 +79,28 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.getProductList();
   },
   methods: {
     onBack() {
       history.back();
     },
-    golist() {}
+    getProductList() {
+      this.$api
+        .materialList()
+        .then(res => {
+          // console.log(res);
+          if (res.code == 200) {
+            this.prodtctList = res.materialList;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    golist(id, name) {
+      this.$router.push({ path: "/productdata", query: { id: id, productName: name } });
+    }
   }
 };
 </script>
@@ -119,26 +123,9 @@ export default {
   margin-left: 1rem;
   color: #8898ab;
 }
-.product_list .van-col {
-  display: -webkit-flex;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
 .top_nav span.active {
   color: #3399ff;
   position: relative;
-}
-.product_list .van-col div {
-  /* width: 100%; */
-  box-shadow: 0rem 0rem 0.3125rem #ccc;
-  padding: 0.5rem;
-  overflow: hidden;
-  display: -webkit-flex;
-  display: flex;
-  justify-content: center;
-  border-radius: 0.1875rem;
 }
 .top_nav span.active::after {
   content: "";
@@ -150,16 +137,7 @@ export default {
   height: 0.125rem;
   border-bottom: 2px solid #3399ff;
 }
-.product_list .van-col span {
-  font-size: 0.625rem;
-  margin-top: 0.5rem;
-}
-.self_study .van-col {
-  display: -webkit-flex;
-  display: flex;
-  justify-content: center;
-  /* padding: 1rem; */
-}
+
 .product_list .van-col {
   display: -webkit-flex;
   display: flex;
@@ -183,6 +161,7 @@ export default {
 .product_list .van-col span {
   font-size: 0.625rem;
   margin-top: 0.5rem;
+  text-align: center;
 }
 .setting_body {
   /* padding: 1rem; */

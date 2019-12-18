@@ -62,8 +62,9 @@ let api = {
   visitDetail: params => post("/visitManager/visitDetail", params), //拜访详情
   visitRecord: params => post("/visitManager/visitApplyRecord", params), //拜访记录
   developdVisit: params => post("/hospitalManager/hospitalDevelopdVisit", params), //已开发拜访
-  materialList: params => post("/MaterialManager/materialList", params), //新人自学
   getContractInfo: params => post("/signManager/getContractInfo", params), //获取合同信息
-  SignSubmit: params => post("/signManager/SignSubmit", params) //合同签署
+  SignSubmit: params => post("/signManager/SignSubmit", params), //合同签署
+  materialList: params => post("/MaterialManager/materialList", params), //新人自学
+  materialDetail: params => post("/MaterialManager/materialDetail", params) //新人自学
 };
 export default api;

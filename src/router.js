@@ -347,6 +347,15 @@ export default new Router({
           /* webpackChunkName: "userinfo" */
           "./views/selfstudy/SelfStudy.vue"
         )
+    },
+    {
+      path: "/productdata",
+      name: "productdata",
+      component: () =>
+        import(
+          /* webpackChunkName: "userinfo" */
+          "./views/selfstudy/ProductData.vue"
+        )
     }
   ]
 });
