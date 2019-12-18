@@ -121,13 +121,26 @@ export default {
   width: 4.5rem;
   background: #f3f4f8;
 }
+.left_sidebar .van-sidebar-item {
+  position: relative;
+}
+.left_sidebar .van-sidebar-item::after {
+  content: "";
+  position: absolute;
+  left: 0rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0.125rem;
+  height: 0.9rem;
+  border-left: 3px solid transparent;
+}
 .left_sidebar .van-sidebar-item--select {
   color: #3188ff;
   font-weight: 500;
-  border-color: #3188ff;
+  border-color: transparent;
 }
-.left_sidebar .van-sidebar-item {
-  font-size: 0.6875rem;
+.left_sidebar .van-sidebar-item--select::after {
+  border-color: #3188ff;
 }
 </style>
 <style scoped>
