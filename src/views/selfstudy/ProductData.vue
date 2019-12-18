@@ -147,6 +147,7 @@ export default {
 .product_data_body {
   margin-top: 2rem;
   height: 93vh;
+  overflow: hidden;
 }
 .left_sidebar {
   height: 100%;
@@ -154,11 +155,12 @@ export default {
 .right_content {
   padding-left: 0.625rem;
   flex: 1;
+  overflow: auto;
 }
 .product_name {
   font-size: 0.75rem;
   font-weight: 500;
-  margin-top: 0.625rem;
+  margin: 0.625rem 0rem;
   text-align: left;
 }
 .product_pdf_list {
@@ -168,7 +170,7 @@ export default {
   width: calc(100% - 1.7rem);
   padding: 0.5rem;
   box-shadow: 0rem 0rem 0.3125rem #ccc;
-  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
   border-radius: 0.1875rem;
 }
 .product_pdf_item .van-row span:nth-child(1) {
