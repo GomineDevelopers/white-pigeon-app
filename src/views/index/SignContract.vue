@@ -174,7 +174,7 @@
           </van-row>
           <!-- 费用核算结束 -->
 
-          <van-row class="sign_title1">五．保密及权利</van-row>
+          <van-row class="sign_title1">五．保密及个人信息采集使用授权</van-row>
           <van-row>
             <ul>
               <li>
@@ -197,9 +197,10 @@
             </ul>
           </van-row>
 
-          <van-row class="sign_title1"
-            >六.本合同一式 2 份，甲方执 1 份，乙方执 1 份，每份合同具有同等法律效力。</van-row
-          >
+          <van-row class="sign_title1">
+            六.本合同一式 2 份，甲方执 1 份，乙方执 1
+            份，自双方签字盖章后生效。电子签名与实体签名具有同等效力。每份合同具有同等法律效力。
+          </van-row>
           <van-row class="sign_moudle">
             <van-row class="first_company font_11">
               <span>甲方：{{ firstPartyName }}</span>
