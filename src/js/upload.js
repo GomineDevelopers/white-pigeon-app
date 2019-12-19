@@ -75,6 +75,7 @@ function uploadToQiniuyun( file, token, domain, resolve ) {
     };
     let api = `http://${domain}/`;
     let fileName = file.name;
+    let fileSize = file.size;
     let putExtra = {
       mimeType: null
     };
@@ -108,7 +109,8 @@ function uploadToQiniuyun( file, token, domain, resolve ) {
         }
       },
       complete(res) {
-        let imgSrc = `${api}${res.key}`;
+        let resImg = `${api}${res.key}`;
+        let imgSrc = fileSize <= 819200 ? resImg :  `${resImg}?imageView2/2/w/1000`;
         resolve(imgSrc);
         setTimeout(() => {
           Toast.clear();
@@ -135,7 +137,6 @@ export function photograph() {
               reader.onload = function(res){
                   let base64Img = res.target.result;
                   let files = base64ToFile(filename,base64Img);
-                  console.log({ content: base64Img, file: files })
                   resolve({ content: base64Img, file: files });
                   
               };
