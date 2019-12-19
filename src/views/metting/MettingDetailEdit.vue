@@ -45,7 +45,7 @@
             <span class="flex_1">
               {{ sectionSelect.length == 0 ? "请选择" : "" }}
               <em v-for="(sectionItem, index) in sectionSelect" :key="index + 'a'">
-                {{ sectionItem.section_name + " " }}
+                {{ sectionItem + " " }}
               </em>
             </span>
             <van-icon name="arrow" />
@@ -134,19 +134,6 @@
           </van-row>
           <van-row class="notice">温馨提示：拍取签到表</van-row>
         </van-row>
-        <van-checkbox-group v-model="result">
-          <van-cell-group>
-            <van-cell
-              v-for="(item, index) in list"
-              clickable
-              :key="index + 'ggh'"
-              :title="`复选框 ${item}`"
-              @click="toggle2(index)"
-            >
-              <van-checkbox :name="item" ref="checkboxes2" slot="right-icon" />
-            </van-cell>
-          </van-cell-group>
-        </van-checkbox-group>
         <van-row class="public_btn">
           <button @click="editMetting()">提交</button>
         </van-row>
@@ -191,7 +178,12 @@
     </transition>
     <!-- 所属科室 -->
     <transition name="van-slide-up">
-      <van-popup v-model="sectionShow" position="bottom" class="section_popup">
+      <van-popup
+        v-model="sectionShow"
+        position="bottom"
+        :close-on-click-overlay="propFalse"
+        class="section_popup"
+      >
         <van-row class="section_button">
           <van-col span="8" @click="sectionShow = false">取消</van-col>
           <van-col span="8" class="section_title">科室选择</van-col>
@@ -200,13 +192,13 @@
         <van-checkbox-group v-model="sectionSelect" :max="3">
           <van-cell-group>
             <van-cell
-              v-for="(item, index) in sectionList"
+              v-for="(item, index) in sectionNameList"
               clickable
               :key="index + 'se'"
-              :title="item.section_name"
+              :title="item"
               @click="toggle(index)"
             >
-              <van-checkbox :name="item.section_name" ref="checkboxes" slot="right-icon" />
+              <van-checkbox :name="item" ref="checkboxes" slot="right-icon" />
             </van-cell>
           </van-cell-group>
         </van-checkbox-group>
@@ -247,6 +239,7 @@ export default {
   name: "visit",
   data() {
     return {
+      propFalse: false,
       hospitalByproductId: null, //产品关联科室，医院
       mettingByProductId: null, //产品关联会议
       secAndHosData: null, //医院和科室的数组
@@ -273,8 +266,10 @@ export default {
       hospitalId: "",
       hospitalList: [],
       sectionShow: false,
-      sectionList: [], //科室信息列表
-      sectionSelect: [], //存放选择的科室
+      sectionTotal: [], //每个产品关联的科室信息，包含section_name,section_id
+      sectionNameList: [], //所有的科室信息列表名称（为checkbox提供选项的）
+      sectionIdList: [], //存放所选科室的id
+      sectionSelect: [], //存放选择的科室名称
       mettingStartTimeShow: false,
       mettingStartTime: "",
       mettingDate: new Date(),
@@ -317,9 +312,7 @@ export default {
         "35"
       ],
       personnelPhoto: [],
-      signPhoto: [],
-      list: ["a", "b"],
-      result: ["a"]
+      signPhoto: []
     };
   },
   created() {
@@ -357,9 +350,6 @@ export default {
     toggle(index) {
       this.$refs.checkboxes[index].toggle();
     },
-    toggle2(index) {
-      this.$refs.checkboxes2[index].toggle();
-    },
     //获取会议详情
     getMetting() {
       this.$toast.loading({
@@ -383,16 +373,9 @@ export default {
             this.conferenceThemeId = data.product_topic_id;
             this.hospital = data.hospital_name;
             this.hospitalId = data.hospital_id;
-            //处理科室
-            let sectionIdArr = data.section_id_list.split(",");
-            let sectionNameArr = data.section_name.split(",");
-            sectionIdArr.forEach((value, index) => {
-              this.sectionSelect.push({
-                section_id: value,
-                section_name: sectionNameArr[index]
-              });
-            });
-            console.log("this.sectionSelect", this.sectionSelect);
+            //处理选中科室
+            this.sectionIdList = data.section_id_list.split(",");
+            this.sectionSelect = data.section_name.split(",");
             this.mettingStartTime = data.start_time;
             this.userName = data.speaker;
             this.userNum = data.num;
@@ -406,6 +389,32 @@ export default {
               this.signPhoto.push(data.sign_image);
             }
             this.getInfoByProductId();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //通过产品关联会议
+    getInfoByProductId() {
+      this.$api
+        .meetingGetInfoByProductId()
+        .then(res => {
+          console.log(res);
+          this.hospitalByproductId = res.getInfoByProductId;
+          this.mettingByProductId = res.getTopicByProductId;
+          if (res.code == 200) {
+            //后台返回数据的product去重
+            var arr1 = {};
+            this.productList = res.getInfoByProductId.reduce((item, next) => {
+              arr1[next.product_id]
+                ? ""
+                : (arr1[next.product_id] =
+                    true && item.push({ id: next.product_id, text: next.product_name }));
+              return item;
+            }, []);
+            // console.log("this.productList", this.productList); //控制台查看结果
+            this.contactHosAndSen(); //初始化默认选项
           }
         })
         .catch(error => {
@@ -450,7 +459,11 @@ export default {
         .then(res => {
           console.log(res);
           if (res.code == 200) {
-            this.sectionList = res.product_section_list;
+            this.sectionTotal = res.product_section_list;
+            console.log("当前产品科室信息", this.sectionTotal);
+            this.sectionTotal.forEach(value => {
+              this.sectionNameList.push(value.section_name);
+            });
           } else {
             this.$toast.fail("获取科室信息失败");
           }
@@ -458,43 +471,15 @@ export default {
         .catch(error => {
           console.log(error);
         });
-      console.log("this.sectionSelect", this.sectionSelect);
+      console.log("当前产品科室名称列表", this.sectionNameList);
 
       //设置默认选项
-      // console.log("产品", this.productId, this.productList);
-      // console.log("会议主题id", this.conferenceThemeId, this.conferenceThemeList);
-      // console.log("医院", this.hospitalId, this.hospitalList);
-      // console.log("科室", this.departmentId, this.departmentList);
+      console.log("产品", this.productId, this.productList);
+      console.log("会议主题id", this.conferenceThemeId, this.conferenceThemeList);
+      console.log("医院", this.hospitalId, this.hospitalList);
       this.productDefaultIndex = this.getAnyIndex(this.productId, this.productList);
       this.themeDefaultIndex = this.getAnyIndex(this.conferenceThemeId, this.conferenceThemeList);
       this.hospitalDefaultIndex = this.getAnyIndex(this.hospitalId, this.hospitalList);
-      // this.sectionDefaultIndex = this.getAnyIndex(this.departmentId, this.departmentList);
-    },
-    //通过产品关联会议
-    getInfoByProductId() {
-      this.$api
-        .meetingGetInfoByProductId()
-        .then(res => {
-          console.log(res);
-          this.hospitalByproductId = res.getInfoByProductId;
-          this.mettingByProductId = res.getTopicByProductId;
-          if (res.code == 200) {
-            //后台返回数据的product去重
-            var arr1 = {};
-            this.productList = res.getInfoByProductId.reduce((item, next) => {
-              arr1[next.product_id]
-                ? ""
-                : (arr1[next.product_id] =
-                    true && item.push({ id: next.product_id, text: next.product_name }));
-              return item;
-            }, []);
-            console.log("this.productList", this.productList); //控制台查看结果
-            this.contactHosAndSen(); //初始化默认选项
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
     },
     // 产品确认
     productConfirm(value) {
@@ -505,6 +490,10 @@ export default {
       this.conferenceThemeId = "";
       this.hospital = "";
       this.hospitalId = "";
+      this.sectionTotal = [];
+      this.sectionNameList = [];
+      this.sectionIdList = [];
+      this.sectionSelect = [];
       this.contactHosAndSen();
     },
     // 会议主题确认
@@ -518,9 +507,21 @@ export default {
       this.hospital = value.text;
       this.hospitalId = value.id;
     },
+    //科室选择确认时
     sectionCom() {
       this.sectionShow = false;
-      console.log(this.sectionSelect);
+      this.sectionIdList = [];
+      console.log(this.sectionTotal, "~~~~~~~~~");
+      console.log(this.sectionSelect, "--------");
+      this.sectionTotal.forEach(value => {
+        this.sectionSelect.forEach(item => {
+          if (value.section_name == item) {
+            console.log("value---------", value);
+            this.sectionIdList.push(value.section_id);
+          }
+        });
+      });
+      console.log(this.sectionIdList, "--------");
     },
     mettingTimeConfirm(event) {
       console.log(event);
@@ -582,25 +583,17 @@ export default {
       if (
         this.productId == "" ||
         this.conferenceThemeId == "" ||
-        this.departmentId == "" ||
+        this.hospital == "" ||
+        this.sectionSelect.length == 0 ||
         this.mettingStartTime == "" ||
         this.userName == "" ||
-        this.userNum == ""
+        this.userNum == "" ||
+        this.personnelPhoto.length == 0 ||
+        this.signPhoto.length == 0
       ) {
         this.$toast.fail("请填写完整必填信息");
         return false;
       }
-      // console.log("会议id", this.$route.query.id);
-      // console.log("产品", this.productId, this.product);
-      // console.log("会议主题", this.conferenceThemeId, this.conferenceTheme);
-      // console.log("医院", this.hospitalId, this.hospital);
-      // console.log("所属科室", this.departmentId, this.department);
-      // console.log("时间", this.mettingStartTime);
-      // console.log("演讲人", this.userName);
-      // console.log("演讲人数", this.userNum);
-      // console.log("人员照片1", this.personnelPhoto[0]);
-      // console.log("人员照片2", this.personnelPhoto[1]);
-      // console.log("签到照片", this.signPhoto[0]);
       this.$toast.loading({
         message: "会议提交中...",
         forbidClick: true,
@@ -612,7 +605,7 @@ export default {
         product_id: this.productId,
         product_topic_id: this.conferenceThemeId,
         hospital_id: this.hospitalId,
-        section_id: this.departmentId,
+        section_id_list: this.sectionIdList,
         start_time: this.mettingStartTime,
         speaker: this.userName,
         num: this.userNum,

@@ -93,10 +93,10 @@ export default {
       this.$api
         .meetingDetail(params)
         .then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             this.$toast.clear();
-            this.metting = res.meeting_detail;
+            this.metting = res.meeting_detail[0];
           }
         })
         .catch(error => {
