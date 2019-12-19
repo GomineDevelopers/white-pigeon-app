@@ -72,7 +72,7 @@
           </van-row>
         </van-row>
         <van-row class="middle_button flex">
-          <button class="middle_button2" @click="createData">保存</button>
+          <button class="middle_button1" @click="createData">保存</button>
           <button class="middle_button2" @click="submitData">提交</button>
         </van-row>
       </van-row>
@@ -217,16 +217,16 @@ export default {
 
     // 开始时间添加单位
     formatter(type, value) {
-      if (type === 'year') {
+      if (type === "year") {
         return `${value}年`;
-      } else if (type === 'month') {
-        return `${value}月`
-      } else if (type === 'day') {
-        return `${value}日`
-      } else if (type === 'hour') {
-        return `${value}点`
-      } else if (type === 'minute') {
-        return `${value}分`
+      } else if (type === "month") {
+        return `${value}月`;
+      } else if (type === "day") {
+        return `${value}日`;
+      } else if (type === "hour") {
+        return `${value}点`;
+      } else if (type === "minute") {
+        return `${value}分`;
       }
       return value;
     },
@@ -293,14 +293,14 @@ export default {
     },
     // 时间选择
     timeConfirm(v) {
-      let prevTime = localStorage.getItem('prevTime');
+      let prevTime = localStorage.getItem("prevTime");
       let time = v.getTime() - new Date(prevTime);
       if (prevTime == null || time < -300000 || time > 300000) {
-          this.timeShow = false;
-          this.prevTime = v;
-          this.start_time = minutesTimeFormat(v);
+        this.timeShow = false;
+        this.prevTime = v;
+        this.start_time = minutesTimeFormat(v);
       } else {
-        this.$toast({message:"开始时间不能为上一次创建的前后5分钟，请重新选择",duration:3000})
+        this.$toast({ message: "开始时间不能为上一次创建的前后5分钟，请重新选择", duration: 3000 });
       }
     },
     // 选择拜访目的
@@ -322,7 +322,7 @@ export default {
       this.product_id = v.id;
       this.visit_goal = "";
       this.goal_visit_id = "";
-      this.visitPurposeList= [];
+      this.visitPurposeList = [];
       this.goalInfo.map(item => {
         if (item.product_id == v.id) {
           this.visitPurposeList.push({ id: item.id, text: item.visit_goal });
@@ -381,17 +381,17 @@ export default {
           visit_image_two: this.visitPhoto[1] || null,
           visit_image_three: this.visitPhoto[2] || null
         };
-        localStorage.setItem('prevTime',this.prevTime);
+        localStorage.setItem("prevTime", this.prevTime);
         this.upDataToServer(data);
       }
     },
     // 上传数据到服务器
     upDataToServer(data) {
       this.$toast.loading({
-        message: '数据提交中...',
+        message: "数据提交中...",
         forbidClick: true,
         duration: 0,
-        loadingType: 'spinner'
+        loadingType: "spinner"
       });
       this.$api
         .createVisit(data)
@@ -403,7 +403,7 @@ export default {
             }, 1000);
           } else {
             this.$toast.fail(res.message);
-          };
+          }
           this.$toast.clear();
         })
         .catch(err => {

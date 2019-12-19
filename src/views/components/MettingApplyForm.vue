@@ -42,7 +42,8 @@
           <span class="flex_1">
             {{ sectionSelect.length == 0 ? "请选择" : "" }}
             <em v-for="(sectionItem, index) in sectionSelect" :key="index + 'a'">
-              {{ sectionItem.section_name + " " }}
+              {{ sectionItem.section_name }}
+              <em v-if="index != sectionSelect.length - 1">,</em>
             </em>
           </span>
           <van-icon name="arrow" />
@@ -645,6 +646,9 @@ export default {
 }
 .section_popup .van-cell__title {
   text-align: left;
+}
+.metting_content .van-field__body .van-field__control {
+  color: #a8aec1;
 }
 </style>
 <style scoped>

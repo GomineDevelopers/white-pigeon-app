@@ -45,7 +45,7 @@
             <span class="flex_1">
               {{ sectionSelect.length == 0 ? "请选择" : "" }}
               <em v-for="(sectionItem, index) in sectionSelect" :key="index + 'a'">
-                {{ sectionItem + " " }}
+                {{ sectionItem }}
               </em>
             </span>
             <van-icon name="arrow" />
@@ -146,6 +146,7 @@
         <van-picker
           show-toolbar
           title="产品选择"
+          :default-index="productDefaultIndex"
           :columns="productList"
           @cancel="productShow = false"
           @confirm="productConfirm"
@@ -158,6 +159,7 @@
         <van-picker
           show-toolbar
           title="会议主题选择"
+          :default-index="themeDefaultIndex"
           :columns="conferenceThemeList"
           @cancel="conferenceThemeShow = false"
           @confirm="conferenceThemeConfirm"
@@ -170,6 +172,7 @@
         <van-picker
           show-toolbar
           title="医院选择"
+          :default-index="hospitalDefaultIndex"
           :columns="hospitalList"
           @cancel="hospitalShow = false"
           @confirm="hospitalListConfirm"
@@ -246,7 +249,6 @@ export default {
       productDefaultIndex: 0,
       themeDefaultIndex: 0,
       hospitalDefaultIndex: 0,
-      sectionDefaultIndex: 0,
       minHour: 10,
       maxHour: 20,
       minDate: new Date(),
@@ -460,7 +462,7 @@ export default {
           console.log(res);
           if (res.code == 200) {
             this.sectionTotal = res.product_section_list;
-            console.log("当前产品科室信息", this.sectionTotal);
+            // console.log("当前产品科室信息", this.sectionTotal);
             this.sectionTotal.forEach(value => {
               this.sectionNameList.push(value.section_name);
             });
@@ -471,12 +473,12 @@ export default {
         .catch(error => {
           console.log(error);
         });
-      console.log("当前产品科室名称列表", this.sectionNameList);
+      // console.log("当前产品科室名称列表", this.sectionNameList);
 
       //设置默认选项
-      console.log("产品", this.productId, this.productList);
-      console.log("会议主题id", this.conferenceThemeId, this.conferenceThemeList);
-      console.log("医院", this.hospitalId, this.hospitalList);
+      // console.log("产品", this.productId, this.productList);
+      // console.log("会议主题id", this.conferenceThemeId, this.conferenceThemeList);
+      // console.log("医院", this.hospitalId, this.hospitalList);
       this.productDefaultIndex = this.getAnyIndex(this.productId, this.productList);
       this.themeDefaultIndex = this.getAnyIndex(this.conferenceThemeId, this.conferenceThemeList);
       this.hospitalDefaultIndex = this.getAnyIndex(this.hospitalId, this.hospitalList);
@@ -577,7 +579,6 @@ export default {
       });
       return tempIndex;
     },
-
     //创建会议
     editMetting() {
       if (

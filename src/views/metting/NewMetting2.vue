@@ -44,7 +44,8 @@
             <span class="flex_1">
               {{ sectionSelect.length == 0 ? "请选择" : "" }}
               <em v-for="(sectionItem, index) in sectionSelect" :key="index + 'a'">
-                {{ sectionItem.section_name + " " }}
+                {{ sectionItem.section_name }}
+                <em v-if="index != sectionSelect.length - 1">,</em>
               </em>
             </span>
             <van-icon name="arrow" />
@@ -340,8 +341,9 @@ export default {
     },
     //通过产品关联会议
     getInfoByProductId() {
+      let params = { hospital_id: this.$route.query.data.infomation.hospital_id };
       this.$api
-        .meetingGetInfoByProductId()
+        .hospitalDevelopdMeeting(params)
         .then(res => {
           console.log(res);
           this.hospitalByproductId = res.getInfoByProductId;
@@ -356,7 +358,7 @@ export default {
                     true && item.push({ id: next.product_id, text: next.product_name }));
               return item;
             }, []);
-            console.log("this.productList", this.productList); //控制台查看结果
+            // console.log("this.productList", this.productList); //控制台查看结果
           }
         })
         .catch(error => {
@@ -618,6 +620,9 @@ export default {
 }
 .section_popup .van-cell__title {
   text-align: left;
+}
+.metting_content .van-field__body .van-field__control {
+  color: #a8aec1;
 }
 </style>
 <style scoped>

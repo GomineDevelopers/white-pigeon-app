@@ -151,7 +151,7 @@
               <div class="pull_cell_cont" :class="{ active: index == contIndex }">
                 <p>潜力：一般</p>
                 <p>中标价：{{ item.bidding_price }}</p>
-                <p>主要科室：{{ item.section_name }}</p>
+                <!-- <p>主要科室：{{ item.section_name }}</p> -->
                 <p>适应症：{{ item.indications }}</p>
               </div>
               <!-- <div class="pull_cell_cont" v-html="item.cont"></div> -->
