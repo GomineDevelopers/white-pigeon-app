@@ -24,7 +24,10 @@
         </van-row>
       </van-row>
       <van-row class="info_module">
-        <van-row class="row_title">医院</van-row>
+        <van-row class="row_title">
+          医院
+          <i>*</i>
+        </van-row>
         <van-row class="icon_right flex" @click="hospitalShow = true">
           <span class="flex_1">{{ hospital ? hospital : "请选择" }}</span>
           <van-icon name="arrow" />
@@ -35,8 +38,13 @@
           所属科室
           <i>*</i>
         </van-row>
-        <van-row class="icon_right flex" @click="departmentShow = true">
-          <span class="flex_1">{{ department ? department : "请选择" }}</span>
+        <van-row class="icon_right flex" @click="sectionShow = true">
+          <span class="flex_1">
+            {{ sectionSelect.length == 0 ? "请选择" : "" }}
+            <em v-for="(sectionItem, index) in sectionSelect" :key="index + 'a'">
+              {{ sectionItem.section_name + " " }}
+            </em>
+          </span>
           <van-icon name="arrow" />
         </van-row>
       </van-row>
@@ -71,7 +79,10 @@
       </van-row>
       <!-- 人员拍照开始 -->
       <van-row class="info_module">
-        <van-row class="row_title">人员拍照</van-row>
+        <van-row class="row_title">
+          人员拍照
+          <i>*</i>
+        </van-row>
         <van-row class="flex after_camera" v-if="personnelPhoto.length > 0">
           <van-row
             class="visit_img"
@@ -115,7 +126,10 @@
       </van-row>
       <!-- 人员拍照结束 -->
       <van-row class="info_module">
-        <van-row class="row_title">签到表拍照</van-row>
+        <van-row class="row_title">
+          签到表拍照
+          <i>*</i>
+        </van-row>
         <van-row class="flex after_camera" v-if="signPhoto.length > 0">
           <van-row
             class="visit_img"
@@ -125,16 +139,6 @@
             <img :src="signPhotoList" />
             <van-icon name="close" class="delete_img" @click="deletePhoto(2, index)" />
           </van-row>
-          <!-- <van-row class="flex camera_icon" v-show="signPhoto.length < 1">
-            <van-uploader
-              class="photoUpload flex flex_align_center flex_justify_center"
-              :after-read="uploadSignPhoto"
-            >
-              <van-row class="flex camera_icon">
-                <van-icon name="photograph" />
-              </van-row>
-            </van-uploader>
-          </van-row> -->
         </van-row>
         <van-row class="camera" v-if="signPhoto.length == 0">
           <van-row class="flex camera_icon" @click="singCamera">
@@ -198,14 +202,25 @@
     </transition>
     <!-- 所属科室 -->
     <transition name="van-slide-up">
-      <van-popup v-model="departmentShow" position="bottom">
-        <van-picker
-          show-toolbar
-          title="所属科室选择"
-          :columns="departmentList"
-          @cancel="departmentShow = false"
-          @confirm="departmentConfirm"
-        />
+      <van-popup v-model="sectionShow" position="bottom" class="section_popup">
+        <van-row class="section_button">
+          <van-col span="8" @click="sectionShow = false">取消</van-col>
+          <van-col span="8" class="section_title">科室选择</van-col>
+          <van-col span="8" @click="sectionConfirm">确认</van-col>
+        </van-row>
+        <van-checkbox-group v-model="sectionSelect" :max="3">
+          <van-cell-group>
+            <van-cell
+              v-for="(item, index) in sectionList"
+              clickable
+              :key="index + 'se'"
+              :title="item.section_name"
+              @click="toggle(index)"
+            >
+              <van-checkbox :name="item" ref="checkboxes" slot="right-icon" />
+            </van-cell>
+          </van-cell-group>
+        </van-checkbox-group>
       </van-popup>
     </transition>
     <!-- 时间选择 -->
@@ -262,10 +277,9 @@ export default {
       hospital: "",
       hospitalId: "",
       hospitalList: [],
-      departmentShow: false,
-      department: "",
-      departmentId: "",
-      departmentList: [],
+      sectionShow: false,
+      sectionList: [], //科室信息列表
+      sectionSelect: [], //存放选择的科室
       mettingStartTimeShow: false,
       mettingStartTime: "",
       mettingDate: new Date(),
@@ -308,7 +322,6 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
     this.getInfoByProductId();
-    // this.setMinDate();
     this.minDate = minDate();
   },
   methods: {
@@ -328,6 +341,9 @@ export default {
     },
     onBack() {
       history.back();
+    },
+    toggle(index) {
+      this.$refs.checkboxes[index].toggle();
     },
     //通过产品关联会议
     getInfoByProductId() {
@@ -365,8 +381,8 @@ export default {
       this.conferenceThemeId = "";
       this.hospital = "";
       this.hospitalId = "";
-      this.department = "";
-      this.departmentId = "";
+      this.sectionList = [];
+      this.sectionSelect = [];
 
       var mettingArr = {};
       let mettingTemp = [];
@@ -396,17 +412,21 @@ export default {
         return item;
       }, []);
 
-      var arr2 = {};
-      let temp2 = [];
-      this.hospitalByproductId.forEach(item => {
-        if (value.id == item.product_id) {
-          temp2.push({ id: item.section_id, text: item.section_name });
-        }
-      });
-      this.departmentList = temp2.reduce((item, next) => {
-        arr2[next.id] ? "" : (arr2[next.id] = true && item.push({ id: next.id, text: next.text }));
-        return item;
-      }, []);
+      //通过选择的产品请求出科室信息
+      let params = { product_id: value.id };
+      this.$api
+        .meetingGetSection(params)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            this.sectionList = res.product_section_list;
+          } else {
+            this.$toast.fail("获取科室信息失败");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     // 会议主题确认
     conferenceThemeConfirm(value) {
@@ -419,10 +439,8 @@ export default {
       this.hospital = value.text;
       this.hospitalId = value.id;
     },
-    departmentConfirm(value) {
-      this.departmentShow = false;
-      this.department = value.text;
-      this.departmentId = value.id;
+    sectionConfirm() {
+      this.sectionShow = false;
     },
     mettingTimeConfirm(event) {
       console.log(event);
@@ -495,18 +513,25 @@ export default {
       if (
         this.productId == "" ||
         this.conferenceThemeId == "" ||
-        this.departmentId == "" ||
+        this.hospital == "" ||
+        this.sectionSelect.length == 0 ||
         this.mettingStartTime == "" ||
         this.userName == "" ||
-        this.userNum == ""
+        this.userNum == "" ||
+        this.personnelPhoto.length == 0 ||
+        this.signPhoto.length == 0
       ) {
         this.$toast.fail("请填写完整必填信息");
         return false;
       }
+      console.log("所属科室", this.sectionSelect);
+      let sectionIdList = [];
+      this.sectionSelect.forEach(value => {
+        sectionIdList.push(value.section_id);
+      });
       // console.log("产品", this.productId, this.product);
       // console.log("会议主题", this.conferenceThemeId, this.conferenceTheme);
       // console.log("医院", this.hospitalId, this.hospital);
-      // console.log("所属科室", this.departmentId, this.department);
       // console.log("时间", this.mettingStartTime);
       // console.log("演讲人", this.userName);
       // console.log("演讲人数", this.userNum);
@@ -533,7 +558,7 @@ export default {
         product_id: this.productId,
         product_topic_id: this.conferenceThemeId,
         hospital_id: this.hospitalId,
-        section_id: this.departmentId,
+        section_id_list: sectionIdList,
         start_time: this.mettingStartTime,
         speaker: this.userName,
         num: this.userNum,
@@ -551,7 +576,7 @@ export default {
               this.productId = "";
               this.conferenceThemeId = "";
               this.hospitalId = "";
-              this.departmentId = "";
+              this.sectionSelect = [];
               this.mettingStartTime = "";
               this.userName = "";
               this.userNum = "";
@@ -577,6 +602,49 @@ export default {
 .info_module .van-cell {
   padding: 0.18rem 0rem 0rem 0rem;
   font-size: 0.625rem;
+}
+.section_popup {
+  height: 13rem;
+  overflow: hidden;
+}
+.van-popup .van-checkbox-group {
+  height: calc(100% - 2rem);
+  position: relative;
+  margin-top: 2rem;
+  overflow: auto;
+}
+.van-popup .van-checkbox-group span {
+  font-size: 0.6875rem;
+}
+.van-popup .section_button {
+  padding: 0rem 0.5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  height: 2rem;
+  line-height: 2rem;
+  border-bottom: 1px solid #eee;
+}
+.van-popup .section_button .van-col {
+  font-size: 0.625rem;
+  color: #1989fa;
+}
+.van-popup .section_button .van-col:nth-child(1) {
+  text-align: left;
+}
+.van-popup .section_button .van-col:nth-child(3) {
+  text-align: right;
+}
+.van-popup .section_button .section_title {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}
+.section_popup .van-cell__title {
+  text-align: left;
 }
 </style>
 <style scoped>
@@ -609,6 +677,9 @@ export default {
   text-align: left;
   border-bottom: 1px solid rgba(238, 238, 238);
   margin-bottom: 0.4375rem;
+}
+.info_module span em {
+  font-style: normal;
 }
 .showbank {
   position: fixed;
