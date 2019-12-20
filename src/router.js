@@ -39,11 +39,7 @@ export default new Router({
     {
       path: "/visitrecord",
       name: "visitrecord",
-      component: () => import(/* webpackChunkName: "visit" */ "./views/visit/VisitRecord.vue"),
-      meta: {
-        title: "拜访记录",
-        requiresAuth: true
-      }
+      component: () => import(/* webpackChunkName: "visit" */ "./views/visit/VisitRecord.vue")
     },
     {
       path: "/visitdetailedit",

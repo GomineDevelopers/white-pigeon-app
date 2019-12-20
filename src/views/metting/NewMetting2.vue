@@ -42,7 +42,7 @@
           </van-row>
           <van-row class="icon_right flex" @click="sectionShow = true">
             <span class="flex_1">
-              {{ sectionSelect.length == 0 ? "请选择" : "" }}
+              {{ sectionSelect.length == 0 ? "最多可选择三个科室" : "" }}
               <em v-for="(sectionItem, index) in sectionSelect" :key="index + 'a'">
                 {{ sectionItem.section_name }}
                 <em v-if="index != sectionSelect.length - 1">,</em>

@@ -4,8 +4,8 @@
       <van-nav-bar title="我的" left-arrow @click-left="onBack()" />
     </van-row>
     <!-- 头部用户信息开始 -->
-    <van-row class="header_body" @click="goUserInfoDetail">
-      <van-row class="header_user_info flex flex_align_center">
+    <van-row class="header_body">
+      <van-row class="header_user_info flex flex_align_center" @click="goUserInfoDetail">
         <van-row class="left_detail flex flex_1">
           <img src="https://img.yzcdn.cn/vant/cat.jpeg" />
           <van-row class="user_info">
@@ -20,19 +20,19 @@
         </van-row>
       </van-row>
       <van-row class="header_user_other">
-        <van-col span="6" class="other_list_info">
+        <van-col span="6" class="other_list_info" @click="goPath('/mettingrecord')">
           <span>{{ statistics.meeting_total_count }}</span>
           <span>会议</span>
         </van-col>
-        <van-col span="6" class="other_list_info">
+        <van-col span="6" class="other_list_info" @click="goPath('/visitrecord')">
           <span>{{ statistics.visit_record_num }}</span>
           <span>拜访</span>
         </van-col>
-        <van-col span="6" class="other_list_info">
+        <van-col span="6" class="other_list_info" @click="goPath('/productapply')">
           <span>{{ statistics.hospital_product_num }}</span>
           <span>开发</span>
         </van-col>
-        <van-col span="6" class="other_list_info">
+        <van-col span="6" class="other_list_info" @click="goPath('/integral')">
           <span>0</span>
           <span class="jifen flex flex_align_center">
             积分
@@ -146,6 +146,9 @@ export default {
     },
     goUserInfoDetail() {
       this.$router.push({ path: "/userinfodetail" });
+    },
+    goPath(path) {
+      this.$router.push({ path: path });
     }
   }
 };

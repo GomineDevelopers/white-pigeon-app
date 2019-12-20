@@ -96,6 +96,7 @@ export default {
                     return false;
                   } else {
                     this.$toast.success("登录成功！");
+                    this.$store.state.userInfo = res.user; //在store中存用户信息
                     if (res.user.is_regional_mangager == 1) {
                       localStorage.setItem("role", 1); //本地存储区域经理的角色  1-经理  2-普通用户
                       this.$router.replace({ path: "/approveindex" });

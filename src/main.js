@@ -43,7 +43,48 @@ router.beforeEach((to, from, next) => {
   } else {
     if (token) {
       store.commit("setToken", token);
-      next();
+      if (store.state.userInfo.length == 0) {
+        console.log("用户信息不存在！");
+        api
+          .userInfo()
+          .then(res => {
+            console.log("用户信息", res);
+            if (res.code == 200) {
+              store.state.userInfo = res.user;
+              if (store.state.userInfo.is_regional_mangager == 1) {
+                //本地存储区域经理的角色  1-经理  2-普通用户
+                router.replace({ path: "/approveindex" });
+              } else {
+                if (
+                  (store.state.userInfo.invite_code == null ||
+                    store.state.userInfo.invite_code == "") &&
+                  store.state.userInfo.identify_status != 1
+                ) {
+                  router.replace({ path: "/answer" });
+                } else {
+                  next();
+                }
+              }
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else {
+        if (store.state.userInfo.is_regional_mangager == 1) {
+          //本地存储区域经理的角色  1-经理  2-普通用户
+          router.replace({ path: "/approveindex" });
+        } else {
+          if (
+            (store.state.userInfo.invite_code == null || store.state.userInfo.invite_code == "") &&
+            store.state.userInfo.identify_status != 1
+          ) {
+            router.replace({ path: "/answer" });
+          } else {
+            next();
+          }
+        }
+      }
     } else {
       Toast("请先登录！");
       if (to.path == "/loginpassword") {
