@@ -192,6 +192,7 @@ export default {
           console.log(res);
           if (res.code == 200) {
             this.$toast.success("答题提交成功！");
+            localStorage.setItem("isAnswer", true); //设置用户答题  true — 答过
             setTimeout(() => {
               this.$router.push({ path: "/" });
             }, 1000);
@@ -202,6 +203,7 @@ export default {
             }, 1500);
           } else if (res.code == 9004) {
             this.$toast.fail("你已经通过答题了,请勿重复提交");
+            localStorage.setItem("isAnswer", true); //设置用户答题  true — 答过
             setTimeout(() => {
               this.$router.push({ path: "/" });
             }, 1500);

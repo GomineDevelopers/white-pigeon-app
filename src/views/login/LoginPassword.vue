@@ -106,8 +106,10 @@ export default {
                         (res.user.invite_code == null || res.user.invite_code == "") &&
                         res.user.identify_status != 1
                       ) {
+                        localStorage.setItem("isAnswer", false); //用户是否答题
                         this.$router.replace({ path: "/answer" });
                       } else {
+                        localStorage.setItem("isAnswer", true); //用户是否答题
                         if (this.$route.query.redirect) {
                           console.log("重定向地址", this.$route.query.redirect);
                           this.$router.replace({

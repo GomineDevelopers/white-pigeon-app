@@ -43,46 +43,20 @@ router.beforeEach((to, from, next) => {
   } else {
     if (token) {
       store.commit("setToken", token);
-      if (store.state.userInfo.length == 0) {
-        console.log("用户信息不存在！");
-        api
-          .userInfo()
-          .then(res => {
-            console.log("用户信息", res);
-            if (res.code == 200) {
-              store.state.userInfo = res.user;
-              if (store.state.userInfo.is_regional_mangager == 1) {
-                //本地存储区域经理的角色  1-经理  2-普通用户
-                router.replace({ path: "/approveindex" });
-              } else {
-                if (
-                  (store.state.userInfo.invite_code == null ||
-                    store.state.userInfo.invite_code == "") &&
-                  store.state.userInfo.identify_status != 1
-                ) {
-                  router.replace({ path: "/answer" });
-                } else {
-                  next();
-                }
-              }
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      } else {
-        if (store.state.userInfo.is_regional_mangager == 1) {
-          //本地存储区域经理的角色  1-经理  2-普通用户
-          router.replace({ path: "/approveindex" });
+      console.log("localStorage", localStorage.getItem("isAnswer"));
+      console.log("localStorage", localStorage.getItem("role"));
+      if (localStorage.getItem("role") == 1) {
+        if (to.path == "/approveindex") {
+          next(); //注意在router.beforeEach中一定要用next()来跳出导航循环
         } else {
-          if (
-            (store.state.userInfo.invite_code == null || store.state.userInfo.invite_code == "") &&
-            store.state.userInfo.identify_status != 1
-          ) {
-            router.replace({ path: "/answer" });
-          } else {
-            next();
-          }
+          //如果用户去的页面不是登录页则跳转登录页
+          next("/approveindex");
+        }
+      } else {
+        if (localStorage.getItem("isAnswer")) {
+          next();
+        } else {
+          next("/answer");
         }
       }
     } else {
