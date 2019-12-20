@@ -112,6 +112,17 @@ export default {
       // 设置系统状态栏背景为蓝色
       plus.navigator.setStatusBarBackground("#2A76FF");
       plus.navigator.setStatusBarStyle("light");
+      plus.key.addEventListener('backbutton', function () {
+            plus.key.addEventListener(
+              'backbutton',
+              function () {
+                  plus.nativeUI.confirm("是否退出程序？", function(event) { 
+                      if (event.index) { 
+                          plus.runtime.quit(); 
+                      } 
+                  }, "系统提示", ["取消", "确定"]); 
+              },false)
+      })
     }
     if (window.plus) {
       plusReady();
