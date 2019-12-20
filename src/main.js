@@ -46,17 +46,32 @@ router.beforeEach((to, from, next) => {
       console.log("localStorage", localStorage.getItem("isAnswer"));
       console.log("localStorage", localStorage.getItem("role"));
       if (localStorage.getItem("role") == 1) {
-        if (to.path == "/approveindex") {
+        if (
+          to.path == "/approveindex" ||
+          to.path == "/doctorapprove" ||
+          to.path == "/hospitalapprove"
+        ) {
           next(); //注意在router.beforeEach中一定要用next()来跳出导航循环
         } else {
           //如果用户去的页面不是登录页则跳转登录页
           next("/approveindex");
         }
       } else {
-        if (localStorage.getItem("isAnswer")) {
-          next();
+        console.log("普通账号！");
+        if (to.path == "/approveindex") {
+          next("/");
         } else {
-          next("/answer");
+          if (localStorage.getItem("isAnswer") == "true") {
+            console.log("已答题");
+            next();
+          } else if (localStorage.getItem("isAnswer") == "false") {
+            if (to.path == "/answer") {
+              next(); //注意在router.beforeEach中一定要用next()来跳出导航循环
+            } else {
+              //如果用户去的页面不是登录页则跳转登录页
+              next("/answer");
+            }
+          }
         }
       }
     } else {
