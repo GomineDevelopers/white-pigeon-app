@@ -43,8 +43,8 @@ router.beforeEach((to, from, next) => {
   } else {
     if (token) {
       store.commit("setToken", token);
-      console.log("localStorage", localStorage.getItem("isAnswer"));
-      console.log("localStorage", localStorage.getItem("role"));
+      // console.log("localStorage", localStorage.getItem("isAnswer"));
+      // console.log("localStorage", localStorage.getItem("role"));
       if (localStorage.getItem("role") == 1) {
         if (
           to.path == "/approveindex" ||
@@ -57,7 +57,7 @@ router.beforeEach((to, from, next) => {
           next("/approveindex");
         }
       } else {
-        console.log("普通账号！");
+        // console.log("普通账号！");
         if (to.path == "/approveindex") {
           next("/");
         } else {
