@@ -65,6 +65,9 @@ export default {
           console.log(res);
           this.loading = false;
           this.$store.commit("setToken", null);
+          localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          localStorage.removeItem("isAnswer");
           this.$dialog
             .alert({
               message: res.message

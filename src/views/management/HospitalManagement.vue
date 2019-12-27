@@ -34,13 +34,6 @@
               <span class="three_level">{{ item.hospital_level }}</span>
               <span class="public">{{ item.hospital_run_type }}</span>
             </van-row>
-            <!-- <van-row class="hospital_tag">
-              <ul class="pop_hosp_type">
-                <li class="hospital_type">{{ item.hospital_type }}</li>
-                <li class="hospital_level">{{ item.hospital_level }}</li>
-                <li class="hospital_run_type">{{ item.hospital_run_type }}</li>
-              </ul>
-            </van-row> -->
             <van-row class="product_list">
               <span v-for="(product, index3) in item.product" :key="index3 + 'b'">
                 {{ product.product_name + "&nbsp;&nbsp;&nbsp;" }}

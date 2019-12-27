@@ -6,6 +6,7 @@
           class="hospital_item border_bom"
           v-for="(item, index) in hospitalList"
           :key="index"
+          @click="goApplyHospitalDetail(item.hospital_id)"
         >
           <van-row class="hospital_name">{{ item.hospital_name }}</van-row>
           <van-row class="hospital_tag">
@@ -88,10 +89,10 @@ export default {
     // 判断医院经营方式
     setHospitalRunType(id) {
       return setHospitalRunType(id);
+    },
+    goApplyHospitalDetail(id) {
+      this.$router.push({ path: "/applyhospitaldetail", query: { id: id } });
     }
-    // goApplyHospitalDetail() {
-    //   this.$router.push({ path: "/applyhospitaldetail" });
-    // }
   }
 };
 </script>
