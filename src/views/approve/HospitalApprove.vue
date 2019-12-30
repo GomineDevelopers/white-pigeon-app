@@ -33,9 +33,31 @@
           <li>
             <span>竞品了解：</span>
             <span class="know_more" v-if="!detail.commodity_know">暂无</span>
-            <span class="know_more" v-if="detail.commodity_know">{{ detail.commodity_know }}</span>
+            <span class="know_more" v-if="detail.commodity_know">{{
+              detail.commodity_know
+            }}</span>
           </li>
         </ul>
+        <div v-if="detail.status == 1" class="region_sure_wap">
+          <span class="tit">区域经理确认代表的销量和单价</span>
+          <ul>
+            <li class="flex_li">
+              <span>销量：</span>
+              <span v-if="detail.region_promise_sales"
+                >{{ detail.product_name }}
+                {{ detail.region_promise_sales }}/月</span
+              >
+              <span v-else>无</span>
+            </li>
+            <li class="flex_li">
+              <span>单价：</span>
+              <span v-if="detail.region_bidding_price"
+                >{{ detail.region_bidding_price }}/元</span
+              >
+              <span v-else>无</span>
+            </li>
+          </ul>
+        </div>
       </van-row>
     </van-row>
     <van-row class="handle" v-if="detail.status == 3">
@@ -43,16 +65,41 @@
         <button class="refuse" @click="showRefuse">拒绝</button>
       </span>
       <span>
-        <button class="pass" @click="pass">通过</button>
+        <button class="pass" @click="passShow = true">通过</button>
       </span>
     </van-row>
-    <van-row class="refuse_daio">
-      <van-dialog v-model="show" title="拒绝理由" show-cancel-button :beforeClose="changeBtn">
+    <van-row>
+      <van-dialog
+        v-model="show"
+        title="拒绝理由"
+        show-cancel-button
+        :beforeClose="changeBtn"
+      >
         <van-field
           class="refuse_text"
           v-model="value"
           placeholder="请输入您的拒绝理由"
           ref="refuse"
+        />
+      </van-dialog>
+      <van-dialog
+        class="pass_dialog"
+        v-model="passShow"
+        title="请输入代表的销量和单价"
+        show-cancel-button
+        :beforeClose="passBtn"
+      >
+        <van-field
+          type="number"
+          v-model="promiseSales"
+          placeholder="请输入承诺销量"
+          ref="promise"
+        />
+        <van-field
+          type="number"
+          v-model="biddingPrice"
+          placeholder="请输入单价"
+          ref="bidding"
         />
       </van-dialog>
     </van-row>
@@ -64,7 +111,10 @@ export default {
   data() {
     return {
       show: false,
+      passShow: false,
       value: "",
+      promiseSales: "",
+      biddingPrice: "",
       detail: {}
     };
   },
@@ -123,7 +173,12 @@ export default {
       this.show = true;
     },
     // 提交通过处理
-    pass() {
+    submitpass() {
+      let data = {
+        hospital_product_id: this.id,
+        region_promise_sales: this.promiseSales,
+        region_bidding_price: Number(this.biddingPrice).toFixed(2)
+      };
       this.$toast.loading({
         id: 0,
         message: "数据处理中...",
@@ -132,7 +187,7 @@ export default {
         loadingType: "spinner"
       });
       this.$api
-        .regionProPass({ hospital_product_id: this.id })
+        .regionProPass(data)
         .then(res => {
           if (res.code == 200) {
             this.$toast("处理成功");
@@ -164,6 +219,35 @@ export default {
           done(false);
         } else {
           this.submitRefuse(done);
+        }
+      } else {
+        done();
+      }
+    },
+    // 通过区域经理弹出处理
+    passBtn(action, done) {
+      if (action === "confirm") {
+        if (!this.promiseSales) {
+          this.$toast("承诺销量不能为空");
+          this.$refs.promise.focus();
+          done(false);
+        } else if (!this.biddingPrice) {
+          this.$toast("单价不能为空");
+          this.$refs.bidding.focus();
+          done(false);
+        } else {
+          this.$dialog
+            .confirm({
+              message: "请确认销量和单价是否正确，一旦提交不可修改！"
+            })
+            .then(() => {
+              this.submitpass();
+              done();
+            })
+            .catch(() => {
+              done(false);
+            });
+          //
         }
       } else {
         done();
@@ -206,6 +290,20 @@ export default {
 <style>
 .approve_content .van-dialog__footer {
   margin-top: 0.625rem;
+}
+.pass_dialog .van-cell__value {
+  border: 1px solid #ebedf0;
+  height: 30px;
+  border-radius: 4px;
+  padding-left: 10px;
+}
+.pass_dialog .van-cell__value input {
+  height: 30px;
+}
+.pass_dialog .van-dialog__header {
+  height: auto;
+  font-size: 0.6rem;
+  line-height: normal;
 }
 </style>
 <style scoped>
@@ -273,5 +371,11 @@ export default {
   background: #3399ff;
   color: #fff;
   margin-left: 0.7rem;
+}
+.region_sure_wap .tit {
+  display: inline-block;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 0.65rem;
 }
 </style>
