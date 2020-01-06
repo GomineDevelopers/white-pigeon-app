@@ -15,8 +15,10 @@
         <van-col span="14">
           <van-field v-model="authCode" placeholder="请输入验证码" />
         </van-col>
-        <van-col span="10" class="forget_password_btn" @click="getAuthCode">
-          <span></span> 获取验证码
+        <van-col span="10" class="forget_password_btn">
+          <span></span>
+          <i v-if="isDisable" @click="getAuthCode">获取验证码</i>
+          <i class="disabled_i" v-if="!isDisable">{{ time }}秒后重试</i>
         </van-col>
       </van-row>
       <van-row class="login_btn" @click="confirmInfo">
@@ -26,6 +28,8 @@
   </van-row>
 </template>
 <script>
+import { setInterval } from "timers";
+import { minDate } from "../../js/public";
 export default {
   name: "retrivepassword",
   data() {
@@ -34,7 +38,8 @@ export default {
       phone: "",
       password: "",
       passwordAgain: "",
-      authCode: ""
+      authCode: "",
+      time: 60
     };
   },
   created() {
@@ -54,8 +59,21 @@ export default {
     onBack() {
       history.back();
     },
+    cutDown() {
+      this.time = 60;
+      this.isDisable = false;
+      let timetimer = setInterval(() => {
+        this.time--;
+        if (this.time <= 0) {
+          console.log(this.time);
+          this.isDisable = true;
+          clearInterval(timetimer);
+        }
+      }, 1000);
+    },
     //获取验证码
     getAuthCode() {
+      let vm = this;
       let regs = /^1[3456789]\d{9}$/;
       if (!regs.test(this.phone)) {
         this.$notify({
@@ -64,9 +82,9 @@ export default {
         });
         return false;
       }
-      setTimeout(() => {
-        this.isDisable = true;
-      }, 60000);
+      this.cutDown();
+
+      return false;
       let postData = {
         mobile: this.phone,
         type: 2
@@ -75,12 +93,25 @@ export default {
         this.$api
           .authCode(postData)
           .then(res => {
-            // console.log(res);
+            console.log(res);
             if (res.code == 200) {
               this.isDisable = false;
               this.$toast.success("验证码发送成功！");
+              const chatTimer = setInterval(() => {
+                console.log(vm.time);
+                if (vm.time == 0) {
+                  vm.isDisable = true;
+                  window.clearInterval(chatTimer);
+                  vm.time = 60;
+                } else {
+                  vm.time--;
+                }
+              }, 1000);
             } else if (res.code == 2004) {
               this.$toast.fail("此手机号还没注册！");
+            } else if (res.code == 2003) {
+              vm.isDisable = false;
+              this.$toast.fail("验证码发送失败！");
             }
           })
           .catch(error => {

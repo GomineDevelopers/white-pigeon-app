@@ -85,6 +85,12 @@ span {
   align-items: center;
   justify-content: center;
 }
+.login_main_body .forget_password_btn i {
+  font-style: normal;
+}
+.login_main_body .forget_password_btn .disabled_i {
+  color: #999;
+}
 
 .login_main_body .forget_password_btn span {
   display: inline-block;

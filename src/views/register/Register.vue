@@ -16,7 +16,9 @@
           <van-field v-model="authCode" placeholder="请输入验证码" />
         </van-col>
         <van-col span="10" class="forget_password_btn" @click="getAuthCode">
-          <span></span> 获取验证码
+          <span></span>
+          <i v-if="isDisable" @click="getAuthCode">获取验证码</i>
+          <i v-if="!isDisable">{{ time }}秒后重试</i>
         </van-col>
       </van-row>
       <van-row class="login_btn">
@@ -39,7 +41,8 @@ export default {
       passwordAgain: "",
       authCode: "",
       isDisable: true,
-      checked: true
+      checked: true,
+      time: 20
     };
   },
   methods: {
@@ -48,6 +51,7 @@ export default {
     },
     //获取验证码
     getAuthCode() {
+      let vm = this;
       let regs = /^1[3456789]\d{9}$/;
       if (!regs.test(this.phone)) {
         this.$notify({
@@ -56,9 +60,6 @@ export default {
         });
         return false;
       }
-      setTimeout(() => {
-        this.isDisable = true;
-      }, 60000);
       let postData = { mobile: this.phone, type: 1 };
       if (this.isDisable) {
         this.$api
@@ -67,16 +68,18 @@ export default {
             console.log(res);
             if (res.code == 200) {
               this.isDisable = false;
-              this.$toast.success("验证码发送成功！");
+              this.$toast.success("验证码发送成功");
             } else if (res.code == 2004) {
-              this.$toast.fail("此手机号已经注册！");
+              this.$toast.fail("此手机号已经注册");
+            } else if (res.code == 2003) {
+              this.$toast.fail("验证码发送失败");
             }
           })
           .catch(error => {
             console.log(error);
           });
       } else {
-        this.$toast.fail("操作频繁，请稍后再试！");
+        this.$toast.fail("操作频繁，请稍后再试");
       }
     },
     //点击注册

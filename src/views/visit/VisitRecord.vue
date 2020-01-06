@@ -5,36 +5,39 @@
         <van-icon class="add_icon" name="add" slot="right" />
       </van-nav-bar>
     </van-row>
-
-    <van-row class="top_nav border_bom">
-      <van-row class="top_nav_list">
-        <van-col
-          :class="index === navActive ? 'active' : ''"
-          v-for="(navItem, index) in navList"
-          :key="index + 'a'"
-          @click="navHandle(index, navItem.status)"
-        >
-          <van-row>{{ navItem.num }}</van-row>
-          <van-row>{{ navItem.name }}</van-row>
-        </van-col>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-row class="top_nav border_bom">
+        <van-row class="top_nav_list">
+          <van-col
+            :class="index === navActive ? 'active' : ''"
+            v-for="(navItem, index) in navList"
+            :key="index + 'a'"
+            @click="navHandle(index, navItem.status)"
+          >
+            <van-row>{{ navItem.num }}</van-row>
+            <van-row>{{ navItem.name }}</van-row>
+          </van-col>
+        </van-row>
+        <!-- <van-row class="newest_date">最新核销日期：2019.10.12</van-row>  二期开发 -->
       </van-row>
-      <!-- <van-row class="newest_date">最新核销日期：2019.10.12</van-row>  二期开发 -->
-    </van-row>
 
-    <van-row class="main_body3">
-      <visitrecord-list :status="status"></visitrecord-list>
-    </van-row>
+      <van-row class="main_body3">
+        <visitrecord-list :status="status"></visitrecord-list>
+      </van-row>
+    </van-pull-refresh>
   </van-row>
 </template>
 <script>
 import visitrecordList from "@/views/components/VisitrecordList";
 export default {
   name: "visitrecord",
+  inject: ["reload"], //刷新页面
   components: {
     "visitrecord-list": visitrecordList
   },
   data() {
     return {
+      isLoading: false,
       navActive: 0,
       status: 7,
       navList: [
@@ -88,6 +91,13 @@ export default {
     },
     onBack() {
       history.back();
+    },
+    onRefresh() {
+      setTimeout(() => {
+        this.reload(); //刷新当前页面，加载新数据
+        this.$toast("刷新成功");
+        this.isLoading = false;
+      }, 500);
     },
     //创建拜访
     newVisit() {

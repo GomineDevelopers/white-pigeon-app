@@ -311,17 +311,6 @@ export default {
     };
   },
   created() {
-    // H5 plus事件处理
-    function plusReady() {
-      // 设置系统状态栏背景为蓝色
-      plus.navigator.setStatusBarBackground("#2A76FF");
-      plus.navigator.setStatusBarStyle("light");
-    }
-    if (window.plus) {
-      plusReady();
-    } else {
-      document.addEventListener("plusready", plusReady, false);
-    }
     this.getInfoByProductId();
     this.minDate = minDate();
   },

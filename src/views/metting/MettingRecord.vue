@@ -28,56 +28,58 @@
       </van-row>
     </transition>
     <!-- 点击右上角展示操作菜单结束 -->
-    <van-row class="metting_data_total">
-      <van-col span="12">
-        <span>{{ mettingNum }}</span>
-        <span>会议总次数</span>
-      </van-col>
-      <van-col span="12">
-        <span>{{ mettingUserNum }}</span>
-        <span>会议总人数</span>
-      </van-col>
-    </van-row>
-    <van-row class="metting_body">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="getMettingList"
-      >
-        <div
-          class="approve_item flex justify_between"
-          v-for="(item, index) in mettingList"
-          :key="index + 'b'"
-          @click="getDetail(item.status, item.id)"
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-row class="metting_data_total">
+        <van-col span="12">
+          <span>{{ mettingNum }}</span>
+          <span>会议总次数</span>
+        </van-col>
+        <van-col span="12">
+          <span>{{ mettingUserNum }}</span>
+          <span>会议总人数</span>
+        </van-col>
+      </van-row>
+      <van-row class="metting_body">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="getMettingList"
         >
-          <div class="approve_item_detail">
-            <ul>
-              <li>
-                {{ item.product_topic }}
-                -
-                <span>{{ item.speaker }}</span>
-              </li>
-              <li class="flex justify_start">
-                <span>{{ item.product_name }}</span>
-              </li>
-              <li class="flex justify_start">
-                <span>{{ item.start_time }}</span>
-              </li>
-            </ul>
+          <div
+            class="approve_item flex justify_between"
+            v-for="(item, index) in mettingList"
+            :key="index + 'b'"
+            @click="getDetail(item.status, item.id)"
+          >
+            <div class="approve_item_detail">
+              <ul>
+                <li>
+                  {{ item.product_topic }}
+                  -
+                  <span>{{ item.speaker }}</span>
+                </li>
+                <li class="flex justify_start">
+                  <span>{{ item.product_name }}</span>
+                </li>
+                <li class="flex justify_start">
+                  <span>{{ item.start_time }}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="approve_state flex">
+              <img v-if="item.status == '1'" src="@/assets/image/hg.png" />
+              <img v-if="item.status == '2'" src="@/assets/image/bhg.png" />
+              <img v-if="item.status == '3'" src="@/assets/image/shz.png" />
+              <img v-if="item.status == '4'" src="@/assets/image/yhx.png" />
+              <img v-if="item.status == '5'" src="@/assets/image/ysx.png" />
+              <img v-if="item.status == '6'" src="@/assets/image/wtj.png" />
+            </div>
           </div>
-          <div class="approve_state flex">
-            <img v-if="item.status == '1'" src="@/assets/image/hg.png" />
-            <img v-if="item.status == '2'" src="@/assets/image/bhg.png" />
-            <img v-if="item.status == '3'" src="@/assets/image/shz.png" />
-            <img v-if="item.status == '4'" src="@/assets/image/yhx.png" />
-            <img v-if="item.status == '5'" src="@/assets/image/ysx.png" />
-            <img v-if="item.status == '6'" src="@/assets/image/wtj.png" />
-          </div>
-        </div>
-      </van-list>
-      <!-- <van-row class="more">查看更多</van-row> -->
-    </van-row>
+        </van-list>
+        <!-- <van-row class="more">查看更多</van-row> -->
+      </van-row>
+    </van-pull-refresh>
     <!-- 会议产品筛选 -->
     <transition name="van-slide-up">
       <van-popup v-model="mettingFiltrate" position="bottom">
@@ -100,8 +102,10 @@
 <script>
 export default {
   name: "visitrecord",
+  inject: ["reload"], //刷新页面
   data() {
     return {
+      isLoading: false,
       mettingUserNum: "-",
       mettingNum: "-",
       mettingFiltrate: false,
@@ -122,7 +126,9 @@ export default {
       ],
       prodectName: "",
       productId: "",
-      productList: []
+      productList: [
+        // { id: 0, text: value.product_name }
+      ]
     };
   },
   created() {
@@ -143,6 +149,14 @@ export default {
   methods: {
     onBack() {
       this.$router.push("/");
+    },
+    //下拉刷新
+    onRefresh() {
+      setTimeout(() => {
+        this.reload(); //刷新当前页面，加载新数据
+        this.$toast("刷新成功");
+        this.isLoading = false;
+      }, 500);
     },
     //获取会议总次数和人数
     getMettingNum() {
@@ -186,7 +200,7 @@ export default {
     },
     //获取会议列表
     getMettingList() {
-      console.log("当前页码", this.page);
+      // console.log("当前页码", this.page);
       let params = {
         product_id: this.productId,
         page: this.page,
@@ -342,6 +356,7 @@ export default {
 .metting_body {
   padding: 0rem 1rem 1rem 1rem;
   text-align: left;
+  min-height: 60vh;
 }
 .metting_item {
   padding: 0.4rem;
