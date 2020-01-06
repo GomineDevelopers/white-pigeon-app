@@ -75,12 +75,12 @@ export default {
         this.$api
           .authCode(postData)
           .then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.code == 200) {
               this.isDisable = false;
               this.$toast.success("验证码发送成功！");
             } else if (res.code == 2004) {
-              this.$toast.fail("此手机号已经注册！");
+              this.$toast.fail("此手机号还没注册！");
             }
           })
           .catch(error => {
@@ -130,6 +130,7 @@ export default {
       this.$api
         .forgetPassword(postData)
         .then(res => {
+          console.log(res);
           if (res.code == 200) {
             this.$toast.success("找回密码成功！");
             localStorage.removeItem("token");
