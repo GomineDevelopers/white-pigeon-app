@@ -3,32 +3,36 @@
     <van-row class="top_nav_bar nav_bgm">
       <van-nav-bar title="开发" left-arrow @click-left="onBack()" />
     </van-row>
-    <van-row class="top_nav border_bom">
-      <van-col
-        :class="index === navActive ? 'active' : ''"
-        span="6"
-        v-for="(navItem, index) in navList"
-        :key="index + 'a'"
-        @click="navHandle(index, navItem.status)"
-      >
-        <van-row>{{ navItem.num }}</van-row>
-        <van-row>{{ navItem.name }}</van-row>
-      </van-col>
-    </van-row>
-    <van-row class="main_body3">
-      <apply-module :status="status"></apply-module>
-    </van-row>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-row class="top_nav border_bom">
+        <van-col
+          :class="index === navActive ? 'active' : ''"
+          span="6"
+          v-for="(navItem, index) in navList"
+          :key="index + 'a'"
+          @click="navHandle(index, navItem.status)"
+        >
+          <van-row>{{ navItem.num }}</van-row>
+          <van-row>{{ navItem.name }}</van-row>
+        </van-col>
+      </van-row>
+      <van-row class="main_body3">
+        <apply-module :status="status"></apply-module>
+      </van-row>
+    </van-pull-refresh>
   </van-row>
 </template>
 <script>
 import applymodule from "@/views/components/ApplyModule";
 export default {
   name: "productapply",
+  inject: ["reload"], //刷新页面
   components: {
     "apply-module": applymodule
   },
   data() {
     return {
+      isLoading: false,
       navActive: 0,
       status: 4,
       navList: [
@@ -36,45 +40,6 @@ export default {
         { name: "审核中", num: "-", status: 3 },
         { name: "未通过", num: "-", status: 2 },
         { name: "已通过", num: "-", status: 1 }
-      ],
-      approveList: [],
-      //全部审核
-      approveAllList: [
-        {
-          title: "产品XXXX",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "pass"
-        },
-        {
-          title: "产品XXXX",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "approveing"
-        },
-        {
-          title: "产品XXXX",
-          hospitalName: "复旦大学附属眼耳鼻喉科医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "notPass"
-        },
-        {
-          title: "产品XXXX",
-          hospitalName: "上海市儿童医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "approveing"
-        },
-        {
-          title: "产品XXXX",
-          hospitalName: "上海长海医院",
-          sales: "产品1 - 3321/月",
-          approveDate: "2019.10.15 15:32:32",
-          approveState: "notPass"
-        }
       ]
     };
   },
@@ -95,6 +60,14 @@ export default {
   methods: {
     onBack() {
       this.$router.push({ path: "/" });
+    },
+    //下拉刷新
+    onRefresh() {
+      setTimeout(() => {
+        this.reload(); //刷新当前页面，加载新数据
+        this.$toast("刷新成功");
+        this.isLoading = false;
+      }, 500);
     },
     navHandle(index, status) {
       this.navActive = index;

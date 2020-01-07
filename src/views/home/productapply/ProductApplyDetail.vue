@@ -16,8 +16,8 @@
             <span>{{ detailContent.product_name }} - {{ detailContent.promise_sales }}</span>
           </li>
           <li class="flex_li">
-            <span>达成时间：</span>
-            <span>{{ detailContent.complete_time }}</span>
+            <span>预估开发时间：</span>
+            <span v-if="detailContent.is_sign == 1">{{ detailContent.complete_time }}</span>
           </li>
           <li>
             <span>医院了解：</span>
@@ -35,6 +35,7 @@
   </van-row>
 </template>
 <script>
+import { timeFormat } from "@/js/public";
 export default {
   name: "productapplydetail",
   data() {
@@ -45,7 +46,8 @@ export default {
         promise_sales: "",
         complete_time: "",
         hospital_know: "",
-        commodity_know: ""
+        commodity_know: "",
+        is_sign: ""
       }
     };
   },
@@ -79,7 +81,22 @@ export default {
           console.log(res);
           if (res.code == 200) {
             this.$toast.clear();
-            this.detailContent = res.hospital_product_detail;
+            let data = res.hospital_product_detail;
+            let modify_time =
+              data.modify_time == null ? "" : new Date(data.modify_time.split(" ")[0]);
+            let endDate =
+              data.modify_time == null
+                ? ""
+                : modify_time.setMonth(modify_time.getMonth() + data.estimated_month);
+            this.detailContent = {
+              product_name: data.product_name,
+              hospital_name: data.hospital_name,
+              promise_sales: data.promise_sales,
+              complete_time: timeFormat(endDate),
+              hospital_know: data.hospital_know,
+              commodity_know: data.commodity_know,
+              is_sign: data.is_sign
+            };
           }
         })
         .catch(error => {

@@ -98,12 +98,14 @@ export default {
             console.log(res);
             if (res.code == 200) {
               this.isDisable = false;
-              this.$toast.success("验证码发送成功！");
+              this.$toast.success("验证码发送成功");
               this.cutDown();
             } else if (res.code == 2004) {
               this.$toast.fail("此手机号还没注册！");
             } else if (res.code == 2003) {
-              this.$toast.fail("验证码发送失败！");
+              this.$toast.fail("验证码发送失败");
+            } else if (res.code == 2002) {
+              this.$toast.fail("此号码验证码条数今日已达上线");
             }
           })
           .catch(error => {

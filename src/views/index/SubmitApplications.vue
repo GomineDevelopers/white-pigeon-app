@@ -81,7 +81,7 @@
       <van-popup v-model="timeShow" position="bottom">
         <van-picker
           show-toolbar
-          title="完成时间选择"
+          title="预估时间选择"
           :columns="timeOption"
           @cancel="timeShow = false"
           @confirm="timeConfirm"
@@ -99,8 +99,19 @@ export default {
       productData: null, //接收路由传的数据
       sales: "",
       time: "",
+      timeId: "",
       timeShow: false,
-      timeOption: ["1个月", "2个月", "3个月", "4个月", "5个月", "6个月", "7个月", "8个月", "9个月"],
+      timeOption: [
+        { text: "1个月", id: 1 },
+        { text: "2个月", id: 2 },
+        { text: "3个月", id: 3 },
+        { text: "4个月", id: 4 },
+        { text: "5个月", id: 5 },
+        { text: "6个月", id: 6 },
+        { text: "7个月", id: 7 },
+        { text: "8个月", id: 8 },
+        { text: "9个月", id: 9 }
+      ],
       date: "", //完成时间
       message: "",
       tips: -1,
@@ -144,10 +155,11 @@ export default {
     timeConfirm(value) {
       // console.log(value);
       this.timeShow = false;
-      this.time = value;
+      this.time = value.text;
+      this.timeId = value.id;
 
       //计算完成时间  2019-11-29
-      let mouthNum = Number(value.replace(/[^0-9]/gi, ""));
+      let mouthNum = value.id;
       let nowDate = new Date();
       let date = nowDate.setMonth(nowDate.getMonth() + mouthNum);
       this.date = timeFormat(nowDate);
@@ -170,6 +182,7 @@ export default {
           hospital_id: this.productData.hospitalId,
           product_id: this.productData.productId,
           promise_sales: this.sales,
+          estimated_month: this.timeId,
           complete_time: this.date,
           hospital_know: this.message,
           commodity_know: this.message2

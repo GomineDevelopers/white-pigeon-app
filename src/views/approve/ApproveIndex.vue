@@ -4,95 +4,100 @@
       <van-nav-bar v-if="role == 2" title="审批" left-arrow @click-left="onBack()" />
       <van-nav-bar v-if="role == 1" title="经理审批" left-arrow @click-left="logOut()" />
     </van-row>
-    <van-row class="tabs flex">
-      <van-row class="approve_nav flex">
-        <span :class="active == 0 ? 'active' : ''" @click="switchOption">产品</span>
-        <span :class="active == 1 ? 'active' : ''" @click="switchOption">医生</span>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-row class="tabs flex">
+        <van-row class="approve_nav flex">
+          <span :class="active == 0 ? 'active' : ''" @click="switchOption">产品</span>
+          <span :class="active == 1 ? 'active' : ''" @click="switchOption">医生</span>
+        </van-row>
       </van-row>
-    </van-row>
-    <van-list
-      class="approve_list manager_approve"
-      v-show="active == 0"
-      v-model="proLoading"
-      :finished="proFinished"
-      finished-text="无更多的产品开发"
-      @load="getProductData"
-    >
-      <div
-        class="approve_item flex justify_between"
-        v-for="(item, index) in productList"
-        :key="index + 'a'"
-        @click="getDetail(item.id)"
+
+      <van-list
+        class="approve_list manager_approve"
+        v-show="active == 0"
+        v-model="proLoading"
+        :finished="proFinished"
+        finished-text="无更多的产品开发"
+        @load="getProductData"
       >
-        <div class="approve_item_detail">
-          <ul>
-            <li>{{ item.name }}提交的产品开发</li>
-            <li class="flex justify_start">
-              <span>医院名：</span>
-              <span>{{ item.hospital_name }}</span>
-            </li>
-            <li class="flex justify_start">
-              <span>承诺销量：</span>
-              <span>{{ item.product_name }} {{ item.promise_sales }}/月</span>
-            </li>
-            <li class="flex justify_start">
-              <span>开发时间：</span>
-              <span>{{ item.create_time }}</span>
-            </li>
-          </ul>
+        <div
+          class="approve_item flex justify_between"
+          v-for="(item, index) in productList"
+          :key="index + 'a'"
+          @click="getDetail(item.id)"
+        >
+          <div class="approve_item_detail">
+            <ul>
+              <li>{{ item.name }}提交的产品开发</li>
+              <li class="flex justify_start">
+                <span>医院名：</span>
+                <span>{{ item.hospital_name }}</span>
+              </li>
+              <li class="flex justify_start">
+                <span>承诺销量：</span>
+                <span>{{ item.product_name }} {{ item.promise_sales }}/月</span>
+              </li>
+              <li class="flex justify_start">
+                <span>申请时间：</span>
+                <span>{{ item.create_time }}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="approve_state flex">
+            <img v-if="item.status == 3" src="@/assets/image/approve.png" />
+            <img v-if="item.status == 1" src="@/assets/image/approve_pass.png" />
+            <img v-if="item.status == 2" src="@/assets/image/approve_no.png" />
+          </div>
         </div>
-        <div class="approve_state flex">
-          <img v-if="item.status == 3" src="@/assets/image/approve.png" />
-          <img v-if="item.status == 1" src="@/assets/image/approve_pass.png" />
-          <img v-if="item.status == 2" src="@/assets/image/approve_no.png" />
-        </div>
-      </div>
-    </van-list>
-    <van-list
-      class="approve_list manager_approve"
-      v-show="active == 1"
-      v-model="docLoading"
-      :finished="docFinished"
-      finished-text="无更多医生需要审核"
-      @load="getHospitalData"
-    >
-      <div
-        class="approve_item flex justify_between"
-        v-for="(item, index) in hospitalList"
-        :key="index + 'b'"
-        @click="getDoctorDetail(item.doctor_id)"
+      </van-list>
+      <van-list
+        class="approve_list manager_approve"
+        v-show="active == 1"
+        v-model="docLoading"
+        :finished="docFinished"
+        finished-text="无更多医生需要审核"
+        @load="getHospitalData"
       >
-        <div class="approve_item_detail">
-          <ul>
-            <li>{{ item.user_name }}提交的医生开发</li>
-            <li class="flex justify_start">
-              <span>医院名：</span>
-              <span>{{ item.hospital_name }}</span>
-            </li>
-            <li class="flex justify_start">
-              <span>医生：</span>
-              <span>{{ item.doctor_name }}</span>
-            </li>
-            <li class="flex justify_start">
-              <span>开发时间：</span>
-              <span>{{ item.create_time }}</span>
-            </li>
-          </ul>
+        <div
+          class="approve_item flex justify_between"
+          v-for="(item, index) in hospitalList"
+          :key="index + 'b'"
+          @click="getDoctorDetail(item.doctor_id)"
+        >
+          <div class="approve_item_detail">
+            <ul>
+              <li>{{ item.user_name }}提交的医生开发</li>
+              <li class="flex justify_start">
+                <span>医院名：</span>
+                <span>{{ item.hospital_name }}</span>
+              </li>
+              <li class="flex justify_start">
+                <span>医生：</span>
+                <span>{{ item.doctor_name }}</span>
+              </li>
+              <li class="flex justify_start">
+                <span>申请时间：</span>
+                <span>{{ item.create_time }}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="approve_state flex">
+            <img v-if="item.status == 3" src="@/assets/image/approve.png" />
+            <img v-if="item.status == 1" src="@/assets/image/approve_pass.png" />
+            <img v-if="item.status == 2" src="@/assets/image/approve_no.png" />
+          </div>
         </div>
-        <div class="approve_state flex">
-          <img v-if="item.status == 3" src="@/assets/image/approve.png" />
-          <img v-if="item.status == 1" src="@/assets/image/approve_pass.png" />
-          <img v-if="item.status == 2" src="@/assets/image/approve_no.png" />
-        </div>
-      </div>
-    </van-list>
+      </van-list>
+    </van-pull-refresh>
   </van-row>
 </template>
 <script>
 export default {
   name: "approveindex",
+  inject: ["reload"], //刷新页面
   data() {
     return {
+      isLoading: false,
       role: "", //角色
       active: 0, //选项状态 0: 产品， 1: 医生
       proLoading: false, //产品数据是否继续加载
@@ -112,17 +117,25 @@ export default {
       // 设置系统状态栏背景为蓝色
       plus.navigator.setStatusBarBackground("#2A76FF");
       plus.navigator.setStatusBarStyle("light");
-      plus.key.addEventListener('backbutton', function () {
-            plus.key.addEventListener(
-              'backbutton',
-              function () {
-                  plus.nativeUI.confirm("是否退出程序？", function(event) { 
-                      if (event.index) { 
-                          plus.runtime.quit(); 
-                      } 
-                  }, "系统提示", ["取消", "确定"]); 
-              },false)
-      })
+      plus.key.addEventListener("backbutton", function() {
+        plus.key.addEventListener(
+          "backbutton",
+          function() {
+            // plus.nativeUI.confirm(
+            //   "是否退出程序？",
+            //   function(event) {
+            //     if (event.index) {
+            //       plus.runtime.quit();
+            //     }
+            //   },
+            //   "系统提示",
+            //   ["取消", "确定"]
+            // );
+            plus.nativeUI.toast("再按一次退出系统！");
+          },
+          false
+        );
+      });
     }
     if (window.plus) {
       plusReady();
@@ -134,6 +147,14 @@ export default {
     this.role = localStorage.getItem("role");
   },
   methods: {
+    //下拉刷新
+    onRefresh() {
+      setTimeout(() => {
+        this.reload(); //刷新当前页面，加载新数据
+        this.$toast("刷新成功");
+        this.isLoading = false;
+      }, 500);
+    },
     // 获取产品审批数据
     getProductData() {
       this.$api

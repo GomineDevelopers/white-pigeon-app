@@ -3,32 +3,40 @@
     <van-row class="top_nav_bar nav_bgm">
       <van-nav-bar title="通知" left-arrow @click-left="onBack()" />
     </van-row>
-    <van-row class="main_body">
-      <van-row
-        class="notify_body"
-        @click="toSign(notifyItem.id)"
-        v-for="(notifyItem, index) in notifyList"
-        :key="index"
-      >
-        <van-row class="notify_date">{{ notifyItem.modify_time }}</van-row>
-        <van-row class="notify_content">
-          <van-row class="notify_title">您有一个新开发已通过</van-row>
-          <van-row class="notify_text"
-            >您开发的{{ notifyItem.hospital_name }}已于{{
-              notifyItem.modify_time
-            }}已经通过审核，请您及时查看！</van-row
-          >
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-row class="main_body">
+        <van-row
+          class="notify_body"
+          @click="toSign(notifyItem.id)"
+          v-for="(notifyItem, index) in notifyList"
+          :key="index"
+        >
+          <van-row class="notify_date">{{ notifyItem.modify_time }}</van-row>
+          <van-row class="notify_content">
+            <van-row class="notify_title">您有一个新开发已通过</van-row>
+            <van-row class="notify_text"
+              >您开发的{{ notifyItem.hospital_name }}已于{{
+                notifyItem.modify_time
+              }}已经通过审核，请您及时查看！</van-row
+            >
+          </van-row>
+        </van-row>
+        <van-row class="no_notify_notice" v-if="!isLoading && isShow">
+          暂无通知
         </van-row>
       </van-row>
-    </van-row>
+    </van-pull-refresh>
   </van-row>
 </template>
 <script>
 export default {
   name: "notify",
+  inject: ["reload"], //刷新页面
   data() {
     return {
-      notifyList: []
+      isLoading: false,
+      notifyList: [],
+      isShow: false
     };
   },
   created() {
@@ -48,14 +56,23 @@ export default {
     this.getNotifyData();
   },
   methods: {
+    //下拉刷新
+    onRefresh() {
+      setTimeout(() => {
+        this.reload(); //刷新当前页面，加载新数据
+        this.$toast("刷新成功");
+        this.isLoading = false;
+      }, 500);
+    },
     // 获取消息数据条数
     getNotifyData() {
       this.$api
         .notify()
         .then(res => {
           if (res.code == 200) {
-            console.log(res);
+            // console.log(res);
             this.notifyList = res.sign_notice_list;
+            this.isShow = res.sign_notice_list.length == 0 ? true : false;
           }
         })
         .catch(err => {
@@ -110,6 +127,9 @@ export default {
 };
 </script>
 <style scoped>
+.main_body {
+  min-height: 60vh;
+}
 .notify_body {
   margin-bottom: 1rem;
   text-align: left;
@@ -133,5 +153,9 @@ export default {
 .notify_content .notify_text {
   font-size: 0.625rem;
   color: #3a4055;
+}
+.no_notify_notice {
+  color: #666;
+  font-size: 0.75rem;
 }
 </style>

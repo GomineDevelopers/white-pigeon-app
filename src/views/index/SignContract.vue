@@ -39,12 +39,18 @@
           <van-row class="sign_matter_item font_11">
             <span>1.技术服务的开始时间:</span>
             <br />
-            <span class="start_time"> {{ startTime }}</span>
+            <span class="start_time">
+              {{ startTime.split("-")[0] }}年 {{ startTime.split("-")[1] }}月
+              {{ startTime.split("-")[2] }}日
+            </span>
           </van-row>
           <van-row class="sign_matter_item font_11">
             <span>2.技术服务的结束时间:</span>
             <br />
-            <span class="end_time"> {{ endTime }}</span>
+            <span class="end_time">
+              {{ endTime.split("-")[0] }}年 {{ endTime.split("-")[1] }}月
+              {{ endTime.split("-")[2] }}日
+            </span>
           </van-row>
           <van-row class="sign_matter_item font_11">
             <span class="time_notice"
@@ -166,11 +172,28 @@
                 <li>B） 照片必须具有真实性</li>
               </ul>
             </van-row>
-            <span>3.支付方式：</span>
-            <br />
-            <span class="font_size_10"
-              >甲方将按照乙方所做有效学术推广服务进行付费，已甲方指定的付款方式为准。</span
-            >
+            <van-row class="marign_top_8">
+              <span>3.支付前提：</span>
+              <br />
+              <span class="font_size_10">
+                乙方需在双方达成协商同意的开发时间 （自
+                <i class="date_i">{{ startTime.split("-")[0] }}</i
+                >年 <i class="date_i">{{ startTime.split("-")[1] }}</i
+                >月 <i class="date_i">{{ startTime.split("-")[2] }}</i
+                >日 到<i class="date_i">{{ estimatedTime.split("-")[0] }}</i
+                >年 <i class="date_i">{{ estimatedTime.split("-")[1] }}</i
+                >月 <i class="date_i">{{ estimatedTime.split("-")[2] }}</i
+                >日 止）内，
+                完成第一次推广对象（医院）的进药，否则之前所做的所有学术推广服务视为无效服务，甲方不予支付费用。
+              </span>
+            </van-row>
+            <van-row class="marign_top_8">
+              <span>4.支付方式：</span>
+              <br />
+              <span class="font_size_10"
+                >甲方将按照乙方所做有效学术推广服务进行付费，已甲方指定的付款方式为准。</span
+              >
+            </van-row>
           </van-row>
           <!-- 费用核算结束 -->
 
@@ -205,7 +228,11 @@
             <van-row class="first_company font_11">
               <span>甲方：{{ firstPartyName }}</span>
               <br />
-              <span>日期：{{ startTime }}</span>
+              <span>
+                日期：
+                {{ startTime.split("-")[0] }}年 {{ startTime.split("-")[1] }}月
+                {{ startTime.split("-")[2] }}日
+              </span>
             </van-row>
             <van-row class="second_party_sign">
               <van-row class="font_11">
@@ -225,8 +252,11 @@
               ></canvas>
               <van-icon class="reset_btn" name="replay" @click="resetSign" />
             </div>
-            <span class="strat_time">日期：{{ startTime }}</span>
-            <!-- <img :src="img" /> -->
+            <span class="strat_time">
+              日期：
+              {{ startTime.split("-")[0] }}年 {{ startTime.split("-")[1] }}月
+              {{ startTime.split("-")[2] }}日
+            </span>
           </van-row>
         </van-row>
       </van-row>
@@ -260,6 +290,7 @@ export default {
       product: "",
       content: "",
       hospital: "",
+      estimatedTime: "", //产品开发预估完成时间
 
       canvasTxt: null,
       startX: 0,
@@ -312,10 +343,11 @@ export default {
         duration: 0,
         loadingType: "spinner"
       });
+      //用户信息
       this.$api
         .userInfo()
         .then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code == 200) {
             this.secondPartyName = res.user.name; // 乙方名称
             this.IDcard = res.user.id_card;
@@ -326,11 +358,12 @@ export default {
         .catch(error => {
           console.log(error);
         });
+      //合同信息
       let params = { hospital_product_id: this.$route.query.id };
       this.$api
         .getContractInfo(params)
         .then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code == 200) {
             this.$toast.clear();
             this.firstPartyName = res.getContractInfo.product_company; //甲方名称
@@ -338,6 +371,11 @@ export default {
             let startDate = timeFormat(nowDate);
             this.startTime = startDate;
             let endFDate = nowDate.setMonth(nowDate.getMonth() + 12);
+            //计算产品预估完成时间 （当前时间 + 提交开发时选择的预估开发时间）
+            let estimated_time = new Date().setMonth(
+              new Date().getMonth() + res.getContractInfo.estimated_month
+            );
+            this.estimatedTime = timeFormat(estimated_time);
             this.endTime = timeFormat(endFDate);
             this.product = res.getContractInfo.product_name;
             this.content = res.getContractInfo.product_name + "产品的所有甲方指定推广宣传内容";
@@ -409,14 +447,6 @@ export default {
       this.img = "";
       this.canvasTxt.clearRect(0, 0, this.$refs.canvasCont.width, this.$refs.canvasCont.height);
       this.isShowSignLabel = true;
-    },
-    dateConfirm(event) {
-      this.startTime = timeFormat(event);
-      this.dateShow = false;
-    },
-    endDateConfirm(event) {
-      this.endTime = timeFormat(event);
-      this.endDateShow = false;
     },
     goManagement() {
       if (!this.signStatus) {
@@ -557,17 +587,6 @@ export default {
 .second_party_sign {
   margin: 0.625rem 0rem 0.1875rem 0rem;
 }
-/* .signature_card {
-  width: 100%;
-  height: 7.5rem;
-  border: 1px solid #eee;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.625rem;
-  color: #999;
-  margin-bottom: 0.625rem;
-} */
-
 .canvas_box {
   box-sizing: border-box;
   flex: 1;
@@ -601,5 +620,9 @@ canvas {
   color: #615d5d;
   border-bottom: 1px solid #eee;
   margin-top: 0.3rem;
+}
+.date_i {
+  text-decoration: underline;
+  font-style: normal;
 }
 </style>

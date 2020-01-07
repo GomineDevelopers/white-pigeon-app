@@ -23,7 +23,7 @@
             <span>{{ detail.doctor_name }}</span>
           </li>
           <li>
-            <span>开发时间：</span>
+            <span>申请时间：</span>
             <span>{{ detail.create_time }}</span>
           </li>
         </ul>

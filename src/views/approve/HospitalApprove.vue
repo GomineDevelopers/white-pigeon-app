@@ -23,7 +23,7 @@
             <span>{{ detail.product_name }} {{ detail.promise_sales }}/月</span>
           </li>
           <li class="flex_li">
-            <span>开发时间：</span>
+            <span>申请时间：</span>
             <span>{{ detail.create_time }}</span>
           </li>
           <li>
@@ -33,9 +33,7 @@
           <li>
             <span>竞品了解：</span>
             <span class="know_more" v-if="!detail.commodity_know">暂无</span>
-            <span class="know_more" v-if="detail.commodity_know">{{
-              detail.commodity_know
-            }}</span>
+            <span class="know_more" v-if="detail.commodity_know">{{ detail.commodity_know }}</span>
           </li>
         </ul>
         <div v-if="detail.status == 1" class="region_sure_wap">
@@ -44,16 +42,13 @@
             <li class="flex_li">
               <span>销量：</span>
               <span v-if="detail.region_promise_sales"
-                >{{ detail.product_name }}
-                {{ detail.region_promise_sales }}/月</span
+                >{{ detail.product_name }} {{ detail.region_promise_sales }}/月</span
               >
               <span v-else>无</span>
             </li>
             <li class="flex_li">
               <span>单价：</span>
-              <span v-if="detail.region_bidding_price"
-                >{{ detail.region_bidding_price }}/元</span
-              >
+              <span v-if="detail.region_bidding_price">{{ detail.region_bidding_price }}/元</span>
               <span v-else>无</span>
             </li>
           </ul>
@@ -69,12 +64,7 @@
       </span>
     </van-row>
     <van-row>
-      <van-dialog
-        v-model="show"
-        title="拒绝理由"
-        show-cancel-button
-        :beforeClose="changeBtn"
-      >
+      <van-dialog v-model="show" title="拒绝理由" show-cancel-button :beforeClose="changeBtn">
         <van-field
           class="refuse_text"
           v-model="value"
@@ -95,12 +85,7 @@
           placeholder="请输入承诺销量"
           ref="promise"
         />
-        <van-field
-          type="number"
-          v-model="biddingPrice"
-          placeholder="请输入单价"
-          ref="bidding"
-        />
+        <van-field type="number" v-model="biddingPrice" placeholder="请输入单价" ref="bidding" />
       </van-dialog>
     </van-row>
   </van-row>
