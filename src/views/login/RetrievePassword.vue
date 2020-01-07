@@ -18,7 +18,7 @@
         <van-col span="10" class="forget_password_btn">
           <span></span>
           <i v-if="isDisable" @click="getAuthCode">获取验证码</i>
-          <i class="disabled_i" v-if="!isDisable">{{ time }}秒后重试</i>
+          <i v-if="!isDisable" class="disabled_i">获取验证码</i>
         </van-col>
       </van-row>
       <van-row class="login_btn" @click="confirmInfo">
@@ -38,8 +38,7 @@ export default {
       phone: "",
       password: "",
       passwordAgain: "",
-      authCode: "",
-      time: 60
+      authCode: ""
     };
   },
   created() {
@@ -59,18 +58,22 @@ export default {
     onBack() {
       history.back();
     },
-    cutDown() {
-      this.time = 60;
-      this.isDisable = false;
-      let timetimer = setInterval(() => {
-        this.time--;
-        if (this.time <= 0) {
-          console.log(this.time);
-          this.isDisable = true;
-          clearInterval(timetimer);
-        }
-      }, 1000);
-    },
+    // cutDown() {
+    //   this.time = 60;
+    //   this.isDisable = false;
+    //   this.timer = setInterval(() => {
+    //     this.time--;
+    //     console.log(this.time);
+    //     if (this.time <= 0) {
+    //       this.isDisable = true;
+    //       clearInterval(this.timer);
+    //       this.timer = null;
+    //     }
+    //   }, 1000);
+    //   this.$once("hook:beforeDestroy", () => {
+    //     clearInterval(this.timer);
+    //   });
+    // },
     //获取验证码
     getAuthCode() {
       let vm = this;
@@ -82,9 +85,6 @@ export default {
         });
         return false;
       }
-      this.cutDown();
-
-      return false;
       let postData = {
         mobile: this.phone,
         type: 2
@@ -97,16 +97,9 @@ export default {
             if (res.code == 200) {
               this.isDisable = false;
               this.$toast.success("验证码发送成功！");
-              const chatTimer = setInterval(() => {
-                console.log(vm.time);
-                if (vm.time == 0) {
-                  vm.isDisable = true;
-                  window.clearInterval(chatTimer);
-                  vm.time = 60;
-                } else {
-                  vm.time--;
-                }
-              }, 1000);
+              setTimeout(() => {
+                this.isDisable = true;
+              }, 60000);
             } else if (res.code == 2004) {
               this.$toast.fail("此手机号还没注册！");
             } else if (res.code == 2003) {

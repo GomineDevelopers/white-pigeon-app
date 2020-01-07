@@ -18,7 +18,7 @@
         <van-col span="10" class="forget_password_btn" @click="getAuthCode">
           <span></span>
           <i v-if="isDisable" @click="getAuthCode">获取验证码</i>
-          <i v-if="!isDisable">{{ time }}秒后重试</i>
+          <i v-if="!isDisable" class="disabled_i">获取验证码</i>
         </van-col>
       </van-row>
       <van-row class="login_btn">
@@ -41,8 +41,7 @@ export default {
       passwordAgain: "",
       authCode: "",
       isDisable: true,
-      checked: true,
-      time: 20
+      checked: true
     };
   },
   methods: {
@@ -69,6 +68,9 @@ export default {
             if (res.code == 200) {
               this.isDisable = false;
               this.$toast.success("验证码发送成功");
+              setTimeout(() => {
+                this.isDisable = true;
+              }, 60000);
             } else if (res.code == 2004) {
               this.$toast.fail("此手机号已经注册");
             } else if (res.code == 2003) {
