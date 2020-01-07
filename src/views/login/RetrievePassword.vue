@@ -18,7 +18,7 @@
         <van-col span="10" class="forget_password_btn">
           <span></span>
           <i v-if="isDisable" @click="getAuthCode">获取验证码</i>
-          <i v-if="!isDisable" class="disabled_i">获取验证码</i>
+          <i class="disabled_i" v-if="!isDisable">{{ time }}秒后重试</i>
         </van-col>
       </van-row>
       <van-row class="login_btn" @click="confirmInfo">
@@ -38,7 +38,9 @@ export default {
       phone: "",
       password: "",
       passwordAgain: "",
-      authCode: ""
+      authCode: "",
+      time: 60,
+      timer: null
     };
   },
   created() {
@@ -54,26 +56,26 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
   },
+  beforeDestroy() {
+    console.log("清除定时器");
+    window.clearInterval(this.timer);
+  },
   methods: {
     onBack() {
       history.back();
     },
-    // cutDown() {
-    //   this.time = 60;
-    //   this.isDisable = false;
-    //   this.timer = setInterval(() => {
-    //     this.time--;
-    //     console.log(this.time);
-    //     if (this.time <= 0) {
-    //       this.isDisable = true;
-    //       clearInterval(this.timer);
-    //       this.timer = null;
-    //     }
-    //   }, 1000);
-    //   this.$once("hook:beforeDestroy", () => {
-    //     clearInterval(this.timer);
-    //   });
-    // },
+    cutDown() {
+      this.time = 60;
+      this.isDisable = false;
+      this.timer = window.setInterval(() => {
+        this.time--;
+        // console.log(this.time);
+        if (this.time <= 0) {
+          this.isDisable = true;
+          window.clearInterval(this.timer);
+        }
+      }, 1000);
+    },
     //获取验证码
     getAuthCode() {
       let vm = this;
@@ -97,13 +99,10 @@ export default {
             if (res.code == 200) {
               this.isDisable = false;
               this.$toast.success("验证码发送成功！");
-              setTimeout(() => {
-                this.isDisable = true;
-              }, 60000);
+              this.cutDown();
             } else if (res.code == 2004) {
               this.$toast.fail("此手机号还没注册！");
             } else if (res.code == 2003) {
-              vm.isDisable = false;
               this.$toast.fail("验证码发送失败！");
             }
           })

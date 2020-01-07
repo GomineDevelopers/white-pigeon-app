@@ -15,10 +15,10 @@
         <van-col span="14">
           <van-field v-model="authCode" placeholder="请输入验证码" />
         </van-col>
-        <van-col span="10" class="forget_password_btn" @click="getAuthCode">
+        <van-col span="10" class="forget_password_btn">
           <span></span>
           <i v-if="isDisable" @click="getAuthCode">获取验证码</i>
-          <i v-if="!isDisable" class="disabled_i">获取验证码</i>
+          <i class="disabled_i" v-if="!isDisable">{{ time }}秒后重试</i>
         </van-col>
       </van-row>
       <van-row class="login_btn">
@@ -41,12 +41,30 @@ export default {
       passwordAgain: "",
       authCode: "",
       isDisable: true,
-      checked: true
+      checked: true,
+      time: 60,
+      timer: null
     };
+  },
+  beforeDestroy() {
+    window.clearInterval(this.timer);
   },
   methods: {
     onBack() {
       history.back();
+    },
+    //定时器
+    cutDown() {
+      this.time = 60;
+      this.isDisable = false;
+      this.timer = window.setInterval(() => {
+        this.time--;
+        // console.log(this.time);
+        if (this.time <= 0) {
+          this.isDisable = true;
+          window.clearInterval(this.timer);
+        }
+      }, 1000);
     },
     //获取验证码
     getAuthCode() {
@@ -68,9 +86,7 @@ export default {
             if (res.code == 200) {
               this.isDisable = false;
               this.$toast.success("验证码发送成功");
-              setTimeout(() => {
-                this.isDisable = true;
-              }, 60000);
+              this.cutDown();
             } else if (res.code == 2004) {
               this.$toast.fail("此手机号已经注册");
             } else if (res.code == 2003) {
