@@ -1,17 +1,20 @@
 <template>
   <van-row>
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar
+      <!-- <van-nav-bar
         title="会议记录"
         left-arrow
         @click-left="onBack()"
         @click-right="mettingOptionNav = !mettingOptionNav"
       >
         <van-icon name="ellipsis" class="add_icon" slot="right" />
+      </van-nav-bar> -->
+      <van-nav-bar title="会议记录" left-arrow @click-left="onBack()" @click-right="newMetting">
+        <van-icon class="add_icon" name="add" slot="right" />
       </van-nav-bar>
     </van-row>
     <!-- 点击右上角展示操作菜单开始 -->
-    <transition name="van-slide-right">
+    <!-- <transition name="van-slide-right">
       <van-row class="optionNav" v-show="mettingOptionNav">
         <van-row class="optionnav_content">
           <van-row class="optionNavItem">
@@ -26,58 +29,24 @@
           </van-row>
         </van-row>
       </van-row>
-    </transition>
+    </transition> -->
     <!-- 点击右上角展示操作菜单结束 -->
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <van-row class="metting_data_total">
-        <van-col span="12">
-          <span>{{ mettingNum }}</span>
-          <span>会议总次数</span>
-        </van-col>
-        <van-col span="12">
-          <span>{{ mettingUserNum }}</span>
-          <span>会议总人数</span>
-        </van-col>
+      <van-row class="metting_data_total top_nav border_bom">
+        <van-row class="top_nav_list">
+          <van-col
+            :class="index === navActive ? 'active' : ''"
+            v-for="(navItem, index) in navList"
+            :key="index + 'a'"
+            @click="navHandle(index, navItem.status)"
+          >
+            <van-row>{{ navItem.num }}</van-row>
+            <van-row>{{ navItem.name }}</van-row>
+          </van-col>
+        </van-row>
       </van-row>
       <van-row class="metting_body">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="getMettingList"
-        >
-          <div
-            class="approve_item flex justify_between"
-            v-for="(item, index) in mettingList"
-            :key="index + 'b'"
-            @click="getDetail(item.status, item.id)"
-          >
-            <div class="approve_item_detail">
-              <ul>
-                <li>
-                  {{ item.product_topic }}
-                  -
-                  <span>{{ item.speaker }}</span>
-                </li>
-                <li class="flex justify_start">
-                  <span>{{ item.product_name }}</span>
-                </li>
-                <li class="flex justify_start">
-                  <span>{{ item.start_time }}</span>
-                </li>
-              </ul>
-            </div>
-            <div class="approve_state flex">
-              <img v-if="item.status == '1'" src="@/assets/image/hg.png" />
-              <img v-if="item.status == '2'" src="@/assets/image/bhg.png" />
-              <img v-if="item.status == '3'" src="@/assets/image/shz.png" />
-              <img v-if="item.status == '4'" src="@/assets/image/yhx.png" />
-              <img v-if="item.status == '5'" src="@/assets/image/ysx.png" />
-              <img v-if="item.status == '6'" src="@/assets/image/wtj.png" />
-            </div>
-          </div>
-        </van-list>
-        <!-- <van-row class="more">查看更多</van-row> -->
+        <metting-record-list :status="status" :productId="productId"></metting-record-list>
       </van-row>
     </van-pull-refresh>
     <!-- 会议产品筛选 -->
@@ -87,6 +56,7 @@
           <van-picker
             show-toolbar
             title="产品筛选"
+            :default-index="productDefaultIndex"
             :columns="productList"
             @cancel="
               mettingFiltrate = false;
@@ -100,34 +70,34 @@
   </van-row>
 </template>
 <script>
+import mettingrecordlist from "@/views/components/MettingRecordList";
 export default {
   name: "visitrecord",
   inject: ["reload"], //刷新页面
+  components: {
+    "metting-record-list": mettingrecordlist
+  },
   data() {
     return {
+      productDefaultIndex: 0, //产品选中
       isLoading: false,
       mettingUserNum: "-",
       mettingNum: "-",
       mettingFiltrate: false,
       mettingOptionNav: false,
-      loading: false, //加载
-      finished: false, //完成
-      page: 1, //页码
-      row: 5, //每页显示条数
-      //会议列表
-      mettingList: [
-        // {
-        //   title: "主题名称XXXX",
-        //   user: "刘某某",
-        //   prodect: "产品1",
-        //   mettingDate: "2019.10.15",
-        //   mettingState: "new"
-        // }
-      ],
       prodectName: "",
-      productId: "",
+      productId: null,
       productList: [
         // { id: 0, text: value.product_name }
+      ],
+      navActive: 0,
+      status: 7,
+      navList: [
+        { name: "全部", num: "-", status: 7 },
+        { name: "合格", num: "-", status: 1 },
+        { name: "不合格", num: "-", status: 2 },
+        { name: "已核销", num: "-", status: 4 },
+        { name: "已失效", num: "-", status: 5 }
       ]
     };
   },
@@ -144,11 +114,15 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
 
-    this.getMettingNum();
+    this.getMetting();
   },
   methods: {
     onBack() {
       this.$router.push("/");
+    },
+    navHandle(index, status) {
+      this.navActive = index;
+      this.status = status;
     },
     //下拉刷新
     onRefresh() {
@@ -158,32 +132,28 @@ export default {
         this.isLoading = false;
       }, 500);
     },
-    //获取会议总次数和人数
-    getMettingNum() {
+    //获取会议统计
+    getMetting() {
+      //会议统计
       this.$api
-        .meetingTotalNumber()
+        .meetingApplyRecord()
         .then(res => {
-          // console.log("会议总次数", res);
+          console.log("会议统计", res);
           if (res.code == 200) {
-            this.mettingNum = res.meeting_total_count;
+            this.navList[0].num = res.apply_record_num;
+            this.navList[1].num = res.pass_apply_record_num;
+            this.navList[2].num = res.refuse_apply_record_num;
+            this.navList[3].num = res.charge_off_apply_record_num;
+            this.navList[4].num = res.failure_apply_record_num;
+          } else {
+            this.$toast.fail(res.message);
           }
         })
         .catch(error => {
           console.log(error);
         });
 
-      this.$api
-        .meetingSumPeople()
-        .then(res => {
-          // console.log("会议总人数", res);
-          if (res.code == 200) {
-            this.mettingUserNum = res.meeting_sum_people;
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-
+      //产品
       this.$api
         .meetingGetProductList()
         .then(res => {
@@ -198,41 +168,7 @@ export default {
           console.log(error);
         });
     },
-    //获取会议列表
-    getMettingList() {
-      // console.log("当前页码", this.page);
-      let params = {
-        product_id: this.productId,
-        page: this.page,
-        row: this.row
-      };
-      setTimeout(() => {
-        this.$api
-          .createList(params)
-          .then(res => {
-            console.log(res);
-            if (res.code == 200) {
-              if (res.meeting_list.length < this.row) {
-                this.mettingList.push(...res.meeting_list);
-                // 加载状态结束
-                this.finished = true;
-                this.loading = false;
-              } else {
-                this.mettingList.push(...res.meeting_list);
-                this.page++; //此处还有一个问题：页码为1时不等滑动就加载了页码2的内容，  页码为2时滑动加载了页码3和页码4的内容
-                this.loading = false;
-              }
-            } else {
-              // 加载状态结束
-              this.loading = false;
-              this.finished = true;
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }, 1000);
-    },
+
     productConfirm(value) {
       this.mettingFiltrate = false;
       this.mettingOptionNav = false;
@@ -279,18 +215,6 @@ export default {
         .catch(error => {
           console.log(error);
         });
-    },
-    //点击每一项
-    getDetail(status, id) {
-      console.log(status);
-      if (status == 6) {
-        this.$router.replace({
-          path: "/mettingdetailedit",
-          query: { id: id, redirect: this.$router.currentRoute.fullPath }
-        });
-      } else {
-        this.$router.push({ path: "/mettingdetailcontent", query: { id: id } });
-      }
     }
   }
 };
@@ -358,43 +282,20 @@ export default {
   text-align: left;
   min-height: 60vh;
 }
-.metting_item {
-  padding: 0.4rem;
-}
-
-.metting_name span:nth-child(2) {
-  font-size: 0.625rem;
-}
-.metting_item ul li {
-  padding: 0.125rem 0px;
-}
-.approve_item {
-  border-bottom: 1px solid #ecf1f8;
-  padding: 0.4rem 0rem;
-}
-.approve_item_detail {
-  width: 80%;
-  text-align: left;
-}
-.approve_item_detail ul li {
-  padding: 0.125rem 0px;
-}
-.approve_item_detail ul li:nth-child(1) {
+.top_nav {
   font-size: 0.75rem;
+  padding: 0.5rem 0rem 0.3rem 0rem;
 }
-.approve_item_detail ul li:nth-child(1) span {
-  color: #333;
+.top_nav .top_nav_list {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
 }
-.approve_item_detail ul li span {
-  font-size: 0.625rem;
-  color: #a8aec1;
+.top_nav .van-col {
+  text-align: center;
+  width: 20%;
 }
-.approve_state {
-  align-items: center;
-  justify-content: center;
-}
-.approve_state img {
-  width: 2.8125rem;
-  height: 2.1875rem;
+.top_nav .active {
+  color: #3399ff;
 }
 </style>

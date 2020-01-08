@@ -76,7 +76,7 @@ export default {
             this.navList[1].num = res.pass_apply_record_num;
             this.navList[2].num = res.refuse_apply_record_num;
             this.navList[3].num = res.charge_off_apply_record_num;
-            this.navList[3].num = res.failure_apply_record_num;
+            this.navList[4].num = res.failure_apply_record_num;
           } else {
             this.$toast.fail(res.message);
           }

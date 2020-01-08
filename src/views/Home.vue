@@ -155,7 +155,7 @@ export default {
   },
   methods: {
     navHandle(index, path) {
-      console.log(index, path);
+      // console.log(index, path);
       if (index == 1) {
         this.$api
           .userInfo()

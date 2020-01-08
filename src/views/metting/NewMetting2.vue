@@ -349,6 +349,17 @@ export default {
           this.hospitalByproductId = res.getInfoByProductId;
           this.mettingByProductId = res.getTopicByProductId;
           if (res.code == 200) {
+            if (res.getInfoByProductId.length == 0) {
+              this.$dialog
+                .alert({
+                  title: "提示",
+                  message: "该医院下您开发的产品还未签约，暂不可以创建会议！"
+                })
+                .then(() => {
+                  this.$router.push({ path: "/" });
+                });
+              return false;
+            }
             //后台返回数据的product去重
             var arr1 = {};
             this.productList = res.getInfoByProductId.reduce((item, next) => {

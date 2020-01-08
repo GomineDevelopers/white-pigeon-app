@@ -67,31 +67,29 @@ export default {
         page: this.page,
         row: this.row
       };
-      setTimeout(() => {
-        this.$api
-          .hospitalManagerList(params)
-          .then(res => {
-            console.log(res);
-            if (res.code == 200) {
-              if (res.hospital_product_list.length < this.row) {
-                this.approveList.push(...res.hospital_product_list);
-                // 加载状态结束
-                this.finished = true;
-              } else {
-                this.approveList.push(...res.hospital_product_list);
-                this.page++; //此处还有一个问题：页码为1时不等滑动就加载了页码2的内容，  页码为2时滑动加载了页码3和页码4的内容
-              }
-            } else {
+      this.$api
+        .hospitalManagerList(params)
+        .then(res => {
+          console.log(res);
+          if (res.code == 200) {
+            if (res.hospital_product_list.length < this.row) {
+              this.approveList.push(...res.hospital_product_list);
               // 加载状态结束
               this.finished = true;
+            } else {
+              this.approveList.push(...res.hospital_product_list);
+              this.page++; //此处还有一个问题：页码为1时不等滑动就加载了页码2的内容，  页码为2时滑动加载了页码3和页码4的内容
             }
+          } else {
             // 加载状态结束
-            this.loading = false; //注意：此处重要
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }, 500);
+            this.finished = true;
+          }
+          // 加载状态结束
+          this.loading = false; //注意：此处重要
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     getDetail(id, status, isSign) {
       //判断status是否为已通过
