@@ -192,7 +192,7 @@ export default {
   },
   mounted() {
     let id = this.$route.query.id;
-    // console.log("id", id);
+    console.log("id", id);
     // this.getVisitGoal();
     this.getVisitRelation(id);
     this.minDate = minDate();
@@ -236,6 +236,7 @@ export default {
       this.$api
         .developdVisit({ hospital_id })
         .then(res => {
+          console.log(res);
           if (res.code == 200) {
             let hospitalInfo = res.getInfoByHospitalId;
             let productInfo = res.getproductByHospitalId;
@@ -244,7 +245,7 @@ export default {
               this.$dialog
                 .alert({
                   title: "提示",
-                  message: "该医院目前没有审核通过的医生信息，不可以申请拜访"
+                  message: "该医院下您开发的产品还未签约或没有审核通过的医生，暂不可以申请拜访！"
                 })
                 .then(() => {
                   this.$router.push({ path: "/" });

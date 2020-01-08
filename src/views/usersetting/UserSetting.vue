@@ -16,10 +16,6 @@
         <span class="flex_1">关于小白</span>
         <van-icon name="arrow" class="right_icon" />
       </van-row>
-      <van-row class="setting_item flex flex_align_center justify_between" @click="goNotice">
-        <span class="flex_1">平台公告</span>
-        <van-icon name="arrow" class="right_icon" />
-      </van-row>
       <van-row class="public_btn">
         <!-- <button @click="loginOut">退出登录</button> -->
         <van-button
@@ -98,9 +94,6 @@ export default {
     },
     goBankCard() {
       this.$router.push({ path: "/bankcard" });
-    },
-    goNotice() {
-      this.$router.push({ path: "/notice" });
     }
   }
 };

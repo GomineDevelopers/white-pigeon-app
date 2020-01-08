@@ -1,7 +1,7 @@
 <template>
   <van-row>
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="公告" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="活动审核标准" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="setting_body">
       <van-row>

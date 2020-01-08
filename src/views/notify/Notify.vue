@@ -3,29 +3,33 @@
     <van-row class="top_nav_bar nav_bgm">
       <van-nav-bar title="通知" left-arrow @click-left="onBack()" />
     </van-row>
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <van-row class="main_body">
-        <van-row
-          class="notify_body"
-          @click="toSign(notifyItem.id)"
-          v-for="(notifyItem, index) in notifyList"
-          :key="index"
-        >
-          <van-row class="notify_date">{{ notifyItem.modify_time }}</van-row>
-          <van-row class="notify_content">
-            <van-row class="notify_title">您有一个新开发已通过</van-row>
-            <van-row class="notify_text"
-              >您开发的{{ notifyItem.hospital_name }}已于{{
-                notifyItem.modify_time
-              }}已经通过审核，请您及时查看！</van-row
-            >
+    <!-- <van-pull-refresh v-model="isLoading" @refresh="onRefresh"> -->
+    <van-row class="main_body">
+      <van-row class="activity_img" @click="goActivity"
+        ><img src="../../assets/image/huodong.png"
+      /></van-row>
+      <van-row
+        class="notify_body"
+        @click="toSign(notifyItem.id)"
+        v-for="(notifyItem, index) in notifyList"
+        :key="index"
+      >
+        <van-row class="notify_date">{{ notifyItem.modify_time }}</van-row>
+        <van-row class="notify_content">
+          <van-row class="notify_title">您有一个新开发已通过</van-row>
+          <van-row class="notify_text">
+            您开发的{{ notifyItem.hospital_name }}已于{{
+              notifyItem.modify_time
+            }}已经通过审核，请您及时查看！
           </van-row>
         </van-row>
-        <van-row class="no_notify_notice" v-if="!isLoading && isShow">
-          暂无通知
-        </van-row>
       </van-row>
-    </van-pull-refresh>
+
+      <van-row class="no_notify_notice" v-if="!isLoading && isShow">
+        暂无通知
+      </van-row>
+    </van-row>
+    <!-- </van-pull-refresh> -->
   </van-row>
 </template>
 <script>
@@ -122,6 +126,9 @@ export default {
     },
     onBack() {
       history.back();
+    },
+    goActivity() {
+      this.$router.push("/notice");
     }
   }
 };
@@ -157,5 +164,12 @@ export default {
 .no_notify_notice {
   color: #666;
   font-size: 0.75rem;
+}
+.activity_img {
+  margin-bottom: 0.625rem;
+}
+.activity_img img {
+  width: 100%;
+  margin-top: -0.5rem;
 }
 </style>
