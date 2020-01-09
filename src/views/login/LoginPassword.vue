@@ -12,11 +12,17 @@
         </van-row>
         <van-row class="password_input">
           <van-col span="16">
-            <van-field v-model="password" type="password" placeholder="请输入密码" />
+            <van-field
+              v-model="password"
+              type="password"
+              placeholder="请输入密码"
+            />
           </van-col>
           <van-col span="8" class="forget_password_btn">
             <span></span>
-            <router-link :to="{ path: '/retrievePassword' }">忘记密码</router-link>
+            <router-link :to="{ path: '/retrievePassword' }"
+              >忘记密码</router-link
+            >
           </van-col>
         </van-row>
         <van-row class="login_btn">
@@ -25,7 +31,7 @@
         <van-row class="other_operation flex">
           <!-- <van-col span="12" class="justify_left">
             <router-link :to="{ path: '/loginsms' }">短信验证码登录</router-link>
-          </van-col> -->
+          </van-col>-->
           <van-col span="24" class="justify_left">
             <router-link :to="{ path: '/register' }">新用户注册</router-link>
           </van-col>
@@ -42,15 +48,25 @@ export default {
       phone: "",
       password: "",
       error: "",
-      res: ""
+      res: "",
+      clientid: ""
     };
   },
   created() {
+    let _this = this;
     // H5 plus事件处理
     function plusReady() {
       // 设置系统状态栏背景为白色
       plus.navigator.setStatusBarBackground("#FFF");
       plus.navigator.setStatusBarStyle("dark");
+
+      _this.clientid = plus.push.getClientInfo().clientid;
+      if (_this.clientid == null || !_this.clientid) {
+        //如果获取的cid为空，说明客户端向推送服务器注册还未完成，可以使用setTimeout延时重试。
+        setTimeout(() => {
+          _this.clientid = plus.push.getClientInfo().clientid;
+        }, 3000);
+      }
     }
     if (window.plus) {
       plusReady();
@@ -102,8 +118,10 @@ export default {
                       this.$router.replace({ path: "/approveindex" });
                     } else {
                       localStorage.setItem("role", 2);
+                      this.updateCid();
                       if (
-                        (res.user.invite_code == null || res.user.invite_code == "") &&
+                        (res.user.invite_code == null ||
+                          res.user.invite_code == "") &&
                         res.user.identify_status != 1
                       ) {
                         localStorage.setItem("isAnswer", false); //用户是否答题
@@ -133,6 +151,18 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    updateCid() {
+      if (this.clientid != null) {
+        this.$api
+          .updateCid({ cid: this.clientid })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     }
   }
 };
