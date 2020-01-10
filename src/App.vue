@@ -28,33 +28,29 @@ export default {
       plus.navigator.setStatusBarBackground("#FFFFFF");
       plus.navigator.setStatusBarStyle("dark");
 
-      var clientid = plus.push.getClientInfo().clientid;
-      console.log(clientid);
-      if (clientid) {
-        //如果获取的cid为空，说明客户端向推送服务器注册还未完成，可以使用setTimeout延时重试。
-        setTimeout(() => {
-          this.clientid = plus.push.getClientInfo().clientid;
-        }, 4000);
-      }
       //监听系统通知栏消息点击事件
       plus.push.addEventListener(
         "click",
         function(msg) {
           //处理点击消息的业务逻辑代码
           console.log(msg);
-          vm.$router.push("/visitrecord");
+          if (msg.title.match("产品")) {
+            vm.$router.push("/productapply");
+          } else if (msg.title.match("医生")) {
+            vm.$router.push("/doctorapplylist");
+          }
         },
         false
       );
       //监听接收透传消息事件
-      plus.push.addEventListener(
-        "receive",
-        function(msg) {
-          //处理透传消息的业务逻辑代码
-          console.log(msg);
-        },
-        false
-      );
+      // plus.push.addEventListener(
+      //   "receive",
+      //   function(msg) {
+      //     //处理透传消息的业务逻辑代码
+      //     console.log(msg);
+      //   },
+      //   false
+      // );
     }
     if (window.plus) {
       plusReady();
