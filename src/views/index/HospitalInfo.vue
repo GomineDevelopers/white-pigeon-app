@@ -251,7 +251,7 @@ export default {
   padding-right: 0.5rem;
   font-size: 0.625rem;
   flex: 1;
-  text-align: left;
+  /* text-align: left; */
 }
 .hospital_adress span:nth-child(2) i {
   font-style: normal;

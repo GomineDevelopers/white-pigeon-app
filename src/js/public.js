@@ -348,9 +348,9 @@ export function minutesTimeFormat(time) {
   return year + "-" + month + "-" + date + "  " + hour + ":" + minute + ":" + "00";
 }
 
-// 开始时间为当前时间的前三天
+// 开始时间为当前时间的前两天
 export function minDate() {
-  let minDate = new Date(new Date() - 259200000);
+  let minDate = new Date(new Date() - 172800000);
   let time = new Date(minDate);
   return time;
 }

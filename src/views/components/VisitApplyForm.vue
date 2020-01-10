@@ -108,6 +108,7 @@
           title="时间选择"
           type="datetime"
           :min-date="minDate"
+          :max-date="maxDate"
           :formatter="formatter"
           @cancel="timeShow = false"
           @confirm="timeConfirm"
@@ -182,7 +183,7 @@ export default {
       minHour: 10,
       maxHour: 20,
       minDate: new Date(),
-      maxDate: new Date(2019, 10, 1),
+      maxDate: new Date(),
       currentDate: new Date(),
       center: { lng: 0, lat: 0 }
     };
@@ -191,6 +192,7 @@ export default {
     this.getVisitRelation();
     // this.getVisitGoal();
     this.minDate = minDate();
+    this.maxDate = new Date(new Date().getTime() + 86400000);
   },
   methods: {
     // 拜访定位

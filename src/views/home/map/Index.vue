@@ -5,11 +5,7 @@
       <van-row class="search_content flex flex_align_center">
         <van-row class="search_input flex flex_align_center" v-show="inputShow">
           <van-icon name="arrow-left" @click="inputHidden" />
-          <van-field
-            v-model="keywords"
-            placeholder="请输入"
-            @input="handleInput"
-          />
+          <van-field v-model="keywords" placeholder="请输入" @input="handleInput" />
           <!-- <span class="search_text" @click="handleTag">筛选</span> -->
         </van-row>
         <van-row class="search_icon flex flex_align_center" @click="showInput">
@@ -28,30 +24,17 @@
               <span>{{ hospitalItem.hospital_address }}</span>
             </li>
           </ul>
-          <van-row class="none_hospital_data" v-if="noneHospitalList"
-            >无数据</van-row
-          >
+          <van-row class="none_hospital_data" v-if="noneHospitalList">无数据</van-row>
         </van-row>
       </transition>
     </van-row>
     <!-- search 结束 -->
     <!-- 遮罩选择省开始 -->
-    <van-popup
-      class="province_dialog"
-      :close-on-click-overlay="propFalse"
-      v-model="dialogShow"
-    >
+    <van-popup class="province_dialog" :close-on-click-overlay="propFalse" v-model="dialogShow">
       <van-row class="province_select">
-        <van-row class="province_select_title"
-          >请选择工作所属省份/直辖市</van-row
-        >
-        <van-row
-          class="province_select_text flex"
-          @click="provinceShow = !provinceShow"
-        >
-          <span>{{
-            provinceValue[0].name ? provinceValue[0].name : "请选择"
-          }}</span>
+        <van-row class="province_select_title">请选择工作所属省份/直辖市</van-row>
+        <van-row class="province_select_text flex" @click="provinceShow = !provinceShow">
+          <span>{{ provinceValue[0].name ? provinceValue[0].name : "请选择" }}</span>
           <van-icon name="arrow-down" />
         </van-row>
       </van-row>
@@ -102,47 +85,24 @@
     </baidu-map>
     <!-- map end -->
     <!-- bottom-nav start 1-已开发  2-不可开发  3-空白医院  4-开发中-->
-    <div
-      v-show="bottomNavIsShow"
-      class="van-tabbar--fixed van-tabbar bottom_bar"
-    >
-      <a
-        class="bottom_bar_item"
-        href="javascript:;"
-        @click="handleActiveTag(3)"
-      >
+    <div v-show="bottomNavIsShow" class="van-tabbar--fixed van-tabbar bottom_bar">
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(3)">
         <img src="@/assets/image/develop_0.png" />
         <span>空白</span>
       </a>
-      <a
-        class="bottom_bar_item"
-        href="javascript:;"
-        @click="handleActiveTag(4)"
-      >
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(4)">
         <img src="@/assets/image/develop_1.png" />
         <span>开发中</span>
       </a>
-      <a
-        class="bottom_bar_item"
-        href="javascript:;"
-        @click="handleActiveTag(1)"
-      >
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(1)">
         <img src="@/assets/image/develop_2.png" />
         <span>已开发</span>
       </a>
-      <a
-        class="bottom_bar_item"
-        href="javascript:;"
-        @click="handleActiveTag(2)"
-      >
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(2)">
         <img src="@/assets/image/develop_3.png" />
         <span>不可开发</span>
       </a>
-      <a
-        class="bottom_bar_item"
-        href="javascript:;"
-        @click="handleActiveTag(5)"
-      >
+      <a class="bottom_bar_item" href="javascript:;" @click="handleActiveTag(5)">
         <img src="@/assets/image/develop_4.png" />
         <span>警告</span>
       </a>
@@ -172,18 +132,12 @@
         </ul>
         <div class="addr">地址：{{ hosSingleData.address }}</div>
         <!-- 审核中的img在医院状态为开发中时显示 -->
-        <img
-          class="approve"
-          src="@/assets/image/approveing.png"
-          v-show="visitShow == 4"
-        />
+        <img class="approve" src="@/assets/image/approveing.png" v-show="visitShow == 4" />
       </div>
       <!-- 拉出详情 start -->
       <div class="hospital_pull_detail" v-show="visitShow == 2">
         <div class="hospital_pull_cont">
-          <span class="pull_cont_notice"
-            >对不起，此医院产品已被开发完，您暂时无法开发！</span
-          >
+          <span class="pull_cont_notice">对不起，此医院产品已被开发完，您暂时无法开发！</span>
         </div>
       </div>
       <div
@@ -194,19 +148,12 @@
       >
         <div class="hospital_pull_cont">
           <ul>
-            <li
-              class="pull_cell"
-              v-for="(item, index) in hospitalFoldData"
-              :key="index"
-            >
+            <li class="pull_cell" v-for="(item, index) in hospitalFoldData" :key="index">
               <div class="pull_cell_head" @click="contIndex = index">
                 <span class="tit">{{ item.product_name }}</span>
                 <span class="arrow" v-if="visitShow == 1">流向：0盒</span>
               </div>
-              <div
-                class="pull_cell_cont"
-                :class="{ active: index == contIndex }"
-              >
+              <div class="pull_cell_cont" :class="{ active: index == contIndex }">
                 <p>潜力：一般</p>
                 <p>中标价：{{ item.bidding_price }}</p>
                 <!-- <p>主要科室：{{ item.section_name }}</p> -->
@@ -216,12 +163,10 @@
             </li>
           </ul>
         </div>
-        <van-button class="apply_btn" size="large" @click="applyForHospital()"
-          >开发医院</van-button
-        >
+        <van-button class="apply_btn" size="large" @click="applyForHospital()">开发医院</van-button>
       </div>
       <!-- 此处医院状态为已开发医院时显示 -->
-      <van-row class="pull_developed" v-show="visitShow == 1">
+      <van-row class="pull_developed" v-show="visitShow == 1 && visitAndMettingShow">
         <van-col span="12" class="line">
           <span @click="creatVisit(hosSingleData.id)">创建拜访</span>
           <!-- <router-link :to="{ path: '/developvisit', query: { id: hosSingleData.id } }"
@@ -245,11 +190,7 @@
 import AreaList from "@/js/area"; //省份数据
 import MapMarker from "../../components/MapMarker";
 import MarkerLighter from "../../components/MarkerLighter";
-import {
-  setHospitalLevel,
-  setHospitalType,
-  setHospitalRunType
-} from "@/js/public";
+import { setHospitalLevel, setHospitalType, setHospitalRunType } from "@/js/public";
 import { setPriority } from "os";
 // 定义地图样式
 let mapStyleJson = [
@@ -371,6 +312,7 @@ export default {
       tagShow: false, //tag标签模块隐藏
       isPopup: false, //显示医院详情弹窗
       contIndex: 0, //弹窗详情产品列表显示状态
+      visitAndMettingShow: false, //显示创建拜访和常见会议
       keywords: "", //输入框关键字
       hospitalSearchList: [
         // {
@@ -537,28 +479,29 @@ export default {
           .hospitalDevelopd(params)
           .then(res => {
             console.log(res);
-            let hospitolContent = res.hospital_data;
-            this.hosSingleData = {
-              id: hospitolContent.id,
-              content: hospitolContent.hospital_name,
-              address: hospitolContent.detail_address,
-              status: status,
-              hospital_type: setHospitalLevel(hospitolContent.hospital_level),
-              hospital_level: setHospitalType(hospitolContent.hospital_type),
-              hospital_run_type: setHospitalRunType(
-                hospitolContent.hospital_run_type
-              ),
-              hospital_mobile: hospitolContent.hospital_mobile,
-              hospital_id: hospitolContent.id
-            };
-            this.hospitalFoldData.push(...res.developd_data);
-            this.hospitalFoldData.push(...res.development_no_apply_data);
+            if (res.code == 200) {
+              this.visitAndMettingShow = true;
+              let hospitolContent = res.hospital_data;
+              this.hosSingleData = {
+                id: hospitolContent.id,
+                content: hospitolContent.hospital_name,
+                address: hospitolContent.detail_address,
+                status: status,
+                hospital_type: setHospitalLevel(hospitolContent.hospital_level),
+                hospital_level: setHospitalType(hospitolContent.hospital_type),
+                hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
+                hospital_mobile: hospitolContent.hospital_mobile,
+                hospital_id: hospitolContent.id
+              };
+              this.hospitalFoldData.push(...res.developd_data);
+              this.hospitalFoldData.push(...res.development_no_apply_data);
 
-            this.hospitalRouteParams = {
-              infomation: this.hosSingleData,
-              awaitApplyProduct: res.development_no_apply_data,
-              developmentProduct: res.developd_data
-            };
+              this.hospitalRouteParams = {
+                infomation: this.hosSingleData,
+                awaitApplyProduct: res.development_no_apply_data,
+                developmentProduct: res.developd_data
+              };
+            }
           })
           .catch(error => {
             console.log(error);
@@ -568,20 +511,20 @@ export default {
           .hospitalNotDevelop(params)
           .then(res => {
             console.log(res);
-            let hospitolContent = res.hospital_data;
-            this.hosSingleData = {
-              content: hospitolContent.hospital_name,
-              address: hospitolContent.detail_address,
-              status: status,
-              hospital_type: setHospitalLevel(hospitolContent.hospital_level),
-              hospital_level: setHospitalType(hospitolContent.hospital_type),
-              hospital_run_type: setHospitalRunType(
-                hospitolContent.hospital_run_type
-              ),
-              hospital_mobile: hospitolContent.hospital_mobile,
-              hospital_id: hospitolContent.id
-            };
-            this.hospitalFoldData = [];
+            if (res.code == 200) {
+              let hospitolContent = res.hospital_data;
+              this.hosSingleData = {
+                content: hospitolContent.hospital_name,
+                address: hospitolContent.detail_address,
+                status: status,
+                hospital_type: setHospitalLevel(hospitolContent.hospital_level),
+                hospital_level: setHospitalType(hospitolContent.hospital_type),
+                hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
+                hospital_mobile: hospitolContent.hospital_mobile,
+                hospital_id: hospitolContent.id
+              };
+              this.hospitalFoldData = [];
+            }
           })
           .catch(error => {
             console.log(error);
@@ -599,9 +542,7 @@ export default {
                 status: status,
                 hospital_type: setHospitalLevel(hospitolContent.hospital_level),
                 hospital_level: setHospitalType(hospitolContent.hospital_type),
-                hospital_run_type: setHospitalRunType(
-                  hospitolContent.hospital_run_type
-                ),
+                hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
                 hospital_mobile: hospitolContent.hospital_mobile,
                 hospital_id: hospitolContent.id
               };
@@ -623,27 +564,27 @@ export default {
           .hospitalDevelopment(params)
           .then(res => {
             // console.log(res);
-            let hospitolContent = res.hospital_data;
-            this.hosSingleData = {
-              content: hospitolContent.hospital_name,
-              address: hospitolContent.detail_address,
-              status: status,
-              hospital_type: setHospitalLevel(hospitolContent.hospital_level),
-              hospital_level: setHospitalType(hospitolContent.hospital_type),
-              hospital_run_type: setHospitalRunType(
-                hospitolContent.hospital_run_type
-              ),
-              hospital_mobile: hospitolContent.hospital_mobile,
-              hospital_id: hospitolContent.id
-            };
-            this.hospitalFoldData.push(...res.development_data);
-            this.hospitalFoldData.push(...res.development_no_apply_data);
+            if (res.code == 200) {
+              let hospitolContent = res.hospital_data;
+              this.hosSingleData = {
+                content: hospitolContent.hospital_name,
+                address: hospitolContent.detail_address,
+                status: status,
+                hospital_type: setHospitalLevel(hospitolContent.hospital_level),
+                hospital_level: setHospitalType(hospitolContent.hospital_type),
+                hospital_run_type: setHospitalRunType(hospitolContent.hospital_run_type),
+                hospital_mobile: hospitolContent.hospital_mobile,
+                hospital_id: hospitolContent.id
+              };
+              this.hospitalFoldData.push(...res.development_data);
+              this.hospitalFoldData.push(...res.development_no_apply_data);
 
-            this.hospitalRouteParams = {
-              infomation: this.hosSingleData,
-              awaitApplyProduct: res.development_no_apply_data,
-              developmentProduct: res.development_data
-            };
+              this.hospitalRouteParams = {
+                infomation: this.hosSingleData,
+                awaitApplyProduct: res.development_no_apply_data,
+                developmentProduct: res.development_data
+              };
+            }
           })
           .catch(error => {
             console.log(error);
@@ -654,6 +595,7 @@ export default {
     close_popup() {
       this.isPopup = false;
       this.bottomNavIsShow = true;
+      this.visitAndMettingShow = false; //隐藏创建拜访和创建会议
       this.hospitalDetailScrollHeight = "0px";
       this.currentPostion = {
         lng: 0,
@@ -831,8 +773,7 @@ export default {
       if (MoveY < 0 && _this.hoDetailHeight === 0) {
         _this.hospitalDetailScrollHeight = `${MoveYAbs}px`;
       } else if (MoveY > 0 && _this.hoDetailHeight > 0) {
-        _this.hospitalDetailScrollHeight = `${_this.hoDetailHeight -
-          MoveYAbs}px`;
+        _this.hospitalDetailScrollHeight = `${_this.hoDetailHeight - MoveYAbs}px`;
       }
     },
     // 详情弹窗开始
