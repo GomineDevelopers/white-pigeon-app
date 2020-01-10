@@ -61,7 +61,6 @@ export default {
   methods: {
     //加载更多
     onLoad() {
-      console.log("当前页码", this.page);
       let params = {
         hospital_product_status: this.status,
         page: this.page,
@@ -70,7 +69,7 @@ export default {
       this.$api
         .hospitalManagerList(params)
         .then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             if (res.hospital_product_list.length < this.row) {
               this.approveList.push(...res.hospital_product_list);

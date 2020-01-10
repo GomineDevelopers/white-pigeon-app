@@ -20,7 +20,7 @@
           </li>
           <li class="flex_li">
             <span>承诺销量：</span>
-            <span>{{ detail.product_name }} {{ detail.promise_sales }}/月</span>
+            <span>{{ detail.product_name }} {{ detail.promise_sales }}</span>
           </li>
           <li class="flex_li">
             <span>申请时间：</span>
@@ -42,13 +42,18 @@
             <li class="flex_li">
               <span>销量：</span>
               <span v-if="detail.region_promise_sales"
-                >{{ detail.product_name }} {{ detail.region_promise_sales }}/月</span
+                >{{ detail.product_name }} {{ detail.region_promise_sales }}</span
               >
               <span v-else>无</span>
             </li>
             <li class="flex_li">
               <span>单价：</span>
-              <span v-if="detail.region_bidding_price">{{ detail.region_bidding_price }}/元</span>
+              <span v-if="detail.region_bidding_price">{{ detail.region_bidding_price }}元</span>
+              <span v-else>无</span>
+            </li>
+            <li class="flex_li">
+              <span>首次开发奖金：</span>
+              <span v-if="detail.first_price">{{ detail.first_price }}元</span>
               <span v-else>无</span>
             </li>
           </ul>
@@ -86,6 +91,12 @@
           ref="promise"
         />
         <van-field type="number" v-model="biddingPrice" placeholder="请输入单价" ref="bidding" />
+        <van-field
+          type="number"
+          v-model="firstBonus"
+          placeholder="请输入首次开发奖金（选填）"
+          ref="bidding"
+        />
       </van-dialog>
     </van-row>
   </van-row>
@@ -100,6 +111,7 @@ export default {
       value: "",
       promiseSales: "",
       biddingPrice: "",
+      firstBonus: "", //首次开发奖
       detail: {}
     };
   },
@@ -135,7 +147,7 @@ export default {
       this.$api
         .regionProDetial({ hospitl_product_id: this.id })
         .then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code == 200) {
             this.detail = res.regional_hospital_product_detail;
           } else {
@@ -162,8 +174,10 @@ export default {
       let data = {
         hospital_product_id: this.id,
         region_promise_sales: this.promiseSales,
-        region_bidding_price: Number(this.biddingPrice).toFixed(2)
+        region_bidding_price: Number(this.biddingPrice).toFixed(2),
+        first_price: Number(this.firstBonus).toFixed(2)
       };
+      console.log(data);
       this.$toast.loading({
         id: 0,
         message: "数据处理中...",
@@ -273,6 +287,9 @@ export default {
 };
 </script>
 <style>
+.approve_content .van-cell:not(:last-child)::after {
+  border-bottom: none;
+}
 .approve_content .van-dialog__footer {
   margin-top: 0.625rem;
 }
@@ -357,10 +374,14 @@ export default {
   color: #fff;
   margin-left: 0.7rem;
 }
+.region_sure_wap {
+  margin-bottom: 1.25rem;
+}
 .region_sure_wap .tit {
   display: inline-block;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-top: 1.35rem;
+  margin-bottom: 0.5rem;
   font-size: 0.65rem;
+  color: #000;
 }
 </style>

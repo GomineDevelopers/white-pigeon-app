@@ -27,7 +27,10 @@
           <li>
             <span>竞品了解：</span>
             <br />
-            <span class="know_detail">{{ detailContent.commodity_know }}</span>
+            <span class="know_detail" v-if="detailContent.commodity_know">{{
+              detailContent.commodity_know
+            }}</span>
+            <span class="know_detail" v-else>暂无</span>
           </li>
         </ul>
       </van-row>
@@ -78,7 +81,7 @@ export default {
       this.$api
         .hospitalManagerDetail(params)
         .then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             this.$toast.clear();
             let data = res.hospital_product_detail;
