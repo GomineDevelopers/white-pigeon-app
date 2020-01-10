@@ -2,16 +2,9 @@
   <div class="home">
     <!-- aside开始 -->
     <!-- <van-cell></van-cell> -->
-    <van-popup
-      v-model="asideShow"
-      position="left"
-      :style="{ height: '100%', width: '70%' }"
-    >
+    <van-popup v-model="asideShow" position="left" :style="{ height: '100%', width: '70%' }">
       <van-row class="aside_nav">
-        <van-row
-          class="top_image flex flex_align_center border_bom"
-          @click="goUserInfo"
-        >
+        <van-row class="top_image flex flex_align_center border_bom" @click="goUserInfo">
           <img src="https://img.yzcdn.cn/vant/cat.jpeg" />
           <van-row class="user_info">
             <span class="user_name">{{ user.name }}</span>
@@ -31,11 +24,7 @@
             <!-- <router-link :to="{ path: asideNavItem.link }">{{ asideNavItem.name }}</router-link> -->
           </van-row>
           <van-row class="bottom_nav">
-            <van-col
-              span="12"
-              class="flex flex_align_center"
-              @click="goSetting"
-            >
+            <van-col span="12" class="flex flex_align_center" @click="goSetting">
               <van-icon name="setting" />
               <span>设置</span>
             </van-col>
@@ -63,9 +52,7 @@
         :key="index + 'nav'"
         @click="navHandle(index, navItem.link)"
       >
-        <span :class="index === navActive ? 'active_Link' : ''">{{
-          navItem.name
-        }}</span>
+        <span :class="index === navActive ? 'active_Link' : ''">{{ navItem.name }}</span>
         <!-- <router-link
           :class="index === navActive ? 'active_Link' : ''"
           :to="{ path: navItem.link }"
@@ -100,8 +87,6 @@ export default {
       navList: [
         { name: "地图", link: "/", span: "7" },
         { name: "拜访/会议", link: "/home/visit", span: "7" }
-        // { name: "开发", link: "/home/productapply", span: "4" },
-        // { name: "积分", link: "/home/integral", span: "4" }
       ],
       //左侧导航栏
       asideNav: [
@@ -215,9 +200,6 @@ export default {
         this.$router.push({ path: path });
       }
     },
-    asideNavRoute(path) {
-      console.log(path);
-    },
     setNavActive() {
       let routePath = this.$route.path;
       switch (routePath) {
@@ -240,7 +222,7 @@ export default {
     },
     link(path) {
       this.asideShow = false;
-      this.$router.push({ path });
+      this.$router.push({ path: path });
     },
     goSetting() {
       this.$router.push({ path: "/usersetting" });

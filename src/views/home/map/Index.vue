@@ -607,7 +607,7 @@ export default {
       this.$api
         .userInfo()
         .then(res => {
-          console.log("用户信息", res);
+          // console.log("用户信息", res);
           this.userInfo = res.user; //存下用户信息
           //判断用户是否有工作地城市信息
           if (res.user.province_code == null || res.user.province_code == "") {

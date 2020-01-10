@@ -17,17 +17,9 @@ Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: "4vWwiDYUhYY3S5uLoPbZqUEz"
 });
-import { Cookie } from "@/js/cookie";
 
 Vue.prototype.$api = api;
 Vue.prototype.$ = jquery;
-Vue.prototype.$Cookie = Cookie;
-
-// 获取本地存储token
-// (() => {
-//   let localToken = localStorage.getItem('token');
-//   store.commit("setToken", localToken);
-// })();
 
 // 检查用户登录状态
 router.beforeEach((to, from, next) => {
@@ -62,7 +54,6 @@ router.beforeEach((to, from, next) => {
           next("/");
         } else {
           if (localStorage.getItem("isAnswer") == "true") {
-            console.log("已答题");
             next();
           } else if (localStorage.getItem("isAnswer") == "false") {
             if (to.path == "/answer") {
