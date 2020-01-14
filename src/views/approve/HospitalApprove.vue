@@ -177,7 +177,6 @@ export default {
         region_bidding_price: Number(this.biddingPrice).toFixed(2),
         first_price: Number(this.firstBonus).toFixed(2)
       };
-      console.log(data);
       this.$toast.loading({
         id: 0,
         message: "数据处理中...",
