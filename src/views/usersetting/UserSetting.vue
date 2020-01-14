@@ -13,7 +13,7 @@
         <van-icon name="arrow" class="right_icon" />
       </van-row>
       <van-row class="setting_item flex flex_align_center justify_between" @click="goAbout">
-        <span class="flex_1">关于小白</span>
+        <span class="flex_1">关于我们</span>
         <van-icon name="arrow" class="right_icon" />
       </van-row>
       <van-row class="public_btn">

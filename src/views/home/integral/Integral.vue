@@ -6,7 +6,7 @@
     <van-row class="main_body">
       <van-row class="top_notice">
         您好，
-        <br />xxx，以下是您上期积分数额及积分明细。
+        <br />{{ name }}，以下是您本期积分数额及积分明细。
       </van-row>
       <van-row class="integral_content">
         <van-row class="integral_total">
@@ -45,7 +45,9 @@
 export default {
   name: "integral",
   data() {
-    return {};
+    return {
+      name: ""
+    };
   },
   created() {
     // H5 plus事件处理
@@ -59,10 +61,42 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
+    this.getUserInfo();
   },
   methods: {
     onBack() {
       history.back();
+    },
+    getUserInfo() {
+      this.$toast.loading({
+        message: "数据加载中...",
+        forbidClick: true,
+        duration: 0,
+        loadingType: "spinner"
+      });
+      this.$api
+        .userInfo()
+        .then(res => {
+          this.$toast.clear();
+          console.log(res);
+          return false;
+          if (res.code == 200) {
+            this.name = res.user.name;
+            let param = { user_id: res.user.id };
+            this.$api
+              .bonusDetail(param)
+              .then(res => {
+                console.log(res);
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          }
+        })
+        .catch(error => {
+          this.$toast.clear();
+          console.log(error);
+        });
     }
   }
 };

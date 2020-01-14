@@ -4,7 +4,7 @@
     <van-row class="login_main_body">
       <van-row class="header_text">
         您好，
-        <br />欢迎来到小白鸽！
+        <br />欢迎来到朱鹊医访！
       </van-row>
       <van-row>
         <van-row class="name_input">
@@ -12,17 +12,11 @@
         </van-row>
         <van-row class="password_input">
           <van-col span="16">
-            <van-field
-              v-model="password"
-              type="password"
-              placeholder="请输入密码"
-            />
+            <van-field v-model="password" type="password" placeholder="请输入密码" />
           </van-col>
           <van-col span="8" class="forget_password_btn">
             <span></span>
-            <router-link :to="{ path: '/retrievePassword' }"
-              >忘记密码</router-link
-            >
+            <router-link :to="{ path: '/retrievePassword' }">忘记密码</router-link>
           </van-col>
         </van-row>
         <van-row class="login_btn">
@@ -120,8 +114,7 @@ export default {
                       localStorage.setItem("role", 2);
                       this.updateCid();
                       if (
-                        (res.user.invite_code == null ||
-                          res.user.invite_code == "") &&
+                        (res.user.invite_code == null || res.user.invite_code == "") &&
                         res.user.identify_status != 1
                       ) {
                         localStorage.setItem("isAnswer", false); //用户是否答题

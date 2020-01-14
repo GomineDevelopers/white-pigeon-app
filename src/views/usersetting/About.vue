@@ -1,7 +1,7 @@
 <template>
   <van-row>
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="关于小白" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="关于我们" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="setting_body">
       <van-row class="setting_item flex flex_align_center justify_between">

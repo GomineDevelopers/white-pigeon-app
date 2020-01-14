@@ -4,7 +4,7 @@
     <van-row class="login_main_body">
       <van-row class="header_text">
         您好，
-        <br />欢迎来到小白鸽！
+        <br />欢迎来到朱鹊医访！
       </van-row>
       <van-row>
         <van-row class="name_input">
