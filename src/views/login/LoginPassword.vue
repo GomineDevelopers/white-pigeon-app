@@ -20,7 +20,9 @@
           </van-col>
         </van-row>
         <van-row class="login_btn">
-          <van-button type="info" @click="login">登&nbsp;录</van-button>
+          <van-button type="info" :loading="loading" :loading-text="loadingText" @click="login"
+            >登&nbsp;录</van-button
+          >
         </van-row>
         <van-row class="other_operation flex">
           <!-- <van-col span="12" class="justify_left">
@@ -39,6 +41,8 @@ export default {
   name: "loginpassword",
   data() {
     return {
+      loadingText: "登录中...",
+      loading: false,
       phone: "",
       password: "",
       error: "",
@@ -85,6 +89,7 @@ export default {
         });
         return false;
       }
+      this.loading = true;
       let postData = {
         email: this.phone,
         password: this.password
@@ -93,6 +98,7 @@ export default {
         .loginPassword(postData)
         .then(res => {
           // console.log(res);
+          this.loading = false;
           if (res.code == 200) {
             this.$store.commit("setToken", res.token); //设置store中token
             localStorage.setItem("token", res.token);
@@ -142,6 +148,7 @@ export default {
           }
         })
         .catch(error => {
+          this.loading = false;
           console.log(error);
         });
     },

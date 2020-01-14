@@ -3,50 +3,69 @@
     <van-row class="top_nav_bar nav_bgm">
       <van-nav-bar title="积分" left-arrow @click-left="onBack()" />
     </van-row>
-    <van-row class="main_body">
-      <van-row class="top_notice">
-        您好，
-        <br />{{ name }}，以下是您本期积分数额及积分明细。
-      </van-row>
-      <van-row class="integral_content">
-        <van-row class="integral_total">
-          <span>累计积分总额</span>
-          <span> <i>0</i>分 </span>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-row class="main_body">
+        <van-row class="top_notice">
+          您好，
+          <br />{{ name }}，以下是您本期积分数额及积分明细。
         </van-row>
-        <van-row class="integral_detail">
-          <span class="integral_detail_title">积分明细</span>
-          <van-row>
-            <ul>
-              <li>
-                <span>累计已返积分</span>
-                <span>+0.00</span>
-              </li>
-              <li>
-                <span>本次业绩积分</span>
-                <span>+0.00</span>
-              </li>
-              <li>
-                <span>本次行为积分</span>
-                <span>+0.00</span>
-              </li>
-              <li>
-                <span>本次可提积分</span>
-                <span>+0.00</span>
-              </li>
-            </ul>
+        <van-row class="integral_content">
+          <van-row class="integral_total">
+            <span>累计积分总额</span>
+            <span>
+              <i>{{ bonusDatiled.total ? bonusDatiled.total : "0" }}</i
+              >分
+            </span>
           </van-row>
-          <van-row class="cancel_date">核销日期：xxxx.xx.xx</van-row>
+          <van-row class="integral_detail">
+            <span class="integral_detail_title">积分明细</span>
+            <van-row>
+              <ul>
+                <li>
+                  <span>累计已返积分</span>
+                  <span
+                    >+{{
+                      bonusDatiled.total_extractable_bonus
+                        ? bonusDatiled.total_extractable_bonus
+                        : "0"
+                    }}</span
+                  >
+                </li>
+                <li>
+                  <span>本期业绩积分</span>
+                  <span
+                    >+{{
+                      bonusDatiled.achievement_bonus ? bonusDatiled.achievement_bonus : "0"
+                    }}</span
+                  >
+                </li>
+                <li>
+                  <span>本期可提积分</span>
+                  <span
+                    >+{{
+                      bonusDatiled.extractable_bonus ? bonusDatiled.extractable_bonus : "0"
+                    }}</span
+                  >
+                </li>
+              </ul>
+            </van-row>
+            <van-row class="cancel_date">核销日期：{{ bonusDatiled.modify_time }}</van-row>
+          </van-row>
         </van-row>
       </van-row>
-    </van-row>
+    </van-pull-refresh>
   </van-row>
 </template>
 <script>
 export default {
   name: "integral",
+  inject: ["reload"], //刷新页面
   data() {
     return {
-      name: ""
+      isLoading: false,
+      name: "",
+      name2: "",
+      bonusDatiled: {} //积分明细
     };
   },
   created() {
@@ -63,6 +82,9 @@ export default {
     }
     this.getUserInfo();
   },
+  // mounted(){
+  //   getUserInfo()
+  // },
   methods: {
     onBack() {
       history.back();
@@ -77,18 +99,23 @@ export default {
       this.$api
         .userInfo()
         .then(res => {
-          this.$toast.clear();
-          console.log(res);
-          return false;
           if (res.code == 200) {
             this.name = res.user.name;
             let param = { user_id: res.user.id };
             this.$api
               .bonusDetail(param)
               .then(res => {
-                console.log(res);
+                // console.log(res);
+                this.$toast.clear();
+                if (res.code == 200) {
+                  this.bonusDatiled = res.bonus_datiled;
+                  if (res.bonus_datiled.length == 0) {
+                    this.$toast("暂无数据");
+                  }
+                }
               })
               .catch(error => {
+                this.$toast.clear();
                 console.log(error);
               });
           }
@@ -97,11 +124,21 @@ export default {
           this.$toast.clear();
           console.log(error);
         });
+    },
+    //下拉刷新
+    onRefresh() {
+      setTimeout(() => {
+        this.reload(); //刷新当前页面，加载新数据
+        this.isLoading = false;
+      }, 500);
     }
   }
 };
 </script>
 <style scoped>
+.main_body {
+  min-height: 78vh;
+}
 .integral {
   text-align: left;
   color: #333;
