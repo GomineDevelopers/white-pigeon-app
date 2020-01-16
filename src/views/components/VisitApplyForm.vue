@@ -387,6 +387,7 @@ export default {
           hospital_id: this.hospital_id,
           doctor_id: this.doctor_id,
           start_time: this.startTime,
+          start_date: this.startTime.split(" ")[0],
           goal_visit_id: this.goal_visit_id,
           visit_channel: this.visit_channel,
           product_id: this.product_id,
@@ -395,6 +396,7 @@ export default {
           visit_image_two: this.visitPhoto[1] || null,
           visit_image_three: this.visitPhoto[2] || null
         };
+        console.log(data);
         localStorage.setItem("prevTime", this.prevTime);
         this.upDataToServer(data);
       }

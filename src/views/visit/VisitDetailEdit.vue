@@ -9,49 +9,49 @@
         <van-row class="info_module" @click="hospitalShow = true">
           <van-row class="row_title">医院</van-row>
           <van-row class="icon_right flex">
-            <span class="flex_1">{{hospital_name ? hospital_name:'请选择'}}</span>
+            <span class="flex_1">{{ hospital_name ? hospital_name : "请选择" }}</span>
             <van-icon name="arrow" />
           </van-row>
         </van-row>
-        <van-row class="info_module" @click="customerShow=true">
+        <van-row class="info_module" @click="customerShow = true">
           <van-row class="row_title">客户</van-row>
           <van-row class="icon_right flex">
-            <span class="flex_1">{{doctor_name ? doctor_name:'请选择'}}</span>
+            <span class="flex_1">{{ doctor_name ? doctor_name : "请选择" }}</span>
             <van-icon name="arrow" />
           </van-row>
         </van-row>
-        <van-row class="info_module" @click="timeShow=true">
+        <van-row class="info_module" @click="timeShow = true">
           <van-row class="row_title">开始时间</van-row>
           <van-row class="icon_right flex">
-            <span class="flex_1">{{start_time ? start_time:'开始时间'}}</span>
+            <span class="flex_1">{{ start_time ? start_time : "开始时间" }}</span>
             <van-icon name="arrow" />
           </van-row>
         </van-row>
-        <van-row class="info_module" @click="productShow=true">
+        <van-row class="info_module" @click="productShow = true">
           <van-row class="row_title">产品</van-row>
           <van-row class="icon_right flex">
-            <span class="flex_1">{{product_name ? product_name:'请选择'}}</span>
+            <span class="flex_1">{{ product_name ? product_name : "请选择" }}</span>
             <van-icon name="arrow" />
           </van-row>
         </van-row>
-        <van-row class="info_module" @click="visitPurposeShow=true">
+        <van-row class="info_module" @click="visitPurposeShow = true">
           <van-row class="row_title">拜访目的</van-row>
           <van-row class="icon_right flex">
-            <span class="flex_1">{{visit_goal ? visit_goal:'请选择'}}</span>
+            <span class="flex_1">{{ visit_goal ? visit_goal : "请选择" }}</span>
             <van-icon name="arrow" />
           </van-row>
         </van-row>
-        <van-row class="info_module" @click="visitChannelShow=true">
+        <van-row class="info_module" @click="visitChannelShow = true">
           <van-row class="row_title">拜访渠道</van-row>
           <van-row class="icon_right flex">
-            <span class="flex_1">{{visitChannel ? visitChannel:'请选择'}}</span>
+            <span class="flex_1">{{ visitChannel ? visitChannel : "请选择" }}</span>
             <van-icon name="arrow" />
           </van-row>
         </van-row>
         <van-row class="info_module">
           <van-row class="row_title">拜访定位</van-row>
           <van-row class="icon_right flex">
-            <span class="flex_1">{{visit_position}}</span>
+            <span class="flex_1">{{ visit_position }}</span>
             <van-icon name="replay" @click="location" />
           </van-row>
         </van-row>
@@ -60,8 +60,8 @@
           <van-row class="flex after_camera">
             <van-row
               class="visit_img"
-              v-for="(visitPhotoList,index) in visitPhoto"
-              :key="index+'vi'"
+              v-for="(visitPhotoList, index) in visitPhoto"
+              :key="index + 'vi'"
             >
               <img :src="visitPhotoList" />
               <van-icon name="clear" class="del_icon" @click="deleteImg(index)" />
@@ -170,7 +170,7 @@
 </template>
 <script>
 import { upload, photograph } from "@/js/upload";
-import {minDate,minutesTimeFormat } from "@/js/public";
+import { minDate, minutesTimeFormat } from "@/js/public";
 export default {
   name: "visitdetailedit",
   data() {
@@ -228,7 +228,7 @@ export default {
     });
   },
   mounted() {
-    this.prevTime = localStorage.getItem('prevTime');
+    this.prevTime = localStorage.getItem("prevTime");
     this.visit_id = this.$route.query.id;
     this.getVisitRelation();
     // this.getVisitGoal();
@@ -238,32 +238,32 @@ export default {
     // 拜访定位
     location() {
       this.$toast.loading({
-      message: "正在定位...",
-      forbidClick: true,
-      loadingType: "spinner"
-    });
+        message: "正在定位...",
+        forbidClick: true,
+        loadingType: "spinner"
+      });
       this.handler();
     },
     handler() {
       let geoLocation = new BMap.Geolocation();
       geoLocation.getCurrentPosition(r => {
         let addr = r.address;
-				this.visit_position = addr.city + addr.district + addr.street + addr.street_number;
-      })
+        this.visit_position = addr.city + addr.district + addr.street + addr.street_number;
+      });
     },
 
     // 开始时间添加单位
     formatter(type, value) {
-      if (type === 'year') {
+      if (type === "year") {
         return `${value}年`;
-      } else if (type === 'month') {
-        return `${value}月`
-      } else if (type === 'day') {
-        return `${value}日`
-      } else if (type === 'hour') {
-        return `${value}点`
-      } else if (type === 'minute') {
-        return `${value}分`
+      } else if (type === "month") {
+        return `${value}月`;
+      } else if (type === "day") {
+        return `${value}日`;
+      } else if (type === "hour") {
+        return `${value}点`;
+      } else if (type === "minute") {
+        return `${value}分`;
       }
       return value;
     },
@@ -277,12 +277,8 @@ export default {
           if (res.code == 200) {
             let data = res.visit_detail;
 
-            data.visit_image == null
-              ? ""
-              : (this.$data.visitPhoto[0] = data.visit_image);
-            data.visit_image_two == null
-              ? ""
-              : (this.$data.visitPhoto[1] = data.visit_image_two);
+            data.visit_image == null ? "" : (this.$data.visitPhoto[0] = data.visit_image);
+            data.visit_image_two == null ? "" : (this.$data.visitPhoto[1] = data.visit_image_two);
             data.visit_image_three == null
               ? ""
               : (this.$data.visitPhoto[2] = data.visit_image_three);
@@ -365,7 +361,7 @@ export default {
     //         this.visitPurposeList = res.visit_goal_list.map(item => {
     //           return { id: item.id, text: item.visit_goal };
     //         });
-            
+
     //       }
     //     })
     //     .catch(err => {
@@ -385,7 +381,7 @@ export default {
       this.goal_visit_id = "";
       this.customerList = [];
       this.productList = [];
-      this.visitPurposeList= [];
+      this.visitPurposeList = [];
       this.hospitalInfo.map(item => {
         if (item.hospital_id == v.id) {
           this.customerList.push({
@@ -414,11 +410,11 @@ export default {
       let prevTime = this.prevTime;
       let time = v.getTime() - new Date(prevTime);
       if (prevTime == null || time < -300000 || time > 300000) {
-          this.timeShow = false;
-          this.prevTime = v;
-          this.start_time = minutesTimeFormat(v);
+        this.timeShow = false;
+        this.prevTime = v;
+        this.start_time = minutesTimeFormat(v);
       } else {
-        this.$toast({message:"开始时间不能为上一次创建的前后5分钟，请重新选择",duration:3000})
+        this.$toast({ message: "开始时间不能为上一次创建的前后5分钟，请重新选择", duration: 3000 });
       }
     },
     // 选择拜访目的
@@ -440,7 +436,7 @@ export default {
       this.product_id = v.id;
       this.visit_goal = "";
       this.goal_visit_id = "";
-      this.visitPurposeList= [];
+      this.visitPurposeList = [];
       this.goalInfo.map(item => {
         if (item.product_id == v.id) {
           this.visitPurposeList.push({ id: item.id, text: item.visit_goal });
@@ -449,18 +445,20 @@ export default {
     },
     //拜访拍照上传
     camera() {
-      photograph().then(res => {
-        console.log("305",res)
-        upload(res, 0).then(res => {
-          this.visitPhoto.push(res);
+      photograph()
+        .then(res => {
+          console.log("305", res);
+          upload(res, 0).then(res => {
+            this.visitPhoto.push(res);
+          });
         })
-      }).catch(err => {
-        console.log("310",err)
-      })
+        .catch(err => {
+          console.log("310", err);
+        });
     },
     // 删除图片
     deleteImg(i) {
-      this.visitPhoto.splice(i,1);
+      this.visitPhoto.splice(i, 1);
     },
     // 检测上传数据是否为空
     checkData() {
@@ -484,6 +482,7 @@ export default {
           hospital_id: this.hospital_id,
           doctor_id: this.doctor_id,
           start_time: this.start_time,
+          start_date: this.start_time.split(" ")[0],
           goal_visit_id: this.visit_goal_id,
           visit_channel: this.visit_channel,
           product_id: this.product_id,
@@ -492,17 +491,17 @@ export default {
           visit_image_two: this.visitPhoto[1] || null,
           visit_image_three: this.visitPhoto[2] || null
         };
-        localStorage.setItem('prevTime',this.prevTime);
+        localStorage.setItem("prevTime", this.prevTime);
         this.upDataToServer(data);
       }
     },
     // 上传数据到服务器
     upDataToServer(data) {
       this.$toast.loading({
-        message: '数据提交中...',
+        message: "数据提交中...",
         forbidClick: true,
         duration: 0,
-        loadingType: 'spinner'
+        loadingType: "spinner"
       });
       this.$api
         .visitEdit(data)
@@ -514,7 +513,7 @@ export default {
             }, 1000);
           } else {
             this.$toast.fail(res.message);
-          };
+          }
           this.$toast.clear();
         })
         .catch(err => {

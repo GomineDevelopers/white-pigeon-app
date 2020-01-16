@@ -376,6 +376,7 @@ export default {
           hospital_id: this.hospital_id,
           doctor_id: this.doctor_id,
           start_time: this.start_time,
+          start_date: this.start_time.split(" ")[0],
           goal_visit_id: this.goal_visit_id,
           visit_channel: this.visit_channel,
           product_id: this.product_id,
