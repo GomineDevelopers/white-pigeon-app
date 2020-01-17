@@ -22,30 +22,60 @@
             <van-row>
               <ul>
                 <li>
-                  <span>累计已返积分</span>
-                  <span
-                    >+{{
-                      bonusDatiled.total_extractable_bonus
-                        ? bonusDatiled.total_extractable_bonus
-                        : "0"
-                    }}</span
-                  >
+                  <span>本期可提积分</span>
+                  <span>
+                    +{{ bonusDatiled.extractable_bonus ? bonusDatiled.extractable_bonus : "0" }}
+                  </span>
                 </li>
                 <li>
                   <span>本期业绩积分</span>
-                  <span
-                    >+{{
-                      bonusDatiled.achievement_bonus ? bonusDatiled.achievement_bonus : "0"
-                    }}</span
-                  >
+                  <span>
+                    +{{ bonusDatiled.achievement_bonus ? bonusDatiled.achievement_bonus : "0" }}
+                  </span>
                 </li>
                 <li>
-                  <span>本期可提积分</span>
-                  <span
-                    >+{{
-                      bonusDatiled.extractable_bonus ? bonusDatiled.extractable_bonus : "0"
-                    }}</span
-                  >
+                  <span>本期医院开发奖励积分</span>
+                  <span>
+                    +{{ bonusDatiled.develop_bonus ? bonusDatiled.develop_bonus : "0" }}
+                  </span>
+                </li>
+                <li>
+                  <span>本期推荐奖励积分</span>
+                  <span> +{{ bonusDatiled.invite_bonus ? bonusDatiled.invite_bonus : "0" }} </span>
+                </li>
+                <li>
+                  <span>本期应扣押积分</span>
+                  <span> +{{ bonusDatiled.deposit ? bonusDatiled.deposit : "0" }} </span>
+                </li>
+                <li>
+                  <span>本期总计积分</span>
+                  <span> +{{ bonusDatiled.total_bonus ? bonusDatiled.total_bonus : "0" }} </span>
+                </li>
+                <li>
+                  <span>累计已返积分</span>
+                  <span>
+                    +{{
+                      bonusDatiled.total_extractable_bonus
+                        ? bonusDatiled.total_extractable_bonus
+                        : "0"
+                    }}
+                  </span>
+                </li>
+                <li>
+                  <span>累计扣押积分</span>
+                  <span>
+                    +{{ bonusDatiled.total_deposit ? bonusDatiled.total_deposit : "0" }}
+                  </span>
+                </li>
+                <li>
+                  <span>累计延迟积分</span>
+                  <span>
+                    +{{ bonusDatiled.total_delay_bonus ? bonusDatiled.total_delay_bonus : "0" }}
+                  </span>
+                </li>
+                <li>
+                  <span>累计总积分</span>
+                  <span> +{{ bonusDatiled.total ? bonusDatiled.total : "0" }} </span>
                 </li>
               </ul>
             </van-row>
