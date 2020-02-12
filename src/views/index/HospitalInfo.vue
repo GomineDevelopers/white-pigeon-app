@@ -123,7 +123,6 @@ export default {
     getRouterData() {
       // 只是改了query，其他都不变
       this.hospitalData = this.$route.query.data;
-      console.log("医院详情data", this.hospitalData);
     },
     submitApplications() {
       if (this.product) {
@@ -139,9 +138,9 @@ export default {
                 hospitalId: this.hospitalData.infomation.hospital_id,
                 hospitailStatus: this.hospitalData.infomation.status,
                 productId: this.product,
-                productName: res.product_info.product_name
+                productName: res.product_info.product_name,
+                specification:res.product_info.specification
               };
-              // console.log("data", paramsData);
               this.$router.push({
                 path: "/submitapplications",
                 query: {

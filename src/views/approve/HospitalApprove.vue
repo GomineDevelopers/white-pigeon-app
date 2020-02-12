@@ -20,7 +20,7 @@
           </li>
           <li class="flex_li">
             <span>承诺销量：</span>
-            <span>{{ detail.product_name }} {{ detail.promise_sales }}</span>
+            <span>{{ detail.product_name +'-'+ detail.specification}}&nbsp;&nbsp;{{ detail.promise_sales }}</span>
           </li>
           <li class="flex_li">
             <span>申请时间：</span>

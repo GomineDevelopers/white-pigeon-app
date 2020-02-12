@@ -35,7 +35,7 @@
               </li>
               <li class="flex justify_start">
                 <span>承诺销量：</span>
-                <span>{{ item.product_name }} {{ item.promise_sales }}/月</span>
+                <span>{{ item.product_name +'-'+item.specification}}&nbsp;&nbsp;&nbsp;{{ item.promise_sales }}/月</span>
               </li>
               <li class="flex justify_start">
                 <span>申请时间：</span>

@@ -299,7 +299,7 @@ export default {
               if (item.hospital_id == data.hospital_id) {
                 this.productList.push({
                   id: item.product_id,
-                  text: item.product_name
+                  text: item.product_name+'-'+item.specification
                 });
               }
             });

@@ -264,7 +264,7 @@ export default {
             });
             productInfo.map(item => {
               if (item.hospital_id == this.hospital_id) {
-                this.productList.push({ id: item.product_id, text: item.product_name });
+                this.productList.push({ id: item.product_id, text: item.product_name+'-'+item.specification });
               }
             });
           }

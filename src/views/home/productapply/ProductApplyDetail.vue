@@ -5,7 +5,7 @@
     </van-row>
     <van-row class="main_body">
       <van-row class="approve_detail">
-        <van-row class="approve_product_name">{{ detailContent.product_name }}</van-row>
+        <van-row class="approve_product_name">{{ detailContent.product_name }}-{{detailContent.specification}}</van-row>
         <ul>
           <li class="flex_li">
             <span>开发医院：</span>
@@ -13,7 +13,7 @@
           </li>
           <li class="flex_li">
             <span>承诺销量：</span>
-            <span>{{ detailContent.product_name }} - {{ detailContent.promise_sales }}</span>
+            <span>{{ detailContent.product_name }}-{{detailContent.specification}}&nbsp;&nbsp; {{ detailContent.promise_sales }}</span>
           </li>
           <li class="flex_li">
             <span>预估开发时间：</span>
@@ -50,7 +50,8 @@ export default {
         complete_time: "",
         hospital_know: "",
         commodity_know: "",
-        is_sign: ""
+        is_sign: "",
+        specification:''
       }
     };
   },
@@ -98,7 +99,8 @@ export default {
               complete_time: timeFormat(endDate),
               hospital_know: data.hospital_know,
               commodity_know: data.commodity_know,
-              is_sign: data.is_sign
+              is_sign: data.is_sign,
+              specification:data.specification
             };
           }
         })

@@ -57,7 +57,7 @@ export default {
     } else {
       document.addEventListener("plusready", plusReady, false);
     }
-    this.productName = this.$route.query.productName;
+    this.productName = this.$route.query.productName+'-'+this.$route.query.specification;
     this.getProductDetail();
   },
   methods: {

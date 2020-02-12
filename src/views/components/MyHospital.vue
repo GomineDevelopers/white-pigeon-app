@@ -8,7 +8,7 @@
           :key="index"
           @click="goApplyHospitalDetail(item.hospital_id)"
         >
-          <van-row class="hospital_name">{{ item.hospital_name }}</van-row>
+          <van-row class="hospital_name">{{ item.hospital_name}}</van-row>
           <van-row class="hospital_tag">
             <span class="compositive">{{ setHospitalType(item.hospital_type) }}</span>
             <span class="three_level">{{ setHospitalLevel(item.hospital_level) }}</span>
@@ -16,7 +16,7 @@
           </van-row>
           <van-row class="product_list">
             <span v-for="(product, index3) in item.product" :key="index3 + 'b'">{{
-              product.product_name + "&nbsp;&nbsp;&nbsp;"
+              product.product_name  +'-'+product.specification+  "&nbsp;&nbsp;&nbsp;"
             }}</span>
           </van-row>
           <van-row class="hospital_address">{{ item.hospital_address }}</van-row>
@@ -56,7 +56,6 @@ export default {
         this.$api
           .userCenterHospital(data)
           .then(res => {
-            console.log(res);
             switch (res.code) {
               case 200:
                 let list = res.hospital_data;

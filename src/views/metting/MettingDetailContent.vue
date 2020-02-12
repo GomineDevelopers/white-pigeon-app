@@ -6,7 +6,7 @@
     <van-row class="doctor_detail">
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">产品</span>
-        <span>{{ metting.product_name }}</span>
+        <span>{{ metting.product_name }}-{{metting.specification}}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">会议主题</span>
@@ -58,7 +58,8 @@ export default {
         num: "",
         personnel_image: "",
         personnel_image_two: "",
-        sign_image: ""
+        sign_image: "",
+        specification:""
       }
     };
   },
@@ -93,7 +94,7 @@ export default {
       this.$api
         .meetingDetail(params)
         .then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code == 200) {
             this.$toast.clear();
             this.metting = res.meeting_detail[0];

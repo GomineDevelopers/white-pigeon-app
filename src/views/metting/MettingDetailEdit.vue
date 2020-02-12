@@ -412,7 +412,7 @@ export default {
               arr1[next.product_id]
                 ? ""
                 : (arr1[next.product_id] =
-                    true && item.push({ id: next.product_id, text: next.product_name }));
+                    true && item.push({ id: next.product_id, text: next.product_name+'-'+next.specification }));
               return item;
             }, []);
             // console.log("this.productList", this.productList); //控制台查看结果

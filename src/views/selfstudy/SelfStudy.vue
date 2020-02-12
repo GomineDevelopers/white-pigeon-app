@@ -13,12 +13,12 @@
           v-for="(item, index) in prodtctList"
           :key="index"
           span="12"
-          @click="golist(item.id, item.product_name)"
+          @click="golist(item.id, item.product_name,item.specification)"
         >
           <div>
             <img :src="item.product_image" />
           </div>
-          <span>{{ item.product_name }}</span>
+          <span>{{ item.product_name +'-'+item.specification}}</span>
         </van-col>
       </van-row>
       <van-row class="setting_body" v-show="!active">
@@ -98,8 +98,8 @@ export default {
           console.log(error);
         });
     },
-    golist(id, name) {
-      this.$router.push({ path: "/productdata", query: { id: id, productName: name } });
+    golist(id, name,specification) {
+      this.$router.push({ path: "/productdata", query: { id: id, productName: name,specification:specification } });
     }
   }
 };
