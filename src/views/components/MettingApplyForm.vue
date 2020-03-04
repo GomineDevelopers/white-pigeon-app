@@ -340,7 +340,6 @@ export default {
       this.$api
         .meetingGetInfoByProductId()
         .then(res => {
-          console.log(res);
           this.hospitalByproductId = res.getInfoByProductId;
           this.mettingByProductId = res.getTopicByProductId;
           if (res.code == 200) {
@@ -350,10 +349,13 @@ export default {
               arr1[next.product_id]
                 ? ""
                 : (arr1[next.product_id] =
-                    true && item.push({ id: next.product_id, text: next.product_name+'-'+next.specification }));
+                    true &&
+                    item.push({
+                      id: next.product_id,
+                      text: next.product_name + "-" + next.specification
+                    }));
               return item;
             }, []);
-            console.log("this.productList", this.productList); //控制台查看结果
           }
         })
         .catch(error => {
@@ -407,7 +409,6 @@ export default {
       this.$api
         .meetingGetSection(params)
         .then(res => {
-          console.log(res);
           if (res.code == 200) {
             this.sectionList = res.product_section_list;
           } else {

@@ -3,32 +3,45 @@
     <van-list v-model="loading" :finished="finished" :finished-text="finishedText" @load="onLoad">
       <div class="approve_list">
         <div
-          class="approve_item flex justify_between"
+          class="approve_item"
           v-for="(item, index) in visitList"
           :key="index + 'b'"
           @click="enterDetail(item.id, item.status)"
         >
-          <div class="approve_item_detail">
-            <ul>
-              <li>{{ item.hospital_name }}</li>
-              <li class="flex justify_start flex_align_center">
-                <span>目的：</span>
-                <span>{{ item.visit_goal }}</span>
-              </li>
-              <li class="flex justify_start flex_align_center">
-                <span>拜访时间：</span>
-                <span>{{ item.start_time }}</span>
-              </li>
-            </ul>
-          </div>
-          <div class="approve_state flex">
-            <img v-if="item.status == 1" src="@/assets/image/hg.png" />
-            <img v-if="item.status == 2" src="@/assets/image/bhg.png" />
-            <img v-if="item.status == 3" src="@/assets/image/shz.png" />
-            <img v-if="item.status == 4" src="@/assets/image/yhx.png" />
-            <img v-if="item.status == 5" src="@/assets/image/ysx.png" />
-            <img v-if="item.status == 6" src="@/assets/image/wtj.png" />
-          </div>
+          <van-swipe-cell>
+            <div class=" flex justify_between flex_align_center">
+              <div class="approve_item_detail">
+                <ul>
+                  <li>{{ item.hospital_name }}</li>
+                  <li class="flex justify_start flex_align_center">
+                    <span>目的：</span>
+                    <span>{{ item.visit_goal }}</span>
+                  </li>
+                  <li class="flex justify_start flex_align_center">
+                    <span>拜访时间：</span>
+                    <span>{{ item.start_time }}</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="approve_state">
+                <img v-if="item.status == 1" src="@/assets/image/hg.png" />
+                <img v-if="item.status == 2" src="@/assets/image/bhg.png" />
+                <img v-if="item.status == 3" src="@/assets/image/shz.png" />
+                <img v-if="item.status == 4" src="@/assets/image/yhx.png" />
+                <img v-if="item.status == 5" src="@/assets/image/ysx.png" />
+                <img v-if="item.status == 6" src="@/assets/image/wtj.png" />
+              </div>
+            </div>
+            <van-button
+              v-if="item.status == 6"
+              slot="right"
+              square
+              text="删除"
+              type="danger"
+              class="delete-button"
+              @click="deleteItem(item.id)"
+            />
+          </van-swipe-cell>
         </div>
       </div>
     </van-list>
@@ -37,6 +50,7 @@
 <script>
 export default {
   name: "visitRecordList",
+  inject: ["reload"], //刷新页面
   props: {
     status: Number
   },
@@ -107,10 +121,53 @@ export default {
       } else {
         this.$router.push({ path: "/visitdetailcontent", query: { id: id } });
       }
+    },
+    deleteItem(id) {
+      console.log("确认");
+      this.$Dialog
+        .confirm({
+          message: "确认删除此条拜访记录吗？",
+          confirmButtonText: "确定", //改变确认按钮上显示的文字
+          cancelButtonText: "取消" //改变取消按钮上显示的文字
+        })
+        .then(() => {
+          let params = { visit_id: id };
+          this.$api
+            .visitDel(params)
+            .then(res => {
+              if (res.code == 200) {
+                this.$toast.success("操作成功");
+                setTimeout(() => {
+                  this.reload(); //刷新当前页面，加载新数据
+                }, 500);
+              } else {
+                this.$toast.fail(res.message);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(() => {});
     }
   }
 };
 </script>
+<style>
+.approve_item .van-swipe-cell {
+  width: 100%;
+}
+.approve_item .van-swipe-cell__right {
+  right: -1px;
+}
+.approve_item .van-swipe-cell__right .van-button--normal {
+  height: 100%;
+  font-size: 10px;
+}
+.approve_item .van-swipe-cell__right .van-button--normal span {
+  font-size: 0.65rem;
+}
+</style>
 <style scoped>
 .approve_content {
   padding: 0rem 1rem 1.25rem 1rem;

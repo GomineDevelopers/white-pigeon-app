@@ -2,56 +2,75 @@
   <van-row>
     <van-row class="visit_content">
       <van-row class="info_module" @click="hospitalShow = true">
-        <van-row class="row_title">医院</van-row>
+        <van-row class="row_title">医院<i>*</i></van-row>
         <van-row class="icon_right flex">
           <span class="flex_1">{{ hospitalValue ? hospitalValue : "请选择" }}</span>
           <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module" @click="customerShow = true">
-        <van-row class="row_title">客户</van-row>
+        <van-row class="row_title">客户<i>*</i></van-row>
         <van-row class="icon_right flex">
           <span class="flex_1">{{ customer ? customer : "请选择" }}</span>
           <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module" @click="timeShow = true">
-        <van-row class="row_title">开始时间</van-row>
+        <van-row class="row_title">开始时间<i>*</i></van-row>
         <van-row class="icon_right flex">
           <span class="flex_1">{{ startTime ? startTime : "选择开始时间" }}</span>
           <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module" @click="productShow = true">
-        <van-row class="row_title">产品</van-row>
+        <van-row class="row_title">产品<i>*</i></van-row>
         <van-row class="icon_right flex">
           <span class="flex_1">{{ product ? product : "请选择" }}</span>
           <van-icon name="arrow" />
         </van-row>
       </van-row>
+      <van-row class="info_module" @click="publicityShow = true">
+        <van-row class="row_title">宣传主题</van-row>
+        <van-row class="icon_right flex">
+          <span class="flex_1">{{ productPublicity ? productPublicity : "请选择" }}</span>
+          <van-icon name="arrow" />
+        </van-row>
+      </van-row>
       <van-row class="info_module" @click="visitPurposeShow = true">
-        <van-row class="row_title">拜访目的</van-row>
+        <van-row class="row_title">拜访目的<i>*</i></van-row>
         <van-row class="icon_right flex">
           <span class="flex_1">{{ visitPurpose ? visitPurpose : "请选择" }}</span>
           <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module" @click="visitChannelShow = true">
-        <van-row class="row_title">拜访渠道</van-row>
+        <van-row class="row_title">拜访渠道<i>*</i></van-row>
         <van-row class="icon_right flex">
           <span class="flex_1">{{ visitChannel ? visitChannel : "请选择" }}</span>
           <van-icon name="arrow" />
         </van-row>
       </van-row>
       <van-row class="info_module">
-        <van-row class="row_title">拜访定位</van-row>
+        <van-row class="row_title">拜访定位<i>*</i></van-row>
         <van-row class="icon_right flex">
           <span class="flex_1">{{ visitPostion }}</span>
           <van-icon name="replay" @click="location" />
         </van-row>
       </van-row>
       <van-row class="info_module">
-        <van-row class="row_title">拍照上传</van-row>
+        <van-row class="row_title">医生反馈<i>*</i></van-row>
+        <van-row class="icon_right flex">
+          <van-field
+            v-model="doctorFeedback"
+            rows="1"
+            autosize
+            type="textarea"
+            placeholder="请输入"
+          />
+        </van-row>
+      </van-row>
+      <van-row class="info_module">
+        <van-row class="row_title">拍照上传（必须包含医院名称）</van-row>
         <van-row class="flex after_camera">
           <van-row
             class="visit_img"
@@ -151,6 +170,18 @@
         />
       </van-popup>
     </transition>
+    <!-- 宣传主题 -->
+    <transition name="van-slide-up">
+      <van-popup v-model="publicityShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="宣传主题选择"
+          :columns="productPublicityList"
+          @cancel="publicityShow = false"
+          @confirm="publicityConfirm"
+        />
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>
@@ -167,19 +198,26 @@ export default {
       visitPurposeShow: false,
       visitChannelShow: false,
       productShow: false,
+      publicityShow: false,
       hospitalValue: "",
       customer: "",
+      doctor_id: "",
       startTime: "",
       visitPurpose: "",
       visitChannel: "",
       product: "",
+      product_id: "",
       visitPhoto: [],
       hospitalList: [],
       customerList: [],
       visitPurposeList: [],
-      visitChannelList: [{ id: 1, text: "面对面拜访" }],
+      visitChannelList: [{ id: 1, text: "非面对面拜访" }],
       visitPostion: "",
       productList: [],
+      productPublicityList: [],
+      productPublicity: "",
+      productPublicityId: "",
+      doctorFeedback: "", //医生反馈
       minHour: 10,
       maxHour: 20,
       minDate: new Date(),
@@ -237,11 +275,13 @@ export default {
             let hospitalInfo = res.getInfoByHospitalId;
             let productInfo = res.getproductByHospitalId;
             let goalInfo = res.getvisitGoalByHospitalId;
+            let visitPropaganda = res.getvisitPropagandaByHospitalId;
             if (hospitalInfo.length != 0) {
               let currHospitalObj = {};
               this.hospitalInfo = hospitalInfo;
               this.productInfo = productInfo;
               this.goalInfo = goalInfo;
+              this.visitPropaganda = visitPropaganda;
               this.hospitalList = hospitalInfo.reduce((item, next) => {
                 currHospitalObj[next.hospital_id]
                   ? ""
@@ -285,6 +325,9 @@ export default {
       this.customerList = [];
       this.productList = [];
       this.visitPurposeList = [];
+      this.productPublicityList = [];
+      this.productPublicity = "";
+      this.productPublicityId = "";
       this.hospitalInfo.map(item => {
         if (item.hospital_id == v.id) {
           this.customerList.push({ id: item.doctor_id, text: item.doctor_name });
@@ -292,7 +335,10 @@ export default {
       });
       this.productInfo.map(item => {
         if (item.hospital_id == v.id) {
-          this.productList.push({ id: item.product_id, text: item.product_name+'-'+item.specification });
+          this.productList.push({
+            id: item.product_id,
+            text: item.product_name + "-" + item.specification
+          });
         }
       });
     },
@@ -334,11 +380,24 @@ export default {
       this.visitPurpose = "";
       this.goal_visit_id = "";
       this.visitPurposeList = [];
+      this.productPublicityList = [];
+      this.productPublicity = "";
+      this.productPublicityId = "";
       this.goalInfo.map(item => {
         if (item.product_id == v.id) {
           this.visitPurposeList.push({ id: item.id, text: item.visit_goal });
         }
       });
+      this.visitPropaganda.map(item => {
+        if (item.product_id == v.id) {
+          this.productPublicityList.push({ id: item.id, text: item.propaganda });
+        }
+      });
+    },
+    publicityConfirm(v) {
+      this.publicityShow = false;
+      this.productPublicity = v.text;
+      this.productPublicityId = v.id;
     },
     //拜访拍照上传
     camera() {
@@ -367,20 +426,22 @@ export default {
     },
     // 检测上传数据是否为空
     checkData(type) {
-      if (this.hospital_id == undefined) {
+      if (!this.hospital_id) {
         this.$toast("医院不能为空");
-      } else if (this.doctor_id == undefined) {
+      } else if (!this.doctor_id) {
         this.$toast("客户不能为空");
       } else if (!this.startTime) {
         this.$toast("开始时间不能为空");
-      } else if (this.goal_visit_id == undefined) {
+      } else if (!this.goal_visit_id) {
         this.$toast("拜访目的不能为空");
-      } else if (this.visit_channel == undefined) {
+      } else if (!this.visit_channel) {
         this.$toast("拜访渠道不能为空");
-      } else if (this.product_id == undefined) {
+      } else if (!this.product_id) {
         this.$toast("产品不能为空");
       } else if (!this.visitPostion) {
         this.$toast("拜访定位不能为空");
+      } else if (!this.doctorFeedback) {
+        this.$toast("医生反馈不能为空");
       } else {
         let data = {
           is_create: type,
@@ -391,12 +452,13 @@ export default {
           goal_visit_id: this.goal_visit_id,
           visit_channel: this.visit_channel,
           product_id: this.product_id,
+          propaganda_id: this.productPublicityId,
           visit_position: this.visitPostion,
+          doctor_feedback: this.doctorFeedback,
           visit_image: this.visitPhoto[0] || null,
           visit_image_two: this.visitPhoto[1] || null,
           visit_image_three: this.visitPhoto[2] || null
         };
-        console.log(data);
         localStorage.setItem("prevTime", this.prevTime);
         this.upDataToServer(data);
       }
@@ -413,7 +475,7 @@ export default {
         .createVisit(data)
         .then(res => {
           if (res.code == 200) {
-            this.$toast.success("上传成功");
+            this.$toast.success("提交成功");
             setTimeout(() => {
               this.$router.replace("/visitrecord");
             }, 1000);
@@ -522,5 +584,10 @@ export default {
 }
 .after_camera .camera_icon .van-icon {
   color: #2692f3;
+}
+.info_module .row_title i {
+  font-style: normal;
+  color: red;
+  margin-left: 0.2rem;
 }
 </style>

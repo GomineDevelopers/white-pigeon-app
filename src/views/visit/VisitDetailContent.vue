@@ -26,11 +26,19 @@
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">产品</span>
-        <span>{{ detail.product_name }}-{{detail.specification}}</span>
+        <span>{{ detail.product_name }}-{{ detail.specification }}</span>
+      </van-row>
+      <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
+        <span class="flex_1">宣传主题</span>
+        <span>{{ detail.propaganda }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">拜访定位</span>
         <span>{{ detail.visit_position }}</span>
+      </van-row>
+      <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
+        <span class="flex_1">医生反馈</span>
+        <span>{{ detail.doctor_feedback }}</span>
       </van-row>
       <van-row class="doctor_detail_item">
         <span>照片上传</span>
@@ -71,14 +79,22 @@ export default {
   methods: {
     // 获取拜访详情数据
     getVistDetail(visit_id) {
+      this.$toast.loading({
+        message: "数据加载中...",
+        forbidClick: true,
+        duration: 0,
+        loadingType: "spinner"
+      });
       this.$api
         .visitDetail({ visit_id })
         .then(res => {
+          this.$toast.clear();
           if (res.code == 200) {
             this.detail = res.visit_detail;
           }
         })
         .catch(err => {
+          this.$toast.clear();
           console.log(err);
         });
     },

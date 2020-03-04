@@ -60,6 +60,7 @@ let api = {
   visitRelation: params => post("/visitManager/visitGetInfoByHospitalId", params), //拜访关联接口
   visitGoal: params => post("/visitManager/visitGoal", params), //拜访目的
   visitList: params => post("/visitManager/visitList", params), //拜访记录
+  visitDel: params => post("/visitManager/visitDel", params), //删除处于创建状态的拜访记录（未提交的）
   visitEdit: params => post("/visitManager/visitEdit", params), //拜访编辑
   visitDetail: params => post("/visitManager/visitDetail", params), //拜访详情
   visitRecord: params => post("/visitManager/visitApplyRecord", params), //拜访记录

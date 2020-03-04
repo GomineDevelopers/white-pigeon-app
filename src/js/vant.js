@@ -28,7 +28,8 @@ import {
   Sidebar,
   SidebarItem,
   CheckboxGroup,
-  PullRefresh
+  PullRefresh,
+  SwipeCell
 } from "vant";
 
 Vue.use(Button);
@@ -60,5 +61,6 @@ Vue.use(SidebarItem);
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(PullRefresh);
+Vue.use(SwipeCell);
 
 Vue.prototype.$Dialog = Dialog;
