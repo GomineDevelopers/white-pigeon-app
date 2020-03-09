@@ -1,7 +1,7 @@
 <template>
   <van-row class="visit">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="会议详情" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="会议编辑" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body2">
       <!-- 会议 -->
@@ -12,7 +12,7 @@
             <i>*</i>
           </van-row>
           <van-row class="icon_right flex" @click="productShow = true">
-            <span class="flex_1">{{ product ? product : "请选择" }}</span>
+            <span class="flex_1">{{ product ? product + "-" + specification : "请选择" }}</span>
             <van-icon name="arrow" />
           </van-row>
         </van-row>
@@ -365,11 +365,11 @@ export default {
       this.$api
         .meetingDetail(params)
         .then(res => {
-          console.log("会议详情", res);
           if (res.code == 200) {
             let data = res.meeting_detail[0];
             this.$toast.clear();
             this.product = data.product_name;
+            this.specification = data.specification;
             this.productId = data.product_id;
             this.conferenceTheme = data.product_topic;
             this.conferenceThemeId = data.product_topic_id;
@@ -412,7 +412,11 @@ export default {
               arr1[next.product_id]
                 ? ""
                 : (arr1[next.product_id] =
-                    true && item.push({ id: next.product_id, text: next.product_name+'-'+next.specification }));
+                    true &&
+                    item.push({
+                      id: next.product_id,
+                      text: next.product_name + "-" + next.specification
+                    }));
               return item;
             }, []);
             // console.log("this.productList", this.productList); //控制台查看结果

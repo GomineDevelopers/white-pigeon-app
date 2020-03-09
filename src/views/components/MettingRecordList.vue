@@ -20,7 +20,7 @@
               <span>{{ item.speaker }}</span>
             </li>
             <li class="flex justify_start">
-              <span>{{ item.product_name }}</span>
+              <span>{{ item.product_name + "-" + item.specification }}</span>
             </li>
             <li class="flex justify_start">
               <span>{{ item.start_time }}</span>
@@ -84,7 +84,7 @@ export default {
       this.$api
         .createList(params)
         .then(res => {
-          //   console.log(res);
+          console.log(res);
           if (res.code == 200) {
             if (res.meeting_list.length < this.row) {
               this.mettingList.push(...res.meeting_list);
