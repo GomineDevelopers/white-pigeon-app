@@ -69,6 +69,11 @@ let api = {
   SignSubmit: params => post("/signManager/SignSubmit", params), //合同签署
   materialList: params => post("/MaterialManager/materialList", params), //新人自学
   materialDetail: params => post("/MaterialManager/materialDetail", params), //新人自学
-  bonusDetail: params => get("/bonus/detailed", params) //积分
+  bonusDetail: params => get("/bonus/detailed", params), //积分
+  getUserByHospitalProduct: params => post("/regionManager/getUserByHospitalProduct", params), //经理端顶部筛选获取代表数据
+  getProductByHospitalProduct: params => post("/regionManager/getProductByHospitalProduct", params), //经理端顶部筛选获取产品数据
+  getHospitalByHospitalProduct: params =>
+    post("/regionManager/getHospitalByHospitalProduct", params), //经理端顶部筛选获取医院数据
+  getProductPrize: params => post("/regionManager/getProductPrize", params) //经理端获取产品奖金
 };
 export default api;

@@ -8,38 +8,59 @@
     <van-row class="approve_body">
       <van-row class="option_nav">
         <van-dropdown-menu>
-          <van-dropdown-item v-model="spokesman" :options="spokesmanList" />
+          <van-dropdown-item
+            :title="title"
+            v-model="userId"
+            :options="userList"
+            @change="userChange"
+          />
           <van-dropdown-item v-model="bonus" :options="bonusList" />
-          <van-dropdown-item v-if="bonus == 1" v-model="product" :options="productList" />
-          <van-dropdown-item v-if="bonus == 1" v-model="hospital" :options="hospitalList" />
+          <van-dropdown-item
+            :title="productTitle"
+            v-if="bonus == 1"
+            v-model="productId"
+            :options="productList"
+            @change="productChange"
+          />
+          <van-dropdown-item
+            :title="hospitalTitle"
+            v-if="bonus == 1"
+            v-model="hospitalId"
+            :options="hospitalList"
+            @change="hospitalChange"
+          />
         </van-dropdown-menu>
       </van-row>
       <van-row class="approve_content">
-        <van-row class="approve_content_item"><span>拜访合格</span><span>14</span></van-row>
-        <van-row class="approve_content_item"><span>拜访不合格</span><span>20</span></van-row>
-        <van-row class="approve_content_item"><span>拜访未核销</span><span>34</span></van-row>
-        <van-row class="approve_content_item"><span>拜访已核销</span><span>25</span></van-row>
-        <van-row class="approve_content_item"><span>会议合格</span><span>1</span></van-row>
-        <van-row class="approve_content_item"><span>会议不合格</span><span>23</span></van-row>
-        <van-row class="approve_content_item"><span>会议未核销</span><span>1</span></van-row>
-        <van-row class="approve_content_item"><span>会议已核销</span><span>23</span></van-row>
         <van-row class="approve_content_item"
-          ><span>未返行为积分</span><span>213312.00</span></van-row
-        >
-        <van-row class="approve_content_item"><span>产品单价</span><span>34.53</span></van-row>
-        <van-row class="approve_content_item"><span>目标销量</span><span>100</span></van-row>
-        <van-row class="approve_content_item"><span>本期销量（盒）</span><span>30</span></van-row>
-        <van-row class="approve_content_item"><span>总销量</span><span>56</span></van-row>
-        <van-row class="approve_content_item"
-          ><span>本期可提积分</span><span>14512.11</span></van-row
-        >
-        <van-row class="approve_content_item"><span>本期延迟积分</span><span>23.00</span></van-row>
-        <van-row class="approve_content_item"
-          ><span>累计已扣积分</span><span>4500.00</span></van-row
+          ><span>拜访合格</span><span>{{ bonusDetail.visit_pass_num }}</span></van-row
         >
         <van-row class="approve_content_item"
-          ><span>累计已返积分</span><span>23000.00</span></van-row
+          ><span>拜访不合格</span><span>{{ bonusDetail.visit_no_pass_num }}</span></van-row
         >
+        <van-row class="approve_content_item"><span>拜访未核销</span><span>-</span></van-row>
+        <van-row class="approve_content_item"><span>拜访已核销</span><span>-</span></van-row>
+        <van-row class="approve_content_item"
+          ><span>会议合格</span><span>{{ bonusDetail.meeting_pass_num }}</span></van-row
+        >
+        <van-row class="approve_content_item"
+          ><span>会议不合格</span><span>{{ bonusDetail.meeting_no_pass_num }}</span></van-row
+        >
+        <van-row class="approve_content_item"><span>会议未核销</span><span>-</span></van-row>
+        <van-row class="approve_content_item"><span>会议已核销</span><span>-</span></van-row>
+        <van-row class="approve_content_item"><span>未返行为积分</span><span>-</span></van-row>
+        <van-row class="approve_content_item"
+          ><span>产品单价</span><span>{{ bonusDetail.region_bidding_price }}</span></van-row
+        >
+        <van-row class="approve_content_item"
+          ><span>目标销量</span><span>{{ bonusDetail.region_promise_sales }}</span></van-row
+        >
+        <van-row class="approve_content_item"><span>本期销量（盒）</span><span>-</span></van-row>
+        <van-row class="approve_content_item"><span>总销量</span><span>-</span></van-row>
+        <van-row class="approve_content_item"><span>本期可提积分</span><span>-</span></van-row>
+        <van-row class="approve_content_item"><span>本期延迟积分</span><span>-</span></van-row>
+        <van-row class="approve_content_item"><span>累计已扣积分</span><span>-</span></van-row>
+        <van-row class="approve_content_item"><span>累计已返积分</span><span>-</span></van-row>
       </van-row>
     </van-row>
   </van-row>
@@ -49,28 +70,38 @@ export default {
   name: "productbonus",
   data() {
     return {
-      spokesman: 1,
+      title: "代表",
+      productTitle: "产品",
+      hospitalTitle: "医院",
+      userId: "",
       bonus: 1,
-      product: 1,
-      hospital: 1,
-      spokesmanList: [
-        { text: "代表1", value: 1 },
-        { text: "代表2", value: 2 },
-        { text: "代表3", value: 3 }
-      ],
+      productId: "",
+      hospitalId: "",
+      userList: [
+        // { text: "代表1", value: 1 },
+        // { text: "代表2", value: 2 },
+        // { text: "代表3", value: 3 }
+      ], //代表数据
       bonusList: [
         { text: "产品奖金", value: 1 },
         { text: "总奖金", value: 2 }
       ],
       productList: [
-        { text: "产品1", value: 1 },
-        { text: "产品2", value: 2 }
-      ],
+        // { text: "产品1", value: 1 },
+        // { text: "产品2", value: 2 }
+      ], //产品数据
       hospitalList: [
-        { text: "医院1", value: 1 },
-        { text: "医院2", value: 2 }
-      ],
-      bonusDetail: {}
+        // { text: "医院1", value: 1 },
+        // { text: "医院2", value: 2 }
+      ], //医院数据
+      bonusDetail: {
+        visit_pass_num: "-",
+        visit_no_pass_num: "-",
+        meeting_pass_num: "-",
+        meeting_no_pass_num: "-",
+        region_promise_sales: "-",
+        region_bidding_price: "-"
+      }
     };
   },
   created() {
@@ -86,12 +117,191 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
   },
+  mounted() {
+    this.getUserOption();
+  },
   methods: {
     onBack() {
       this.$router.push("/approveindex");
     },
+    //获取代表筛选条件
+    getUserOption() {
+      this.$toast.loading({
+        message: "代表查询中...",
+        loadingType: "spinner",
+        duration: 0,
+        forbidClick: true
+      });
+      this.$api
+        .getUserByHospitalProduct()
+        .then(res => {
+          this.$toast.clear();
+          if (res.code == 200) {
+            let data = res.user_info;
+            data.forEach((value, index) => {
+              this.userList.push({ text: value.name, value: value.user_id });
+            });
+          } else {
+            this.$toast.fail(res.message);
+          }
+        })
+        .catch(error => {
+          this.$toast.clear();
+          console.log(error);
+        });
+    },
+    //代表
+    userChange(value) {
+      this.title = value.text;
+      //代表切换，清空对应的产品和医院数据
+      this.productTitle = "产品";
+      this.hospitalTitle = "医院";
+      this.productId = "";
+      this.hospitalId = "";
+      this.productList = [];
+      this.hospitalList = [];
+      this.bonusDetail = {
+        visit_pass_num: "-",
+        visit_no_pass_num: "-",
+        meeting_pass_num: "-",
+        meeting_no_pass_num: "-",
+        region_promise_sales: "-",
+        region_bidding_price: "-"
+      };
+      this.$toast.loading({
+        message: "产品查询中...",
+        loadingType: "spinner",
+        duration: 0,
+        forbidClick: true
+      });
+      let params = { user_id: this.userId };
+      this.$api
+        .getProductByHospitalProduct(params)
+        .then(res => {
+          this.$toast.clear();
+          // console.log(res);
+          if (res.code == 200) {
+            res.product_info.forEach(value => {
+              this.productList.push({
+                text: value.product_name + "-" + value.specification,
+                value: value.product_id
+              });
+            });
+          } else {
+            this.$toast.fail(res.message);
+          }
+        })
+        .catch(error => {
+          this.$toast.clear();
+        });
+    },
+    //产品
+    productChange(value) {
+      this.productTitle = value.text;
+      //产品切换，重置医院数据
+      this.hospitalTitle = "医院";
+      this.hospitalId = "";
+      this.hospitalList = [];
+      this.bonusDetail = {
+        visit_pass_num: "-",
+        visit_no_pass_num: "-",
+        meeting_pass_num: "-",
+        meeting_no_pass_num: "-",
+        region_promise_sales: "-",
+        region_bidding_price: "-"
+      };
+      this.$toast.loading({
+        message: "医院查询中...",
+        loadingType: "spinner",
+        duration: 0,
+        forbidClick: true
+      });
+      let params = {
+        user_id: this.userId,
+        product_id: this.productId
+      };
+      this.$api
+        .getHospitalByHospitalProduct(params)
+        .then(res => {
+          this.$toast.clear();
+          if (res.code == 200) {
+            res.hospital_info.forEach(value => {
+              this.hospitalList.push({
+                text: value.hospital_name,
+                value: value.hospital_id
+              });
+            });
+          } else {
+            this.$toast.fail(res.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.$toast.clear();
+        });
+    },
+    //医院
+    hospitalChange(value) {
+      this.hospitalTitle = value.text;
+    },
     submitOption() {
-      console.log("11");
+      console.log("user:", this.userId);
+      console.log("product:", this.productId);
+      console.log("hospital:", this.hospitalId);
+      this.bonusDetail = {
+        visit_pass_num: "-",
+        visit_no_pass_num: "-",
+        meeting_pass_num: "-",
+        meeting_no_pass_num: "-",
+        region_promise_sales: "-",
+        region_bidding_price: "-"
+      };
+      if (!this.userId) {
+        this.$toast.fail("请选择代表");
+        return false;
+      } else if (!this.productId) {
+        this.$toast.fail("请选择产品");
+        return false;
+      } else if (!this.hospitalId) {
+        this.$toast.fail("请选择医院");
+        return false;
+      } else {
+        this.$toast.loading({
+          message: "数据查询中...",
+          loadingType: "spinner",
+          duration: 0,
+          forbidClick: true
+        });
+        let params = {
+          user_id: this.userId,
+          product_id: this.productId,
+          hospital_id: this.hospitalId
+        };
+        this.$api
+          .getProductPrize(params)
+          .then(res => {
+            this.$toast.clear();
+            console.log(res);
+            if (res.code == 200) {
+              this.bonusDetail.visit_pass_num = res.visit_pass_num;
+              this.bonusDetail.visit_no_pass_num = res.visit_no_pass_num;
+              this.bonusDetail.meeting_pass_num = res.meeting_pass_num;
+              this.bonusDetail.meeting_no_pass_num = res.meeting_no_pass_num;
+              if (res.hospital_product_info) {
+                this.bonusDetail.region_promise_sales =
+                  res.hospital_product_info.region_promise_sales;
+                this.bonusDetail.region_bidding_price =
+                  res.hospital_product_info.region_bidding_price;
+              }
+            } else {
+              this.$toast.fail(res.message);
+            }
+          })
+          .catch(error => {
+            this.$toast.clear();
+            console.log(error);
+          });
+      }
     }
   }
 };
@@ -107,6 +317,10 @@ export default {
 .van-hairline-unset--top-bottom::after {
   border-width: 0px;
 }
+.option_nav .van-dropdown-menu__title {
+  padding: 0 !important;
+  padding-right: 6px !important;
+}
 </style>
 <style scoped>
 .approve_body {
@@ -116,6 +330,7 @@ export default {
 .option_nav {
   height: 2.2rem;
   border-bottom: 1px solid #f0f0f0;
+  padding-right: 0.8rem;
 }
 .approve_content {
   height: calc(100% - 2.7rem);

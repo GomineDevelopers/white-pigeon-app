@@ -8,7 +8,12 @@
     <van-row class="approve_body">
       <van-row class="option_nav">
         <van-dropdown-menu>
-          <van-dropdown-item v-model="spokesman" :options="spokesmanList" />
+          <van-dropdown-item
+            :title="userTitle"
+            v-model="userId"
+            :options="userList"
+            @change="userChange"
+          />
         </van-dropdown-menu>
       </van-row>
       <van-row class="approve_content">
@@ -50,12 +55,9 @@ export default {
   name: "totalbonus",
   data() {
     return {
-      spokesman: 1,
-      spokesmanList: [
-        { text: "代表1", value: 1 },
-        { text: "代表2", value: 2 },
-        { text: "代表3", value: 3 }
-      ],
+      userTitle: "代表",
+      userId: "",
+      userList: [],
       bonusDetail: {}
     };
   },
@@ -72,9 +74,42 @@ export default {
       document.addEventListener("plusready", plusReady, false);
     }
   },
+  mounted() {
+    this.getUserOption();
+  },
   methods: {
     onBack() {
       this.$router.push("/approveindex");
+    },
+    //获取代表筛选条件
+    getUserOption() {
+      this.$toast.loading({
+        message: "代表查询中...",
+        loadingType: "spinner",
+        duration: 0,
+        forbidClick: true
+      });
+      this.$api
+        .getUserByHospitalProduct()
+        .then(res => {
+          this.$toast.clear();
+          if (res.code == 200) {
+            let data = res.user_info;
+            data.forEach((value, index) => {
+              this.userList.push({ text: value.name, value: value.user_id });
+            });
+          } else {
+            this.$toast("代表数据请求出错！");
+          }
+        })
+        .catch(error => {
+          this.$toast.clear();
+          console.log(error);
+        });
+    },
+    //代表
+    userChange(value) {
+      this.userTitle = value.text;
     },
     submitOption() {
       console.log("11");
