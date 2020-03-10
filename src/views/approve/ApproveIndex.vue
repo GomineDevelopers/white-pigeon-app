@@ -1,9 +1,48 @@
 <template>
   <van-row class="approve">
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar v-if="role == 2" title="审批" left-arrow @click-left="onBack()" />
-      <van-nav-bar v-if="role == 1" title="经理审批" left-arrow @click-left="logOut()" />
+      <van-nav-bar
+        v-if="role == 2"
+        title="审批"
+        left-arrow
+        @click-left="onBack()"
+        @click-right="moreOptionNav = !moreOptionNav"
+      >
+        <van-icon name="ellipsis" class="add_icon" slot="right" />
+      </van-nav-bar>
+      <van-nav-bar
+        v-if="role == 1"
+        title="经理审批"
+        left-arrow
+        @click-left="logOut()"
+        @click-right="moreOptionNav = !moreOptionNav"
+      >
+        <van-icon name="ellipsis" class="add_icon" slot="right" />
+      </van-nav-bar>
     </van-row>
+    <!-- 点击右上角展示操作菜单开始 -->
+    <transition name="van-slide-right">
+      <van-row class="optionNav" v-show="moreOptionNav">
+        <van-row class="optionnav_content">
+          <van-row class="optionNavItem" @click="productBonus">
+            <span class="flex flex_align_center"> <van-icon name="gold-coin-o" />产品奖金</span>
+          </van-row>
+          <van-row class="optionNavItem" @click="totalBonus">
+            <span class="flex flex_align_center">
+              <van-icon name="balance-pay" />
+              总奖金
+            </span>
+          </van-row>
+          <van-row class="optionNavItem" @click="flowDirectionDownload">
+            <span class="flex flex_align_center">
+              <van-icon name="down" />
+              流向下载
+            </span>
+          </van-row>
+        </van-row>
+      </van-row>
+    </transition>
+    <!-- 点击右上角展示操作菜单结束 -->
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <van-row class="tabs flex">
         <van-row class="approve_nav flex">
@@ -35,7 +74,11 @@
               </li>
               <li class="flex justify_start">
                 <span>承诺销量：</span>
-                <span>{{ item.product_name +'-'+item.specification}}&nbsp;&nbsp;&nbsp;{{ item.promise_sales }}/月</span>
+                <span
+                  >{{ item.product_name + "-" + item.specification }}&nbsp;&nbsp;&nbsp;{{
+                    item.promise_sales
+                  }}/月</span
+                >
               </li>
               <li class="flex justify_start">
                 <span>申请时间：</span>
@@ -97,6 +140,7 @@ export default {
   inject: ["reload"], //刷新页面
   data() {
     return {
+      moreOptionNav: false,
       isLoading: false,
       role: "", //角色
       active: 0, //选项状态 0: 产品， 1: 医生
@@ -289,6 +333,15 @@ export default {
     },
     getDoctorDetail(id) {
       this.$router.push({ path: "/doctorapprove", query: { id: id } });
+    },
+    productBonus() {
+      this.$router.push({ name: "productbonus" });
+    },
+    totalBonus() {
+      this.$router.push({ path: "/totalbonus" });
+    },
+    flowDirectionDownload() {
+      this.$router.push({ path: "/flowdirectiondownload" });
     }
   },
   watch: {}
@@ -307,7 +360,7 @@ export default {
   top: 46px;
   left: 0;
   right: 0;
-  z-index: 999;
+  z-index: 998;
   padding-top: 20px;
   padding-bottom: 10px;
   background: #fff;
@@ -335,7 +388,6 @@ export default {
 .approve_content {
   margin-top: 0.3125rem;
   overflow: auto;
-  /* height: 23.875rem; */
   height: 80vh;
 }
 .approve_item {
@@ -368,5 +420,53 @@ export default {
 .approve_state img {
   width: 2.8125rem;
   height: 2.1875rem;
+}
+.optionNav {
+  height: 4.8rem;
+  padding: 0.3rem 0.9rem;
+  position: fixed;
+  top: 1.8rem;
+  right: 0.3rem;
+  font-size: 0.75rem;
+  background: #fff;
+  border-radius: 0.375rem;
+  box-shadow: 0rem 0rem 0.3125rem #ccc;
+  z-index: 999;
+}
+.optionnav_content {
+  position: relative;
+}
+.optionNav::after {
+  display: block;
+  content: "";
+  border-width: 8px 8px 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent #fff transparent;
+  position: absolute;
+  right: 0.6rem;
+  top: -0.65rem;
+}
+.optionNavItem {
+  height: 1.6rem;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+}
+.optionNavItem span {
+  font-size: 0.625rem;
+  color: #333;
+}
+.optionNavItem span img {
+  width: 0.9rem;
+  margin-right: 0.3rem;
+}
+.optionNavItem .van-icon {
+  margin-right: 0.3125rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #3f4459;
+}
+.add_icon {
+  font-size: 1rem;
 }
 </style>

@@ -352,6 +352,22 @@ export default new Router({
           /* webpackChunkName: "userinfo" */
           "./views/selfstudy/ProductData.vue"
         )
+    },
+    {
+      path: "/productbonus",
+      name: "productbonus",
+      component: () => import(/* webpackChunkName: "approve" */ "./views/approve/ProductBonus.vue")
+    },
+    {
+      path: "/totalbonus",
+      name: "totalbonus",
+      component: () => import(/* webpackChunkName: "approve" */ "./views/approve/TotalBonus.vue")
+    },
+    {
+      path: "/flowdirectiondownload",
+      name: "flowdirectiondownload",
+      component: () =>
+        import(/* webpackChunkName: "approve" */ "./views/approve/FlowDirectionDownload.vue")
     }
   ]
 });

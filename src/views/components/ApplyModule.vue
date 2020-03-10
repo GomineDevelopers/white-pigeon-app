@@ -13,7 +13,7 @@
             <ul>
               <li class="prodect_name flex justify_start flex_align_center">
                 <span>产品名：</span>
-                <span>{{ item.product_name }}-{{item.specification}}</span>
+                <span>{{ item.product_name }}-{{ item.specification }}</span>
               </li>
               <li class="flex justify_start flex_align_center">
                 <span>医院名：</span>
@@ -52,10 +52,17 @@ export default {
   },
   watch: {
     status(newVal, oldVal) {
-      console.log("newVal", newVal);
-      this.page = 1; //初始化
-      this.approveList = []; //列表数据
-      this.finished = false; //完成
+      setTimeout(() => {
+        // 清空列表数据
+        this.approveList = [];
+        this.finished = false;
+        this.page = 1; //初始化页码
+
+        // 重新加载数据
+        // 将 loading 设置为 true，表示处于加载状态
+        this.loading = true;
+        this.onLoad();
+      }, 1000);
     }
   },
   methods: {

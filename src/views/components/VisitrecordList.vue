@@ -60,16 +60,23 @@ export default {
       finished: false, //完成
       finishedText: "没有更多了",
       page: 1, //页码
-      row: 10, //每页显示条数
+      row: 3, //每页显示条数
       visitList: []
     };
   },
   watch: {
     status(newVal, oldVal) {
-      this.page = 1; //初始化
-      this.visitList = []; //列表数据
-      this.loading = false; //加载
-      this.finished = false; //完成
+      setTimeout(() => {
+        // 清空列表数据
+        this.visitList = [];
+        this.finished = false; //
+        this.page = 1; //初始化页码
+
+        // 重新加载数据
+        // 将 loading 设置为 true，表示处于加载状态
+        this.loading = true;
+        this.onLoad();
+      }, 1000);
     }
   },
   methods: {

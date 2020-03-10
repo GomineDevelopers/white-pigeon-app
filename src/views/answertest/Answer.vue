@@ -182,14 +182,14 @@ export default {
           score += 1;
         }
       });
-      console.log(score);
+      // console.log(score);
       let identify_status = score >= 8 ? "1" : "2";
-      console.log(identify_status);
+      // console.log(identify_status);
       let params = { identify_status: identify_status };
       this.$api
         .question(params)
         .then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             this.$toast.success("答题提交成功！");
             localStorage.setItem("isAnswer", true); //设置用户答题  true — 答过
@@ -215,14 +215,14 @@ export default {
     },
     //推荐码
     referraCode() {
-      console.log(this.phone);
       let params = { referra_code: this.phone };
       this.$api
         .referraCode(params)
         .then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code == 200) {
             this.$toast.success("推荐码验证成功！");
+            localStorage.setItem("isAnswer", true); //设置用户答题  true — 答过
             setTimeout(() => {
               this.$router.push({ path: "/" });
             }, 1000);
@@ -233,6 +233,7 @@ export default {
             }, 1500);
           } else if (res.code == 9004) {
             this.$toast.fail("你已经提交过了,请勿重复提交");
+            localStorage.setItem("isAnswer", true); //设置用户答题  true — 答过
             setTimeout(() => {
               this.$router.push({ path: "/" });
             }, 1000);

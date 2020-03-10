@@ -36,7 +36,7 @@
             </van-row>
             <van-row class="product_list">
               <span v-for="(product, index3) in item.product" :key="index3 + 'b'">
-                {{ product.product_name +'-'+product.specification+ "&nbsp;&nbsp;" }}
+                {{ product.product_name + "-" + product.specification + "&nbsp;&nbsp;" }}
               </span>
             </van-row>
             <van-row class="hospital_address">地址：{{ item.address }}</van-row>
@@ -85,12 +85,11 @@ export default {
         page: this.page,
         row: this.row
       };
-      console.log("当前页", this.page);
       setTimeout(() => {
         this.$api
           .hospitalManager(params)
           .then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.code == 200) {
               if (res.hospital_data.length < this.row) {
                 res.hospital_data.forEach(value => {
@@ -132,14 +131,12 @@ export default {
             console.log(error);
           });
       }, 500);
-
-      console.log("数据", this.hospitalList);
     },
     //点击搜索
     search() {
       this.hospitalList = [];
       this.page = 1;
-      this.finished = false; //初始化完成状态  @load="hospitalSearch" 自动加载
+      this.finished = false; //初始化完成状态
     },
     goApplyHospitalDetail(id) {
       this.$router.push({ path: "/applyhospitaldetail", query: { id: id } });

@@ -46,14 +46,6 @@ export default {
     status: Number,
     productId: Number
   },
-  watch: {
-    status(newVal, oldVal) {
-      this.page = 1; //初始化
-      this.mettingList = []; //列表数据
-      this.loading = false; //加载
-      this.finished = false; //完成
-    }
-  },
   data() {
     return {
       loading: false, //加载
@@ -72,6 +64,21 @@ export default {
       ]
     };
   },
+  watch: {
+    status(newVal, oldVal) {
+      setTimeout(() => {
+        // 清空列表数据
+        this.mettingList = [];
+        this.finished = false; //
+        this.page = 1; //初始化页码
+
+        // 重新加载数据
+        // 将 loading 设置为 true，表示处于加载状态
+        this.loading = true;
+        this.getMettingList();
+      }, 1000);
+    }
+  },
   methods: {
     //获取会议列表
     getMettingList() {
@@ -84,7 +91,6 @@ export default {
       this.$api
         .createList(params)
         .then(res => {
-          console.log(res);
           if (res.code == 200) {
             if (res.meeting_list.length < this.row) {
               this.mettingList.push(...res.meeting_list);

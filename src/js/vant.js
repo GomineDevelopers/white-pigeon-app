@@ -29,7 +29,10 @@ import {
   SidebarItem,
   CheckboxGroup,
   PullRefresh,
-  SwipeCell
+  SwipeCell,
+  DropdownMenu,
+  DropdownItem,
+  Calendar
 } from "vant";
 
 Vue.use(Button);
@@ -62,5 +65,8 @@ Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(PullRefresh);
 Vue.use(SwipeCell);
+Vue.use(DropdownMenu);
+Vue.use(DropdownItem);
+Vue.use(Calendar);
 
 Vue.prototype.$Dialog = Dialog;

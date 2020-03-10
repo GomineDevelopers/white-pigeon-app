@@ -28,6 +28,7 @@ router.beforeEach((to, from, next) => {
   if (
     to.path == "/retrievePassword" ||
     to.path == "/loginsms" ||
+    to.ath == "/loginpassword" ||
     to.path == "/register" ||
     to.path == "/loginprotocol"
   ) {
@@ -41,7 +42,15 @@ router.beforeEach((to, from, next) => {
         if (
           to.path == "/approveindex" ||
           to.path == "/doctorapprove" ||
-          to.path == "/hospitalapprove"
+          to.path == "/hospitalapprove" ||
+          to.path == "/productbonus" ||
+          to.path == "/totalbonus" ||
+          to.path == "/flowdirectiondownload" ||
+          to.path == "/loginpassword" ||
+          to.path == "/loginsms" ||
+          to.path == "/retrievePassword" ||
+          to.path == "/register" ||
+          to.path == "/loginprotocol"
         ) {
           next(); //注意在router.beforeEach中一定要用next()来跳出导航循环
         } else {

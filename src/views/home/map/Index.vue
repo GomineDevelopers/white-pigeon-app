@@ -150,7 +150,7 @@
           <ul>
             <li class="pull_cell" v-for="(item, index) in hospitalFoldData" :key="index">
               <div class="pull_cell_head" @click="contIndex = index">
-                <span class="tit">{{ item.product_name }}-{{item.specification}}</span>
+                <span class="tit">{{ item.product_name }}-{{ item.specification }}</span>
                 <span class="arrow" v-if="visitShow == 1">流向：0盒</span>
               </div>
               <div class="pull_cell_cont" :class="{ active: index == contIndex }">
@@ -744,8 +744,14 @@ export default {
               }, 1500);
             } else if (res.code == 9002) {
               this.$toast.fail("该省份没有医院信息");
+              setTimeout(() => {
+                this.reload(); //刷新当前页面，加载医院数据
+              }, 1500);
             } else {
               this.$toast.fail(res.message);
+              setTimeout(() => {
+                this.reload(); //刷新当前页面，加载医院数据
+              }, 1500);
             }
           })
           .catch(error => {
