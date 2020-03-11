@@ -22,19 +22,25 @@
             <van-row>
               <ul>
                 <li>
-                  <span>本期可提积分</span>
+                  <span class="title">
+                    本期可提积分
+                    <van-icon name="question" @click="readTips(1)" />
+                    <p class="tips" :class="{ active: tips == 1 }">
+                      本期实际发放积分
+                    </p>
+                  </span>
                   <span>
                     +{{ bonusDatiled.extractable_bonus ? bonusDatiled.extractable_bonus : "0" }}
                   </span>
                 </li>
-                <li>
+                <!-- <li>
                   <span>本期业绩积分</span>
                   <span>
                     +{{ bonusDatiled.achievement_bonus ? bonusDatiled.achievement_bonus : "0" }}
                   </span>
-                </li>
+                </li> -->
                 <li>
-                  <span>本期医院开发奖励积分</span>
+                  <span>本期医院开发积分</span>
                   <span>
                     +{{ bonusDatiled.develop_bonus ? bonusDatiled.develop_bonus : "0" }}
                   </span>
@@ -44,15 +50,27 @@
                   <span> +{{ bonusDatiled.invite_bonus ? bonusDatiled.invite_bonus : "0" }} </span>
                 </li>
                 <li>
-                  <span>本期应扣押积分</span>
+                  <span class="title">
+                    本期扣押积分
+                    <van-icon name="question" @click="readTips(2)" />
+                    <p class="tips" :class="{ active: tips == 2 }">
+                      本期所扣押金积分
+                    </p>
+                  </span>
                   <span> +{{ bonusDatiled.deposit ? bonusDatiled.deposit : "0" }} </span>
                 </li>
-                <li>
+                <!-- <li>
                   <span>本期总计积分</span>
                   <span> +{{ bonusDatiled.total_bonus ? bonusDatiled.total_bonus : "0" }} </span>
-                </li>
+                </li> -->
                 <li>
-                  <span>累计已返积分</span>
+                  <span class="title">
+                    累计已返积分
+                    <van-icon name="question" @click="readTips(3)" />
+                    <p class="tips" :class="{ active: tips == 3 }">
+                      往期已提奖金之和，不含本期
+                    </p>
+                  </span>
                   <span>
                     +{{
                       bonusDatiled.total_extractable_bonus
@@ -62,12 +80,18 @@
                   </span>
                 </li>
                 <li>
-                  <span>累计扣押积分</span>
+                  <span class="title">
+                    累计已扣押积分
+                    <van-icon name="question" @click="readTips(4)" />
+                    <p class="tips" :class="{ active: tips == 4 }" style="left:5.5rem">
+                      往期已扣押金之和，不含本期
+                    </p>
+                  </span>
                   <span>
                     +{{ bonusDatiled.total_deposit ? bonusDatiled.total_deposit : "0" }}
                   </span>
                 </li>
-                <li>
+                <!-- <li>
                   <span>累计延迟积分</span>
                   <span>
                     +{{ bonusDatiled.total_delay_bonus ? bonusDatiled.total_delay_bonus : "0" }}
@@ -76,7 +100,7 @@
                 <li>
                   <span>累计总积分</span>
                   <span> +{{ bonusDatiled.total ? bonusDatiled.total : "0" }} </span>
-                </li>
+                </li> -->
               </ul>
             </van-row>
             <van-row class="cancel_date">核销日期：{{ bonusDatiled.modify_time }}</van-row>
@@ -92,6 +116,7 @@ export default {
   inject: ["reload"], //刷新页面
   data() {
     return {
+      tips: -1,
       isLoading: false,
       name: "",
       name2: "",
@@ -161,6 +186,10 @@ export default {
         this.reload(); //刷新当前页面，加载新数据
         this.isLoading = false;
       }, 500);
+    },
+    // 查看提示
+    readTips(id) {
+      this.tips == id ? (this.tips = -1) : (this.tips = id);
     }
   }
 };
@@ -235,5 +264,33 @@ export default {
   color: #a8aec1;
   font-size: 0.625rem;
   margin-top: 0.3125rem;
+}
+.title {
+  position: relative;
+  display: block;
+  font-size: 0.625rem;
+  width: 100%;
+}
+.title .van-icon {
+  color: #d2d7de !important;
+  font-size: 0.75rem;
+  vertical-align: -2px;
+}
+.title .tips {
+  font-size: 0.5rem;
+  position: absolute;
+  margin: 0;
+  left: 5rem;
+  z-index: 10;
+  top: -5px;
+  width: 52%;
+  background: #fff;
+  padding: 0.2rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.1875rem;
+  display: none;
+}
+.title .tips.active {
+  display: inline-block;
 }
 </style>

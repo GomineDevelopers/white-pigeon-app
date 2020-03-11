@@ -5,10 +5,13 @@
     </van-row>
     <van-row class="main_body">
       <van-row class="applications_info">
-        <van-row class="drug_name bgm_white">{{ productData.productName }}-{{productData.specification}}</van-row>
+        <van-row class="drug_name bgm_white"
+          >{{ productData.productName }}-{{ productData.specification }}</van-row
+        >
         <van-row class="flex_align_center bgm_white padding_3 border_bom">
-          <span class="title"
-            >承诺销量<i>*</i><van-icon name="question" @click="readTips(0)" />
+          <span class="title">
+            承诺销量<i>*</i>
+            <van-icon name="question" @click="readTips(0)" />
             <p class="tips" :class="{ active: tips == 0 }">
               请按实际情况填写，此项目为重点评估项，避免因填写不当影响申请结果。
             </p>
@@ -18,8 +21,9 @@
           </span>
         </van-row>
         <van-row class="bgm_white padding_3 border_bom">
-          <span class="title"
-            >预估开发时间<i>*</i><van-icon name="question" @click="readTips(1)" />
+          <span class="title">
+            预估开发时间<i>*</i>
+            <van-icon name="question" @click="readTips(1)" />
             <p class="tips" :class="{ active: tips == 1 }" style="left: 5.4rem">
               请按实际开发情况填写，此项目为重点评估项，避免因填写不当影响申请结果。
             </p>
