@@ -17,35 +17,57 @@
         </van-dropdown-menu>
       </van-row>
       <van-row class="approve_content">
-        <van-row class="approve_content_item"><span>拜访合格</span><span>14</span></van-row>
-        <van-row class="approve_content_item"><span>拜访不合格</span><span>20</span></van-row>
-        <van-row class="approve_content_item"><span>拜访未核销</span><span>34</span></van-row>
-        <van-row class="approve_content_item"><span>拜访已核销</span><span>25</span></van-row>
-        <van-row class="approve_content_item"><span>会议合格</span><span>1</span></van-row>
-        <van-row class="approve_content_item"><span>会议不合格</span><span>23</span></van-row>
-        <van-row class="approve_content_item"><span>会议未核销</span><span>1</span></van-row>
-        <van-row class="approve_content_item"><span>会议已核销</span><span>23</span></van-row>
-        <van-row class="approve_content_item"
-          ><span>未返行为积分</span><span>213312.00</span></van-row
-        >
-        <van-row class="approve_content_item"
-          ><span>本期可提积分</span><span>14512.11</span></van-row
-        >
-        <van-row class="approve_content_item"><span>本期延迟积分</span><span>23.00</span></van-row>
-        <van-row class="approve_content_item"
-          ><span>累计已扣积分</span><span>4500.00</span></van-row
-        >
-        <van-row class="approve_content_item"
-          ><span>累计已返积分</span><span>23000.00</span></van-row
-        >
-        <van-row class="approve_content_item"><span>推荐用户数量</span><span>1</span></van-row>
-        <van-row class="approve_content_item"><span>累计推荐用户</span><span>20</span></van-row>
-        <van-row class="approve_content_item"
-          ><span>累计推荐积分</span><span>2324.66</span></van-row
-        >
-        <van-row class="approve_content_item"
-          ><span>累计开发积分</span><span>2323.53</span></van-row
-        >
+        <van-row class="approve_content_item">
+          <span>拜访合格</span><span>{{ bonusDetail.visit_pass_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>拜访不合格</span><span>{{ bonusDetail.visit_no_pass_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>拜访未核销</span><span>{{ bonusDetail.meeting_used }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>拜访已核销</span><span>{{ bonusDetail.meeting_noused }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>会议合格</span><span>{{ bonusDetail.meeting_pass_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>会议不合格</span><span>{{ bonusDetail.meeting_no_pass_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>会议未核销</span><span>{{ bonusDetail.meeting_noused }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>会议已核销</span><span>{{ bonusDetail.meeting_used }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>未返行为积分</span><span>{{ bonusDetail.delay_action }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>本期可提积分</span><span>{{ bonusDetail.qte }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>本期延迟积分</span><span>{{ bonusDetail.delay }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>累计已扣积分</span><span>{{ bonusDetail.total_deposit }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>累计已返积分</span><span>{{ bonusDetail.total_returned }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>推荐用户数量</span><span>{{ bonusDetail.invite_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>累计推荐用户</span><span>{{ bonusDetail.total_invite_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>累计推荐积分</span><span>{{ bonusDetail.total_invite_bonus }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>累计开发积分</span><span>{{ bonusDetail.total_develop }}</span>
+        </van-row>
       </van-row>
     </van-row>
   </van-row>
@@ -58,7 +80,25 @@ export default {
       userTitle: "代表",
       userId: "",
       userList: [],
-      bonusDetail: {}
+      bonusDetail: {
+        visit_pass_num: "--",
+        visit_no_pass_num: "--",
+        meeting_pass_num: "--",
+        meeting_no_pass_num: "--",
+        visit_used: "--",
+        visit_noused: "--",
+        meeting_used: "--",
+        meeting_noused: "--",
+        delay_action: "--",
+        qte: "--",
+        delay: "--",
+        total_deposit: "--",
+        total_returned: "--",
+        invite_num: "--",
+        total_invite_num: "--",
+        total_invite_bonus: "--",
+        total_develop: "--"
+      }
     };
   },
   created() {
@@ -110,9 +150,91 @@ export default {
     //代表
     userChange(value) {
       this.userTitle = value.text;
+      this.bonusDetail = {
+        visit_pass_num: "--",
+        visit_no_pass_num: "--",
+        meeting_pass_num: "--",
+        meeting_no_pass_num: "--",
+        visit_used: "--",
+        visit_noused: "--",
+        meeting_used: "--",
+        meeting_noused: "--",
+        delay_action: "--",
+        qte: "--",
+        delay: "--",
+        total_deposit: "--",
+        total_returned: "--",
+        invite_num: "--",
+        total_invite_num: "--",
+        total_invite_bonus: "--",
+        total_develop: "--"
+      };
     },
     submitOption() {
-      console.log("11");
+      this.bonusDetail = {
+        visit_pass_num: "--",
+        visit_no_pass_num: "--",
+        meeting_pass_num: "--",
+        meeting_no_pass_num: "--",
+        visit_used: "--",
+        visit_noused: "--",
+        meeting_used: "--",
+        meeting_noused: "--",
+        delay_action: "--",
+        qte: "--",
+        delay: "--",
+        total_deposit: "--",
+        total_returned: "--",
+        invite_num: "--",
+        total_invite_num: "--",
+        total_invite_bonus: "--",
+        total_develop: "--"
+      };
+      if (!this.userId) {
+        this.$toast.fail("请选择代表");
+        return false;
+      } else {
+        this.$toast.loading({
+          message: "数据查询中...",
+          loadingType: "spinner",
+          duration: 0,
+          forbidClick: true
+        });
+        let params = {
+          user_id: this.userId
+        };
+        this.$api
+          .getSumProductPrize(params)
+          .then(res => {
+            this.$toast.clear();
+            // console.log(res);
+            if (res.code == 200) {
+              this.bonusDetail.visit_pass_num = res.visit_pass_num;
+              this.bonusDetail.visit_no_pass_num = res.visit_no_pass_num;
+              this.bonusDetail.meeting_pass_num = res.meeting_pass_num;
+              this.bonusDetail.meeting_no_pass_num = res.meeting_no_pass_num;
+              this.bonusDetail.visit_used = res.visit_used;
+              this.bonusDetail.visit_noused = res.visit_noused;
+              this.bonusDetail.meeting_used = res.meeting_used;
+              this.bonusDetail.meeting_noused = res.meeting_noused;
+              this.bonusDetail.delay_action = res.delay_action;
+              this.bonusDetail.qte = res.qte;
+              this.bonusDetail.delay = res.delay;
+              this.bonusDetail.total_deposit = res.total_deposit;
+              this.bonusDetail.total_returned = res.total_returned;
+              this.bonusDetail.invite_num = res.invite_num;
+              this.bonusDetail.total_invite_num = res.total_invite_num;
+              this.bonusDetail.total_invite_bonus = res.total_invite_bonus;
+              this.bonusDetail.total_develop = res.total_develop;
+            } else {
+              this.$toast.fail(res.message);
+            }
+          })
+          .catch(error => {
+            this.$toast.clear();
+            console.log(error);
+          });
+      }
     }
   }
 };

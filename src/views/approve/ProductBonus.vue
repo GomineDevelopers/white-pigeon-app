@@ -14,17 +14,17 @@
             :options="userList"
             @change="userChange"
           />
-          <van-dropdown-item v-model="bonus" :options="bonusList" />
+          <van-dropdown-item v-model="bonusType" :options="bonusList" @change="bonusChange" />
           <van-dropdown-item
             :title="productTitle"
-            v-if="bonus == 1"
+            v-if="bonusType == 1"
             v-model="productId"
             :options="productList"
             @change="productChange"
           />
           <van-dropdown-item
             :title="hospitalTitle"
-            v-if="bonus == 1"
+            v-if="bonusType == 1"
             v-model="hospitalId"
             :options="hospitalList"
             @change="hospitalChange"
@@ -33,34 +33,56 @@
       </van-row>
       <van-row class="approve_content">
         <van-row class="approve_content_item"
-          ><span>拜访合格</span><span>{{ bonusDetail.visit_pass_num }}</span></van-row
-        >
-        <van-row class="approve_content_item"
-          ><span>拜访不合格</span><span>{{ bonusDetail.visit_no_pass_num }}</span></van-row
-        >
-        <van-row class="approve_content_item"><span>拜访未核销</span><span>-</span></van-row>
-        <van-row class="approve_content_item"><span>拜访已核销</span><span>-</span></van-row>
-        <van-row class="approve_content_item"
-          ><span>会议合格</span><span>{{ bonusDetail.meeting_pass_num }}</span></van-row
-        >
-        <van-row class="approve_content_item"
-          ><span>会议不合格</span><span>{{ bonusDetail.meeting_no_pass_num }}</span></van-row
-        >
-        <van-row class="approve_content_item"><span>会议未核销</span><span>-</span></van-row>
-        <van-row class="approve_content_item"><span>会议已核销</span><span>-</span></van-row>
-        <van-row class="approve_content_item"><span>未返行为积分</span><span>-</span></van-row>
-        <van-row class="approve_content_item"
-          ><span>产品单价</span><span>{{ bonusDetail.region_bidding_price }}</span></van-row
-        >
-        <van-row class="approve_content_item"
-          ><span>目标销量</span><span>{{ bonusDetail.region_promise_sales }}</span></van-row
-        >
-        <van-row class="approve_content_item"><span>本期销量（盒）</span><span>-</span></van-row>
-        <van-row class="approve_content_item"><span>总销量</span><span>-</span></van-row>
-        <van-row class="approve_content_item"><span>本期可提积分</span><span>-</span></van-row>
-        <van-row class="approve_content_item"><span>本期延迟积分</span><span>-</span></van-row>
-        <van-row class="approve_content_item"><span>累计已扣积分</span><span>-</span></van-row>
-        <van-row class="approve_content_item"><span>累计已返积分</span><span>-</span></van-row>
+          ><span>拜访合格</span><span>{{ bonusDetail.visit_pass_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>拜访不合格</span><span>{{ bonusDetail.visit_no_pass_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>拜访未核销</span><span>{{ bonusDetail.visit_noused }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>拜访已核销</span><span>{{ bonusDetail.visit_used }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>会议合格</span><span>{{ bonusDetail.meeting_pass_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>会议不合格</span><span>{{ bonusDetail.meeting_no_pass_num }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>会议未核销</span><span>{{ bonusDetail.meeting_noused }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>会议已核销</span><span>{{ bonusDetail.meeting_used }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>未返行为积分</span><span>{{ bonusDetail.delay_action }}</span>
+        </van-row>
+        <van-row class="approve_content_item" v-if="bonusType == 1">
+          <span>产品单价</span><span>{{ bonusDetail.region_bidding_price }}</span>
+        </van-row>
+        <van-row class="approve_content_item" v-if="bonusType == 1">
+          <span>目标销量</span><span>{{ bonusDetail.region_promise_sales }}</span>
+        </van-row>
+        <van-row class="approve_content_item" v-if="bonusType == 1">
+          <span>本期销量（盒）</span><span>{{ bonusDetail.sale }}</span>
+        </van-row>
+        <van-row class="approve_content_item" v-if="bonusType == 1">
+          <span>总销量</span><span>{{ bonusDetail.total_sale }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>本期可提积分</span><span>{{ bonusDetail.qte }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>本期延迟积分</span><span>{{ bonusDetail.delay }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>累计已扣积分</span><span>{{ bonusDetail.total_deposit }}</span>
+        </van-row>
+        <van-row class="approve_content_item">
+          <span>累计已返积分</span><span>{{ bonusDetail.total_returned }}</span>
+        </van-row>
       </van-row>
     </van-row>
   </van-row>
@@ -74,7 +96,7 @@ export default {
       productTitle: "产品",
       hospitalTitle: "医院",
       userId: "",
-      bonus: 1,
+      bonusType: 1,
       productId: "",
       hospitalId: "",
       userList: [
@@ -95,12 +117,23 @@ export default {
         // { text: "医院2", value: 2 }
       ], //医院数据
       bonusDetail: {
-        visit_pass_num: "-",
-        visit_no_pass_num: "-",
-        meeting_pass_num: "-",
-        meeting_no_pass_num: "-",
-        region_promise_sales: "-",
-        region_bidding_price: "-"
+        visit_pass_num: "--",
+        visit_no_pass_num: "--",
+        meeting_pass_num: "--",
+        meeting_no_pass_num: "--",
+        region_promise_sales: "--",
+        region_bidding_price: "--",
+        visit_used: "--",
+        visit_noused: "--",
+        meeting_used: "--",
+        meeting_noused: "--",
+        delay_action: "--",
+        sale: "--",
+        total_sale: "--",
+        qte: "--",
+        delay: "--",
+        total_deposit: "--",
+        total_returned: "--"
       }
     };
   },
@@ -161,19 +194,32 @@ export default {
       this.productList = [];
       this.hospitalList = [];
       this.bonusDetail = {
-        visit_pass_num: "-",
-        visit_no_pass_num: "-",
-        meeting_pass_num: "-",
-        meeting_no_pass_num: "-",
-        region_promise_sales: "-",
-        region_bidding_price: "-"
+        visit_pass_num: "--",
+        visit_no_pass_num: "--",
+        meeting_pass_num: "--",
+        meeting_no_pass_num: "--",
+        region_promise_sales: "--",
+        region_bidding_price: "--",
+        visit_used: "--",
+        visit_noused: "--",
+        meeting_used: "--",
+        meeting_noused: "--",
+        delay_action: "--",
+        sale: "--",
+        total_sale: "--",
+        qte: "--",
+        delay: "--",
+        total_deposit: "--",
+        total_returned: "--"
       };
-      this.$toast.loading({
-        message: "产品查询中...",
-        loadingType: "spinner",
-        duration: 0,
-        forbidClick: true
-      });
+      if (this.bonusType == 1) {
+        this.$toast.loading({
+          message: "产品查询中...",
+          loadingType: "spinner",
+          duration: 0,
+          forbidClick: true
+        });
+      }
       let params = { user_id: this.userId };
       this.$api
         .getProductByHospitalProduct(params)
@@ -195,6 +241,27 @@ export default {
           this.$toast.clear();
         });
     },
+    bonusChange() {
+      this.bonusDetail = {
+        visit_pass_num: "--",
+        visit_no_pass_num: "--",
+        meeting_pass_num: "--",
+        meeting_no_pass_num: "--",
+        region_promise_sales: "--",
+        region_bidding_price: "--",
+        visit_used: "--",
+        visit_noused: "--",
+        meeting_used: "--",
+        meeting_noused: "--",
+        delay_action: "--",
+        sale: "--",
+        total_sale: "--",
+        qte: "--",
+        delay: "--",
+        total_deposit: "--",
+        total_returned: "--"
+      };
+    },
     //产品
     productChange(value) {
       this.productTitle = value.text;
@@ -203,12 +270,23 @@ export default {
       this.hospitalId = "";
       this.hospitalList = [];
       this.bonusDetail = {
-        visit_pass_num: "-",
-        visit_no_pass_num: "-",
-        meeting_pass_num: "-",
-        meeting_no_pass_num: "-",
-        region_promise_sales: "-",
-        region_bidding_price: "-"
+        visit_pass_num: "--",
+        visit_no_pass_num: "--",
+        meeting_pass_num: "--",
+        meeting_no_pass_num: "--",
+        region_promise_sales: "--",
+        region_bidding_price: "--",
+        visit_used: "--",
+        visit_noused: "--",
+        meeting_used: "--",
+        meeting_noused: "--",
+        delay_action: "--",
+        sale: "--",
+        total_sale: "--",
+        qte: "--",
+        delay: "--",
+        total_deposit: "--",
+        total_returned: "--"
       };
       this.$toast.loading({
         message: "医院查询中...",
@@ -243,64 +321,159 @@ export default {
     //医院
     hospitalChange(value) {
       this.hospitalTitle = value.text;
+      this.bonusDetail = {
+        visit_pass_num: "--",
+        visit_no_pass_num: "--",
+        meeting_pass_num: "--",
+        meeting_no_pass_num: "--",
+        region_promise_sales: "--",
+        region_bidding_price: "--",
+        visit_used: "--",
+        visit_noused: "--",
+        meeting_used: "--",
+        meeting_noused: "--",
+        delay_action: "--",
+        sale: "--",
+        total_sale: "--",
+        qte: "--",
+        delay: "--",
+        total_deposit: "--",
+        total_returned: "--"
+      };
     },
     submitOption() {
-      console.log("user:", this.userId);
-      console.log("product:", this.productId);
-      console.log("hospital:", this.hospitalId);
+      // console.log("user:", this.userId);
+      // console.log("product:", this.productId);
+      // console.log("hospital:", this.hospitalId);
       this.bonusDetail = {
-        visit_pass_num: "-",
-        visit_no_pass_num: "-",
-        meeting_pass_num: "-",
-        meeting_no_pass_num: "-",
-        region_promise_sales: "-",
-        region_bidding_price: "-"
+        visit_pass_num: "--",
+        visit_no_pass_num: "--",
+        meeting_pass_num: "--",
+        meeting_no_pass_num: "--",
+        region_promise_sales: "--",
+        region_bidding_price: "--",
+        visit_used: "--",
+        visit_noused: "--",
+        meeting_used: "--",
+        meeting_noused: "--",
+        delay_action: "--",
+        sale: "--",
+        total_sale: "--",
+        qte: "--",
+        delay: "--",
+        total_deposit: "--",
+        total_returned: "--"
       };
-      if (!this.userId) {
-        this.$toast.fail("请选择代表");
-        return false;
-      } else if (!this.productId) {
-        this.$toast.fail("请选择产品");
-        return false;
-      } else if (!this.hospitalId) {
-        this.$toast.fail("请选择医院");
-        return false;
-      } else {
-        this.$toast.loading({
-          message: "数据查询中...",
-          loadingType: "spinner",
-          duration: 0,
-          forbidClick: true
-        });
-        let params = {
-          user_id: this.userId,
-          product_id: this.productId,
-          hospital_id: this.hospitalId
-        };
-        this.$api
-          .getProductPrize(params)
-          .then(res => {
-            this.$toast.clear();
-            console.log(res);
-            if (res.code == 200) {
-              this.bonusDetail.visit_pass_num = res.visit_pass_num;
-              this.bonusDetail.visit_no_pass_num = res.visit_no_pass_num;
-              this.bonusDetail.meeting_pass_num = res.meeting_pass_num;
-              this.bonusDetail.meeting_no_pass_num = res.meeting_no_pass_num;
-              if (res.hospital_product_info) {
-                this.bonusDetail.region_promise_sales =
-                  res.hospital_product_info.region_promise_sales;
-                this.bonusDetail.region_bidding_price =
-                  res.hospital_product_info.region_bidding_price;
-              }
-            } else {
-              this.$toast.fail(res.message);
-            }
-          })
-          .catch(error => {
-            this.$toast.clear();
-            console.log(error);
+
+      if (this.bonusType == 1) {
+        if (!this.userId) {
+          this.$toast.fail("请选择代表");
+          return false;
+        } else if (!this.productId) {
+          this.$toast.fail("请选择产品");
+          return false;
+        } else if (!this.hospitalId) {
+          this.$toast.fail("请选择医院");
+          return false;
+        } else {
+          this.$toast.loading({
+            message: "数据查询中...",
+            loadingType: "spinner",
+            duration: 0,
+            forbidClick: true
           });
+          let params = {
+            user_id: this.userId,
+            product_id: this.productId,
+            hospital_id: this.hospitalId
+          };
+          this.$api
+            .getProductPrize(params)
+            .then(res => {
+              this.$toast.clear();
+              console.log(res);
+              if (res.code == 200) {
+                this.bonusDetail.visit_pass_num = res.visit_pass_num;
+                this.bonusDetail.visit_no_pass_num = res.visit_no_pass_num;
+                this.bonusDetail.meeting_pass_num = res.meeting_pass_num;
+                this.bonusDetail.meeting_no_pass_num = res.meeting_no_pass_num;
+                this.bonusDetail.visit_used = res.visit_used;
+                this.bonusDetail.visit_noused = res.visit_noused;
+                this.bonusDetail.meeting_used = res.meeting_used;
+                this.bonusDetail.meeting_noused = res.meeting_noused;
+                this.bonusDetail.delay_action = res.delay_action;
+                this.bonusDetail.sale = res.sale;
+                this.bonusDetail.total_sale = res.total_sale;
+                this.bonusDetail.qte = res.qte;
+                this.bonusDetail.delay = res.delay;
+                this.bonusDetail.total_deposit = res.total_deposit;
+                this.bonusDetail.total_returned = res.total_returned;
+                if (res.hospital_product_info) {
+                  this.bonusDetail.region_promise_sales =
+                    res.hospital_product_info.region_promise_sales;
+                  this.bonusDetail.region_bidding_price =
+                    res.hospital_product_info.region_bidding_price;
+                }
+              } else {
+                this.$toast.fail(res.message);
+              }
+            })
+            .catch(error => {
+              this.$toast.clear();
+              console.log(error);
+            });
+        }
+      } else if (this.bonusType == 2) {
+        // console.log("总奖金");
+        if (!this.userId) {
+          this.$toast.fail("请选择代表");
+          return false;
+        } else {
+          this.$toast.loading({
+            message: "数据查询中...",
+            loadingType: "spinner",
+            duration: 0,
+            forbidClick: true
+          });
+          let params = {
+            user_id: this.userId
+          };
+          this.$api
+            .getSumProductPrize(params)
+            .then(res => {
+              this.$toast.clear();
+              // console.log(res);
+              if (res.code == 200) {
+                this.bonusDetail.visit_pass_num = res.visit_pass_num;
+                this.bonusDetail.visit_no_pass_num = res.visit_no_pass_num;
+                this.bonusDetail.meeting_pass_num = res.meeting_pass_num;
+                this.bonusDetail.meeting_no_pass_num = res.meeting_no_pass_num;
+                this.bonusDetail.visit_used = res.visit_used;
+                this.bonusDetail.visit_noused = res.visit_noused;
+                this.bonusDetail.meeting_used = res.meeting_used;
+                this.bonusDetail.meeting_noused = res.meeting_noused;
+                this.bonusDetail.delay_action = res.delay_action;
+                this.bonusDetail.sale = res.sale;
+                this.bonusDetail.total_sale = res.total_sale;
+                this.bonusDetail.qte = res.qte;
+                this.bonusDetail.delay = res.delay;
+                this.bonusDetail.total_deposit = res.total_deposit;
+                this.bonusDetail.total_returned = res.total_returned;
+                if (res.hospital_product_info) {
+                  this.bonusDetail.region_promise_sales =
+                    res.hospital_product_info.region_promise_sales;
+                  this.bonusDetail.region_bidding_price =
+                    res.hospital_product_info.region_bidding_price;
+                }
+              } else {
+                this.$toast.fail(res.message);
+              }
+            })
+            .catch(error => {
+              this.$toast.clear();
+              console.log(error);
+            });
+        }
       }
     }
   }

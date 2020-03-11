@@ -74,6 +74,7 @@ let api = {
   getProductByHospitalProduct: params => post("/regionManager/getProductByHospitalProduct", params), //经理端顶部筛选获取产品数据
   getHospitalByHospitalProduct: params =>
     post("/regionManager/getHospitalByHospitalProduct", params), //经理端顶部筛选获取医院数据
-  getProductPrize: params => post("/regionManager/getProductPrize", params) //经理端获取产品奖金
+  getProductPrize: params => post("/regionManager/getProductPrize", params), //经理端获取产品奖金
+  getSumProductPrize: params => post("/regionManager/getSumProductPrize", params) //经理端获取产品奖金
 };
 export default api;
