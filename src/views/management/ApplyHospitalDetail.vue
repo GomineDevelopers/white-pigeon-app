@@ -30,7 +30,7 @@
         <van-row class="already_develop_product hospital_module">
           <van-row v-for="(awaitItem, index) in awaitDevelopd" :key="index + 'a'">
             <span
-              >{{ awaitItem.product_name }}-{{ awaitItem.specification }}&nbsp;&nbsp;¥{{
+              >{{ awaitItem.product_name }}-{{ awaitItem.package }}&nbsp;&nbsp;¥{{
                 awaitItem.bidding_price
               }}</span
             >
@@ -50,18 +50,14 @@
         <van-row class="already_develop_content" v-show="isShow">
           <van-row v-for="(item, index2) in developdData" :key="index2 + 'b'">
             <span
-              >{{ item.product_name }}-{{ item.specification }}&nbsp;&nbsp;¥{{
-                item.bidding_price
-              }}</span
+              >{{ item.product_name }}-{{ item.package }}&nbsp;&nbsp;¥{{ item.bidding_price }}</span
             >
           </van-row>
         </van-row>
         <van-row class="already_develop_content" v-show="!isShow">
           <van-row v-for="(item, index2) in developdData" :key="index2 + 'b'">
             <span
-              >{{ item.product_name }}-{{ item.specification }}&nbsp;&nbsp;¥{{
-                item.bidding_price
-              }}</span
+              >{{ item.product_name }}-{{ item.package }}&nbsp;&nbsp;¥{{ item.bidding_price }}</span
             >
           </van-row>
         </van-row>

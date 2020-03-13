@@ -75,7 +75,7 @@
               <li class="flex justify_start">
                 <span>承诺销量：</span>
                 <span
-                  >{{ item.product_name + "-" + item.specification }}&nbsp;&nbsp;&nbsp;{{
+                  >{{ item.product_name + "-" + item.package }}&nbsp;&nbsp;&nbsp;{{
                     item.promise_sales
                   }}/月</span
                 >

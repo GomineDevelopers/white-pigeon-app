@@ -33,7 +33,7 @@
               <van-cell
                 v-for="(item, index) in hospitalData.awaitApplyProduct"
                 :key="index + 'p'"
-                :title="item.product_name + '-' + item.specification + '  ¥' + item.bidding_price"
+                :title="item.product_name + '-' + item.package + '  ¥' + item.bidding_price"
                 clickable
                 @click="product = item.id"
               >
@@ -63,7 +63,7 @@
               >{{
                 alreadyItem.product_name +
                   "-" +
-                  alreadyItem.specification +
+                  alreadyItem.package +
                   "  ¥" +
                   alreadyItem.bidding_price
               }}</van-row
@@ -77,7 +77,7 @@
               >{{
                 alreadyItem.product_name +
                   "-" +
-                  alreadyItem.specification +
+                  alreadyItem.package +
                   "  ¥" +
                   alreadyItem.bidding_price
               }}</van-row
@@ -139,7 +139,7 @@ export default {
                 hospitailStatus: this.hospitalData.infomation.status,
                 productId: this.product,
                 productName: res.product_info.product_name,
-                specification:res.product_info.specification
+                package: res.product_info.package
               };
               this.$router.push({
                 path: "/submitapplications",

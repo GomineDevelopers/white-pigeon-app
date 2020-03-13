@@ -150,7 +150,7 @@
           <ul>
             <li class="pull_cell" v-for="(item, index) in hospitalFoldData" :key="index">
               <div class="pull_cell_head" @click="contIndex = index">
-                <span class="tit">{{ item.product_name }}-{{ item.specification }}</span>
+                <span class="tit">{{ item.product_name }}-{{ item.package }}</span>
                 <span class="arrow" v-if="visitShow == 1">流向：0盒</span>
               </div>
               <div class="pull_cell_cont" :class="{ active: index == contIndex }">

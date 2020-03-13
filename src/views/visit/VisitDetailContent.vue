@@ -26,7 +26,7 @@
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">产品</span>
-        <span>{{ detail.product_name }}-{{ detail.specification }}</span>
+        <span>{{ detail.product_name }}-{{ detail.package }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">宣传主题</span>

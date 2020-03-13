@@ -36,7 +36,7 @@
             </van-row>
             <van-row class="product_list">
               <span v-for="(product, index3) in item.product" :key="index3 + 'b'">
-                {{ product.product_name + "-" + product.specification + "&nbsp;&nbsp;" }}
+                {{ product.product_name + "-" + product.package + "&nbsp;&nbsp;" }}
               </span>
             </van-row>
             <van-row class="hospital_address">地址：{{ item.address }}</van-row>

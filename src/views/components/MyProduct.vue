@@ -48,7 +48,7 @@ export default {
                   list.forEach(item => {
                     if (item.product_id == i) {
                       if (!productName) {
-                        productName = item.product_name+'-'+item.specification;
+                        productName = item.product_name + "-" + item.package;
                       }
                       hospital.push({
                         hospital_id: item.hospital_id,
@@ -59,11 +59,11 @@ export default {
                   dealProductList.push({
                     product_id: i,
                     product_name: productName,
-                    hospital: hospital,
+                    hospital: hospital
                   });
                 }
                 this.productList = dealProductList;
-                console.log(this.productList)
+                console.log(this.productList);
                 this.finished = true;
                 break;
               case 3001:

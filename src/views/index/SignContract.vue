@@ -362,7 +362,7 @@ export default {
       this.$api
         .getContractInfo(params)
         .then(res => {
-          console.log(res,'-----------');
+          console.log(res, "-----------");
           if (res.code == 200) {
             this.$toast.clear();
             this.firstPartyName = res.getContractInfo.product_company; //甲方名称
@@ -376,8 +376,12 @@ export default {
             );
             this.estimatedTime = timeFormat(estimated_time);
             this.endTime = timeFormat(endFDate);
-            this.product = res.getContractInfo.product_name+'-'+res.getContractInfo.specification;
-            this.content = res.getContractInfo.product_name +'-'+ res.getContractInfo.specification+ "产品的所有甲方指定推广宣传内容";
+            this.product = res.getContractInfo.product_name + "-" + res.getContractInfo.package;
+            this.content =
+              res.getContractInfo.product_name +
+              "-" +
+              res.getContractInfo.package +
+              "产品的所有甲方指定推广宣传内容";
             this.hospital = res.getContractInfo.hospital_name;
           } else {
             this.$toast.fail(res.message);

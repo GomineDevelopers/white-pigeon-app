@@ -20,7 +20,7 @@
               <span>{{ item.speaker }}</span>
             </li>
             <li class="flex justify_start">
-              <span>{{ item.product_name + "-" + item.specification }}</span>
+              <span>{{ item.product_name + "-" + item.package }}</span>
             </li>
             <li class="flex justify_start">
               <span>{{ item.start_time }}</span>

@@ -13,7 +13,7 @@
             <ul>
               <li class="prodect_name flex justify_start flex_align_center">
                 <span>产品名：</span>
-                <span>{{ item.product_name }}-{{ item.specification }}</span>
+                <span>{{ item.product_name }}-{{ item.package }}</span>
               </li>
               <li class="flex justify_start flex_align_center">
                 <span>医院名：</span>

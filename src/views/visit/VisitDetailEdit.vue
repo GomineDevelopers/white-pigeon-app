@@ -30,9 +30,7 @@
         <van-row class="info_module" @click="productShow = true">
           <van-row class="row_title">产品<i>*</i></van-row>
           <van-row class="icon_right flex">
-            <span class="flex_1">{{
-              product_name ? product_name + "-" + specification : "请选择"
-            }}</span>
+            <span class="flex_1">{{ product_name ? product_name + "-" + package : "请选择" }}</span>
             <van-icon name="arrow" />
           </van-row>
         </van-row>
@@ -216,7 +214,7 @@ export default {
       productShow: false,
       publicityShow: false,
       prevTime: null,
-      specification: "",
+      package: "",
       hospital_name: "",
       doctor_name: "",
       start_time: "",
@@ -342,7 +340,7 @@ export default {
               if (item.hospital_id == data.hospital_id) {
                 this.productList.push({
                   id: item.product_id,
-                  text: item.product_name + "-" + item.specification
+                  text: item.product_name + "-" + item.package
                 });
               }
             });

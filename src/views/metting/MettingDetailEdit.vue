@@ -12,7 +12,7 @@
             <i>*</i>
           </van-row>
           <van-row class="icon_right flex" @click="productShow = true">
-            <span class="flex_1">{{ product ? product + "-" + specification : "请选择" }}</span>
+            <span class="flex_1">{{ product ? product + "-" + package : "请选择" }}</span>
             <van-icon name="arrow" />
           </van-row>
         </van-row>
@@ -369,7 +369,7 @@ export default {
             let data = res.meeting_detail[0];
             this.$toast.clear();
             this.product = data.product_name;
-            this.specification = data.specification;
+            this.package = data.package;
             this.productId = data.product_id;
             this.conferenceTheme = data.product_topic;
             this.conferenceThemeId = data.product_topic_id;
@@ -415,7 +415,7 @@ export default {
                     true &&
                     item.push({
                       id: next.product_id,
-                      text: next.product_name + "-" + next.specification
+                      text: next.product_name + "-" + next.package
                     }));
               return item;
             }, []);

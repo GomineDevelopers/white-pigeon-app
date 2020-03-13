@@ -6,7 +6,7 @@
     <van-row class="doctor_detail">
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">产品</span>
-        <span>{{ metting.product_name }}-{{metting.specification}}</span>
+        <span>{{ metting.product_name }}-{{ metting.package }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">会议主题</span>
@@ -59,7 +59,7 @@ export default {
         personnel_image: "",
         personnel_image_two: "",
         sign_image: "",
-        specification:""
+        package: ""
       }
     };
   },

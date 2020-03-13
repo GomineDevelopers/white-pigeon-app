@@ -123,7 +123,7 @@ export default {
           if (res.code == 200) {
             res.product_info.forEach(value => {
               this.productList.push({
-                text: value.product_name + "-" + value.specification,
+                text: value.product_name + "-" + value.package,
                 value: value.product_id
               });
             });

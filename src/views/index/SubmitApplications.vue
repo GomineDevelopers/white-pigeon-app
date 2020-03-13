@@ -6,7 +6,7 @@
     <van-row class="main_body">
       <van-row class="applications_info">
         <van-row class="drug_name bgm_white"
-          >{{ productData.productName }}-{{ productData.specification }}</van-row
+          >{{ productData.productName }}-{{ productData.package }}</van-row
         >
         <van-row class="flex_align_center bgm_white padding_3 border_bom">
           <span class="title">

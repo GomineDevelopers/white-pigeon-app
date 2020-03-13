@@ -352,7 +352,7 @@ export default {
                     true &&
                     item.push({
                       id: next.product_id,
-                      text: next.product_name + "-" + next.specification
+                      text: next.product_name + "-" + next.package
                     }));
               return item;
             }, []);

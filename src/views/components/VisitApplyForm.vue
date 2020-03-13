@@ -337,7 +337,7 @@ export default {
         if (item.hospital_id == v.id) {
           this.productList.push({
             id: item.product_id,
-            text: item.product_name + "-" + item.specification
+            text: item.product_name + "-" + item.package
           });
         }
       });
