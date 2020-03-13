@@ -5,9 +5,9 @@
     </van-row>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <van-row class="main_body">
-        <van-row class="activity_img" @click="goActivity"
-          ><img src="../../assets/image/huodong.png"
-        /></van-row>
+        <van-row class="activity_img" @click="goActivity">
+          <img src="../../assets/image/huodong.png" />
+        </van-row>
         <van-row
           class="notify_body"
           @click="toSign(notifyItem.id)"
