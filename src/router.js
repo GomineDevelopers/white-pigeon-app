@@ -368,6 +368,11 @@ export default new Router({
       name: "flowdirectiondownload",
       component: () =>
         import(/* webpackChunkName: "approve" */ "./views/approve/FlowDirectionDownload.vue")
+    },
+    {
+      path: "/feedbacklist",
+      name: "feedbacklist",
+      component: () => import(/* webpackChunkName: "approve" */ "./views/approve/FeedbackList.vue")
     }
   ]
 });

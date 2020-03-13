@@ -46,6 +46,7 @@ router.beforeEach((to, from, next) => {
           to.path == "/productbonus" ||
           to.path == "/totalbonus" ||
           to.path == "/flowdirectiondownload" ||
+          to.path == "/feedbacklist" ||
           to.path == "/loginpassword" ||
           to.path == "/loginsms" ||
           to.path == "/retrievePassword" ||

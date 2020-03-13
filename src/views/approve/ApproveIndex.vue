@@ -39,6 +39,12 @@
               流向下载
             </span>
           </van-row>
+          <van-row class="optionNavItem" @click="feedbackList">
+            <span class="flex flex_align_center">
+              <van-icon name="envelop-o" />
+              代表反馈
+            </span>
+          </van-row>
         </van-row>
       </van-row>
     </transition>
@@ -342,6 +348,9 @@ export default {
     },
     flowDirectionDownload() {
       this.$router.push({ path: "/flowdirectiondownload" });
+    },
+    feedbackList() {
+      this.$router.push({ path: "/feedbacklist" });
     }
   },
   watch: {}
@@ -422,7 +431,7 @@ export default {
   height: 2.1875rem;
 }
 .optionNav {
-  height: 4.8rem;
+  height: 6.3rem;
   padding: 0.3rem 0.9rem;
   position: fixed;
   top: 1.8rem;
