@@ -11,6 +11,10 @@
             <span>{{ detail.user_name }}</span>
           </li>
           <li>
+            <span>客户名称：</span>
+            <span>{{ detail.customer_name }}</span>
+          </li>
+          <li>
             <span>电话：</span>
             <span>{{ detail.email }}</span>
           </li>

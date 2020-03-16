@@ -18,7 +18,7 @@
           <div>
             <img :src="item.product_image" />
           </div>
-          <span>{{ item.product_name + "-" + item.package }}</span>
+          <span>{{ item.product_name }}</span>
         </van-col>
       </van-row>
       <van-row class="setting_body" v-show="!active">
@@ -101,7 +101,7 @@ export default {
     golist(id, name, pack) {
       this.$router.push({
         path: "/productdata",
-        query: { id: id, productName: name, package: pack }
+        query: { id: id, productName: name }
       });
     }
   }

@@ -49,6 +49,12 @@
           </van-uploader>
         </van-row>
       </van-row>
+      <van-row class="info_module">
+        <van-row>客户名称</van-row>
+        <van-row>
+          <van-field v-model="customer" placeholder="请输入客户名称" />
+        </van-row>
+      </van-row>
       <van-row class="submit_btn" @click="submitInfo">
         <van-button type="info">提&nbsp;交</van-button>
       </van-row>
@@ -99,7 +105,8 @@ export default {
       IDdateValue: "",
       IDaddress: "",
       IDcardurl1: "",
-      IDcardurl2: ""
+      IDcardurl2: "",
+      customer: ""
     };
   },
   created() {
@@ -200,6 +207,9 @@ export default {
       } else if (!_this.IDcardurl2) {
         _this.$notify("身份证国徽面不能为空");
         return;
+      } else if (!_this.customer) {
+        _this.$notify("客户名称不能为空");
+        return;
       }
       let data = {
         username: _this.userName,
@@ -207,8 +217,10 @@ export default {
         id_address: _this.IDaddress,
         id_effect_time: _this.IDdateValue,
         id_front_img: _this.IDcardurl1,
-        id_back_img: _this.IDcardurl2
+        id_back_img: _this.IDcardurl2,
+        customer_name: _this.customer
       };
+      console.log(data);
       _this.$dialog
         .confirm({
           message: "请确定您填写的姓名与注册 手机号姓名一致。",
