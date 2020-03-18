@@ -712,8 +712,10 @@ export default {
     positionHospital(item) {
       //点击搜索出的医院列表
       // console.log(item)
-      this.center.lng = item.hospital_longtude;
-      this.center.lat = item.hospital_latitude;
+      this.center = {
+        lng: item.hospital_longtude,
+        lat: item.hospital_latitude
+      };
       this.inputHidden();
       this.hosSingleData = {};
     },
