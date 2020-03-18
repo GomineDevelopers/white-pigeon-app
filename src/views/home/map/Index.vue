@@ -65,6 +65,7 @@
       @zoomend="drag"
       @ready="handler"
     >
+      <bm-local-search :auto-viewport="true" :location="location"></bm-local-search>
       <template v-if="markerReset">
         <map-marker
           v-for="(item, index) in filterHospital"
@@ -329,7 +330,8 @@ export default {
       },
       markerReset: true,
       bottomNavIsShow: true,
-      center: { lng: 121.536019, lat: 31.222785 }, //当前定位
+      location: "",
+      center: "", //当前定位省市
       zoom: 14,
       mapStyle: {
         //地图样式
@@ -411,7 +413,7 @@ export default {
       // geoLocation.getCurrentPosition(r => {
       // this.center = { lng: r.longitude, lat: r.latitude}
       // });
-      this.zoom = 13;
+      this.zoom = 12;
     },
     // 显示可视区域医院数据
     drag() {
@@ -478,7 +480,6 @@ export default {
         this.$api
           .hospitalDevelopd(params)
           .then(res => {
-            console.log(res);
             if (res.code == 200) {
               this.visitAndMettingShow = true;
               let hospitolContent = res.hospital_data;
@@ -627,6 +628,7 @@ export default {
                 this.$toast.clear();
                 if (res.code == 200) {
                   this.hospitalData = res.data;
+                  this.center = res.province_name;
                   this.drag();
                 } else {
                   this.$toast.fail(res.message);
@@ -717,7 +719,7 @@ export default {
     },
     //弹框省市确认
     provinceConfirm(value) {
-      // console.log(value)
+      return false;
       this.provinceValue = value;
       this.provinceShow = false;
       this.provinceSubmit();
@@ -736,7 +738,6 @@ export default {
         this.$api
           .selectProvice(params)
           .then(res => {
-            // console.log(res);
             if (res.code == 200) {
               this.$toast.success("提交成功！");
               setTimeout(() => {
