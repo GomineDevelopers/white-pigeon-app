@@ -37,7 +37,7 @@
           </van-row>
         </van-row>
       </van-row>
-      <van-row class="await_develop_title">已开发产品</van-row>
+      <van-row class="await_develop_title">开发产品</van-row>
       <van-row class="already_develop_product hospital_module">
         <van-row class="already_develop_title">
           <van-col span="12" :class="isShow ? 'active' : ''" @click="isShow = !isShow"
@@ -84,7 +84,7 @@ export default {
         address: "",
         tel: ""
       }, //医院基础信息
-      developdData: [], //已开发产品
+      developdData: [], //开发产品
       awaitDevelopd: [] //待开发产品
     };
   },
@@ -128,7 +128,7 @@ export default {
               address: res.hospital_data.detail_address,
               tel: res.hospital_data.hospital_mobile
             };
-            this.developdData = res.developd_data; //已开发产品
+            this.developdData = res.developd_data; //开发产品
             this.awaitDevelopd = res.development_no_apply_data; //待开发产品
           } else {
             this.$toast.fail(res.message);

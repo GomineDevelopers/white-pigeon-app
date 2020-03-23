@@ -79,7 +79,7 @@
                 <span>{{ item.hospital_name }}</span>
               </li>
               <li class="flex justify_start">
-                <span>承诺销量：</span>
+                <span>承诺月均销量：</span>
                 <span
                   >{{ item.product_name + "-" + item.package }}&nbsp;&nbsp;&nbsp;{{
                     item.promise_sales

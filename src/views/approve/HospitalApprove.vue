@@ -19,7 +19,7 @@
             <span>{{ detail.hospital_name }}</span>
           </li>
           <li class="flex_li">
-            <span>承诺销量：</span>
+            <span>承诺月均销量：</span>
             <span
               >{{ detail.product_name + "-" + detail.package }}&nbsp;&nbsp;{{
                 detail.promise_sales
@@ -91,7 +91,7 @@
         <van-field
           type="number"
           v-model="promiseSales"
-          placeholder="请输入承诺销量"
+          placeholder="请输入承诺月均销量"
           ref="promise"
         />
         <van-field type="number" v-model="biddingPrice" placeholder="请输入单价" ref="bidding" />
@@ -230,7 +230,7 @@ export default {
     passBtn(action, done) {
       if (action === "confirm") {
         if (!this.promiseSales) {
-          this.$toast("承诺销量不能为空");
+          this.$toast("承诺月均销量不能为空");
           this.$refs.promise.focus();
           done(false);
         } else if (!this.biddingPrice) {

@@ -10,7 +10,7 @@
         >
         <van-row class="flex_align_center bgm_white padding_3 border_bom">
           <span class="title">
-            承诺销量<i>*</i>
+            承诺月均销量<i>*</i>
             <van-icon name="question" @click="readTips(0)" />
             <p class="tips" :class="{ active: tips == 0 }">
               请按实际情况填写，此项目为重点评估项，避免因填写不当影响申请结果。
@@ -339,7 +339,7 @@ export default {
   font-size: 0.5rem;
   position: absolute;
   margin: 0;
-  left: 4.2rem;
+  left: 5.2rem;
   z-index: 10;
   top: -5px;
   width: 56%;

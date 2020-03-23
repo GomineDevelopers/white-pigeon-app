@@ -44,9 +44,9 @@
         </van-row>
       </van-row>
 
-      <!-- 已开发产品开始 -->
+      <!-- 开发产品开始 -->
       <van-row v-if="hospitalData.developmentProduct.length != 0">
-        <van-row class="await_develop_title">已开发产品</van-row>
+        <van-row class="await_develop_title">开发产品</van-row>
         <van-row class="already_develop_product hospital_module">
           <van-row class="already_develop_title">
             <van-col span="12" :class="isShow ? 'active' : ''" @click="isShow = !isShow"
@@ -85,7 +85,7 @@
           </van-row>
         </van-row>
       </van-row>
-      <!-- 已开发产品结束 -->
+      <!-- 开发产品结束 -->
       <van-row class="public_btn">
         <button @click="submitApplications">确&nbsp;定</button>
       </van-row>

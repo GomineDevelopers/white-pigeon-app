@@ -14,7 +14,7 @@
             <span>{{ detailContent.hospital_name }}</span>
           </li>
           <li class="flex_li">
-            <span>承诺销量：</span>
+            <span>承诺月均销量：</span>
             <span
               >{{ detailContent.product_name }}-{{ detailContent.package }}&nbsp;&nbsp;
               {{ detailContent.promise_sales }}</span
