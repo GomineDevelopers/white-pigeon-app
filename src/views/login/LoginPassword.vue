@@ -94,10 +94,11 @@ export default {
         email: this.phone,
         password: this.password
       };
+      console.log("12:" + postData);
       this.$api
         .loginPassword(postData)
         .then(res => {
-          // console.log(res);
+          console.log("154:" + res);
           this.loading = false;
           if (res.code == 200) {
             this.$store.commit("setToken", res.token); //设置store中token

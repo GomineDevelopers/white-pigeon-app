@@ -134,7 +134,10 @@ span {
 .justify_right {
   text-align: right;
 }
-
+.van-nav-bar {
+  height: 2rem;
+  line-height: 2rem;
+}
 .van-nav-bar .van-icon {
   color: rgba(58, 64, 85, 1);
 }

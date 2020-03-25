@@ -721,7 +721,6 @@ export default {
     },
     //弹框省市确认
     provinceConfirm(value) {
-      return false;
       this.provinceValue = value;
       this.provinceShow = false;
       this.provinceSubmit();
