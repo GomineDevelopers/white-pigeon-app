@@ -461,6 +461,7 @@ export default {
     },
     //点击医院获取详细信息
     clickHandler(data) {
+      console.log("点击医院的数据", data);
       this.isPopup = true;
       this.bottomNavIsShow = false;
       this.currentPostion.lng = data.hospital_longtude;
@@ -711,6 +712,7 @@ export default {
     //点击搜索医院列表定位
     positionHospital(item) {
       //点击搜索出的医院列表
+      console.log(item);
       this.center = {
         lng: item.hospital_longtude,
         lat: item.hospital_latitude

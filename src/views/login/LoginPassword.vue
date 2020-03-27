@@ -11,12 +11,12 @@
           <van-field v-model="phone" type="number" placeholder="请输入手机号" />
         </van-row>
         <van-row class="password_input">
-          <van-col span="16">
+          <van-col span="15">
             <van-field v-model="password" type="password" placeholder="请输入密码" />
           </van-col>
-          <van-col span="8" class="forget_password_btn">
+          <van-col span="9" class="forget_password_btn">
             <span></span>
-            <router-link :to="{ path: '/retrievePassword' }">忘记密码</router-link>
+            <router-link :to="{ path: '/retrievePassword' }">设置新密码</router-link>
           </van-col>
         </van-row>
         <van-row class="login_btn">

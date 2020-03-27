@@ -1,6 +1,6 @@
 <template>
   <van-row>
-    <van-nav-bar title="找回密码" left-arrow @click-left="onBack()" />
+    <van-nav-bar title="设置新密码" left-arrow @click-left="onBack()" />
     <van-row class="login_main_body">
       <van-row class="name_input">
         <van-field v-model="phone" type="number" placeholder="请输入手机号" />
@@ -157,7 +157,7 @@ export default {
         .then(res => {
           console.log(res);
           if (res.code == 200) {
-            this.$toast.success("找回密码成功！");
+            this.$toast.success("设置新密码成功！");
             localStorage.removeItem("token");
             this.$router.push({ path: "/" });
           } else {

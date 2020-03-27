@@ -1,7 +1,7 @@
 <template>
   <van-row>
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="开发记录" left-arrow @click-left="onBack()"> </van-nav-bar>
+      <van-nav-bar title="新增记录" left-arrow @click-left="onBack()"> </van-nav-bar>
     </van-row>
     <van-row class="main_body">
       <van-row class="approve_content">

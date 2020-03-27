@@ -16,13 +16,13 @@
         <van-row class="optionnav_content">
           <van-row class="optionNavItem">
             <span class="flex flex_align_center" @click="newDoctor">
-              <van-icon name="plus" />新建医生</span
+              <van-icon name="plus" />新增医生</span
             >
           </van-row>
           <van-row class="optionNavItem">
             <span class="flex flex_align_center" @click="doctorApplyList">
               <img src="../../assets/image/record_con.png" />
-              开发记录
+              新增记录
             </span>
           </van-row>
         </van-row>

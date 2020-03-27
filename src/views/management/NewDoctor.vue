@@ -1,7 +1,7 @@
 <template>
   <van-row>
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="新建医生" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="新增医生" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body new_doctor">
       <van-row class="info_module">
@@ -92,7 +92,7 @@
         </van-row>
       </van-row>
       <van-row class="public_btn" @click="create">
-        <button>创&nbsp;建</button>
+        <button>新&nbsp;增</button>
       </van-row>
     </van-row>
 
@@ -467,7 +467,7 @@ export default {
         })
         .then(() => {
           this.$toast.loading({
-            message: "创建中...",
+            message: "数据提交中...",
             forbidClick: true,
             duration: 0,
             loadingType: "spinner",
@@ -489,7 +489,7 @@ export default {
             .then(res => {
               console.log(res);
               if (res.code == 200) {
-                this.$toast.success("创建成功");
+                this.$toast.success("提交成功");
                 setTimeout(() => {
                   this.$router.push({ path: "/doctormanagement" });
                 }, 1500);
