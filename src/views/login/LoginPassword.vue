@@ -58,13 +58,14 @@ export default {
       plus.navigator.setStatusBarBackground("#FFF");
       plus.navigator.setStatusBarStyle("dark");
 
-      _this.clientid = plus.push.getClientInfo().clientid;
-      if (_this.clientid == null || !_this.clientid) {
-        //如果获取的cid为空，说明客户端向推送服务器注册还未完成，可以使用setTimeout延时重试。
-        setTimeout(() => {
-          _this.clientid = plus.push.getClientInfo().clientid;
-        }, 3000);
-      }
+      //此处是为了上架ios所注释的push代码，后面要恢复（2020.03.27）
+      // _this.clientid = plus.push.getClientInfo().clientid;
+      // if (_this.clientid == null || !_this.clientid) {
+      //   //如果获取的cid为空，说明客户端向推送服务器注册还未完成，可以使用setTimeout延时重试。
+      //   setTimeout(() => {
+      //     _this.clientid = plus.push.getClientInfo().clientid;
+      //   }, 3000);
+      // }
     }
     if (window.plus) {
       plusReady();

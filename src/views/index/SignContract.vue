@@ -460,7 +460,8 @@ export default {
         message: "合同提交中...",
         forbidClick: true,
         duration: 0,
-        loadingType: "spinner"
+        loadingType: "spinner",
+        overlay: true
       });
       let base64Img = this.$refs.canvasCont.toDataURL();
       let files = this.base64ToFile(base64Img);

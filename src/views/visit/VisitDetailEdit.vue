@@ -553,7 +553,8 @@ export default {
         message: "数据提交中...",
         forbidClick: true,
         duration: 0,
-        loadingType: "spinner"
+        loadingType: "spinner",
+        overlay: true
       });
       this.$api
         .visitEdit(data)

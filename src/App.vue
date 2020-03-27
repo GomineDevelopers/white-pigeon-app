@@ -29,19 +29,20 @@ export default {
       plus.navigator.setStatusBarStyle("dark");
 
       //监听系统通知栏消息点击事件
-      plus.push.addEventListener(
-        "click",
-        function(msg) {
-          //处理点击消息的业务逻辑代码
-          console.log(msg);
-          if (msg.title.match("产品")) {
-            vm.$router.push("/productapply");
-          } else if (msg.title.match("医生")) {
-            vm.$router.push("/doctorapplylist");
-          }
-        },
-        false
-      );
+      // plus.push.addEventListener(
+      //   "click",
+      //   function(msg) {
+      //     //处理点击消息的业务逻辑代码
+      //     console.log(msg);
+      //     if (msg.title.match("产品")) {
+      //       vm.$router.push("/productapply");
+      //     } else if (msg.title.match("医生")) {
+      //       vm.$router.push("/doctorapplylist");
+      //     }
+      //   },
+      //   false
+      // );  //此处是为了上架ios所注释的push代码，后面要恢复（2020.03.27）
+
       //监听接收透传消息事件
       // plus.push.addEventListener(
       //   "receive",

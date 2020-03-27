@@ -470,7 +470,8 @@ export default {
             message: "创建中...",
             forbidClick: true,
             duration: 0,
-            loadingType: "spinner"
+            loadingType: "spinner",
+            overlay: true
           });
           let postData = {
             doctor_name: this.doctorName,

@@ -22,7 +22,17 @@
         </van-col>
       </van-row>
       <van-row class="login_btn">
-        <van-button type="info" @click="registerInfo">注&nbsp;册</van-button>
+        <van-button
+          @click="registerInfo"
+          :loading="loading"
+          type="info"
+          loading-text="注册中..."
+          text="注 册"
+        />
+        <!-- <van-button type="info" @click="registerInfo" :loading="loading"
+          type="info"
+          :loading-text="loadingText"
+          text="确认">注&nbsp;册</van-button> -->
       </van-row>
     </van-row>
     <van-row class="login_protocol flex flex_align_center flex_justify_center">
@@ -43,7 +53,8 @@ export default {
       isDisable: true,
       checked: true,
       time: 60,
-      timer: null
+      timer: null,
+      loading: false
     };
   },
   beforeDestroy() {
@@ -138,6 +149,7 @@ export default {
         });
         return false;
       }
+      this.loading = true;
       let postData = {
         mobile: this.phone,
         password: this.password,
@@ -156,8 +168,10 @@ export default {
           } else {
             this.$toast.fail(res.message);
           }
+          this.loading = false;
         })
         .catch(error => {
+          this.loading = false;
           console.log(error);
         });
     }

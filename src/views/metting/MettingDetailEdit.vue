@@ -603,7 +603,8 @@ export default {
         message: "会议提交中...",
         forbidClick: true,
         duration: 0,
-        loadingType: "spinner"
+        loadingType: "spinner",
+        overlay: true
       });
       let postData = {
         meeting_id: Number(this.$route.query.id),

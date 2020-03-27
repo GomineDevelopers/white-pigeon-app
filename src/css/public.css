@@ -291,3 +291,118 @@ span {
   font-size: 0.625rem;
   color: #a8aec1;
 }
+@media screen and (min-width: 768px) {
+  .map_marker img {
+    width: 1rem;
+    margin-bottom: -0.3rem;
+  }
+  .van-popup--left {
+    width: 50% !important;
+  }
+  .top_image img {
+    width: 2rem;
+    height: 2rem;
+  }
+  .asideNavitem {
+    margin-top: 0.8rem;
+  }
+  .asideNavitem img {
+    width: 0.8rem;
+    margin-right: 0.3rem;
+  }
+  .asideNavitem span {
+    font-size: 0.5rem;
+  }
+  .bottom_nav i {
+    font-size: 0.65rem;
+  }
+  .bottom_nav span {
+    font-size: 0.5rem;
+    margin-left: 0.3rem;
+  }
+  .top_image .user_name {
+    font-size: 0.65rem;
+  }
+  .top_image .user_detail {
+    font-size: 0.5rem;
+  }
+  .home_nav_bar span {
+    font-size: 0.65rem;
+  }
+  .home_nav_bar .active_Link {
+    font-size: 0.6875rem;
+  }
+  .login_main_body .password_input,
+  .login_main_body .name_input {
+    font-size: 0.65rem;
+  }
+  .header_text {
+    font-size: 0.6875rem;
+  }
+  .van-nav-bar__arrow,
+  .van-nav-bar__title {
+    font-size: 0.65rem;
+  }
+  .van-nav-bar {
+    height: 1.5rem;
+    line-height: 1.5rem;
+  }
+  .login_main_body .password_input {
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+  }
+  .login_main_body .van-cell {
+    padding: 0.3rem 0rem;
+    line-height: 1rem;
+    font-size: 0.6rem;
+  }
+  .login_main_body .login_btn .van-button--normal {
+    height: 2rem;
+    line-height: 2rem;
+  }
+  .hospital_pull_detail .apply_btn {
+    height: 70px !important;
+    line-height: 70px !important;
+  }
+  .hospital_pull_detail .van-button__text {
+    font-size: 0.6rem !important;
+  }
+  .van-radio {
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+  }
+  .van-radio__icon {
+    height: 100% !important;
+  }
+  .van-radio__icon .van-icon {
+    font-size: 1em;
+  }
+  .van-picker__title {
+    font-size: 20px;
+  }
+  .van-picker-column {
+    font-size: 20px;
+  }
+  .area_option .van-picker-column,
+  .van-picker__cancel,
+  .van-picker__confirm {
+    font-size: 22px !important;
+  }
+  .van-dialog__message {
+    line-height: 60px;
+  }
+  .middle_button {
+    margin: 0.9375rem 0rem;
+  }
+  .van-field__control {
+    line-height: normal;
+  }
+  .van-tabbar--fixed {
+    bottom: 10px;
+  }
+  .bottom_bar img {
+    width: 20px !important;
+  }
+}

@@ -179,7 +179,8 @@ export default {
           message: "开发提交中...",
           forbidClick: true,
           duration: 0,
-          loadingType: "spinner"
+          loadingType: "spinner",
+          overlay: true
         });
         // console.log("准备提交开发");
         let postData = {

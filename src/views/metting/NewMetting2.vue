@@ -345,7 +345,6 @@ export default {
       this.$api
         .hospitalDevelopdMeeting(params)
         .then(res => {
-          console.log(res);
           this.hospitalByproductId = res.getInfoByProductId;
           this.mettingByProductId = res.getTopicByProductId;
           if (res.code == 200) {
@@ -533,14 +532,16 @@ export default {
           message: "会议创建中...",
           forbidClick: true,
           duration: 0,
-          loadingType: "spinner"
+          loadingType: "spinner",
+          overlay: true
         });
       } else if (type == 2) {
         this.$toast.loading({
           message: "会议提交中...",
           forbidClick: true,
           duration: 0,
-          loadingType: "spinner"
+          loadingType: "spinner",
+          overlay: true
         });
       }
       let postData = {
@@ -573,7 +574,7 @@ export default {
               this.personnelPhoto = "";
               this.signPhoto = "";
               this.$router.push({ path: "/mettingrecord" });
-            }, 1500);
+            }, 1000);
           } else {
             this.$toast.fail(res.message);
           }

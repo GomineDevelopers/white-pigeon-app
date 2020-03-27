@@ -187,28 +187,52 @@ export default {
     submitInfo() {
       let _this = this;
       if (!_this.userName) {
-        _this.$notify("姓名不能为空");
+        _this.$notify({
+          type: "warning",
+          message: "姓名不能为空！"
+        });
         return;
       } else if (!_this.IDnumber) {
-        _this.$notify("身份证号不能为空");
+        _this.$notify({
+          type: "warning",
+          message: "身份证号不能为空!"
+        });
         return;
       } else if (_this.IDnumber.length < 18) {
-        _this.$notify("身份证号位数错误");
+        _this.$notify({
+          type: "warning",
+          message: "身份证号位数错误!"
+        });
         return;
       } else if (!_this.IDaddress) {
-        _this.$notify("证件地址不能为空");
+        _this.$notify({
+          type: "warning",
+          message: "证件地址不能为空!"
+        });
         return;
       } else if (!_this.IDdateValue) {
-        _this.$notify("证件有效期不能为空");
+        _this.$notify({
+          type: "warning",
+          message: "证件有效期不能为空!"
+        });
         return;
       } else if (!_this.IDcardurl1) {
-        _this.$notify("身份证人像面不能为空");
+        _this.$notify({
+          type: "warning",
+          message: "身份证人像面不能为空!"
+        });
         return;
       } else if (!_this.IDcardurl2) {
-        _this.$notify("身份证国徽面不能为空");
+        _this.$notify({
+          type: "warning",
+          message: "身份证国徽面不能为空!"
+        });
         return;
       } else if (!_this.customer) {
-        _this.$notify("客户名称不能为空");
+        _this.$notify({
+          type: "warning",
+          message: "客户名称不能为空!"
+        });
         return;
       }
       let data = {
@@ -220,7 +244,6 @@ export default {
         id_back_img: _this.IDcardurl2,
         customer_name: _this.customer
       };
-      console.log(data);
       _this.$dialog
         .confirm({
           message: "请确定您填写的姓名与注册 手机号姓名一致。",

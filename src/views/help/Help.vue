@@ -4,10 +4,21 @@
       <van-nav-bar title="帮助反馈" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body">
-      <textarea class="help_content" placeholder="请输入您需要帮助或者反馈的内容！" v-model="idea" ref="textarea"></textarea>
+      <textarea
+        class="help_content"
+        placeholder="请输入您需要帮助或者反馈的内容！"
+        v-model="idea"
+        ref="textarea"
+      ></textarea>
       <van-row class="public_btn">
         <!-- <button >确&nbsp;认</button> -->
-        <van-button @click="submitFeedback" :loading="loading" type="info" :loading-text="loadingText" text="确认" />
+        <van-button
+          @click="submitFeedback"
+          :loading="loading"
+          type="info"
+          :loading-text="loadingText"
+          text="确认"
+        />
       </van-row>
     </van-row>
   </van-row>
@@ -40,7 +51,7 @@ export default {
     submitFeedback() {
       let idea = this.idea;
       if (!idea) {
-        this.$toast('提交内容不能为空');
+        this.$toast("提交内容不能为空");
         this.$refs.textarea.focus();
       } else {
         this.loading = true;
@@ -49,7 +60,7 @@ export default {
     },
     submitData(idea) {
       this.$api
-        .addFeedback({idea})
+        .addFeedback({ idea })
         .then(res => {
           this.loading = false;
           this.idea = "";
@@ -58,8 +69,8 @@ export default {
         .catch(err => {
           this.loading = false;
           this.idea = "";
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     onBack() {
       history.back();

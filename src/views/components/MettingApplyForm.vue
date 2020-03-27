@@ -515,33 +515,25 @@ export default {
         this.$toast.fail("请填写完整必填信息");
         return false;
       }
-      console.log("所属科室", this.sectionSelect);
       let sectionIdList = [];
       this.sectionSelect.forEach(value => {
         sectionIdList.push(value.section_id);
       });
-      // console.log("产品", this.productId, this.product);
-      // console.log("会议主题", this.conferenceThemeId, this.conferenceTheme);
-      // console.log("医院", this.hospitalId, this.hospital);
-      // console.log("时间", this.mettingStartTime);
-      // console.log("演讲人", this.userName);
-      // console.log("演讲人数", this.userNum);
-      // console.log("人员照片1", this.personnelPhoto[0]);
-      // console.log("人员照片2", this.personnelPhoto[1]);
-      // console.log("签到照片", this.signPhoto[0]);
       if (type == 1) {
         this.$toast.loading({
           message: "会议创建中...",
           forbidClick: true,
           duration: 0,
-          loadingType: "spinner"
+          loadingType: "spinner",
+          overlay: true
         });
       } else if (type == 2) {
         this.$toast.loading({
           message: "会议提交中...",
           forbidClick: true,
           duration: 0,
-          loadingType: "spinner"
+          loadingType: "spinner",
+          overlay: true
         });
       }
       let postData = {
@@ -560,7 +552,6 @@ export default {
       this.$api
         .createMeeting(postData)
         .then(res => {
-          console.log(res);
           if (res.code == 200) {
             this.$toast.success(type == 1 ? "会议创建成功" : "会议提交成功");
             setTimeout(() => {
@@ -573,8 +564,8 @@ export default {
               this.userNum = "";
               this.personnelPhoto = "";
               this.signPhoto = "";
-              this.$router.push({ path: "/mettingrecord" });
-            }, 1500);
+              this.$router.replace({ path: "/mettingrecord" });
+            }, 1000);
           } else {
             this.$toast.fail(res.message);
           }
