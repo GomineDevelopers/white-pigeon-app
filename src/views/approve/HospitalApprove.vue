@@ -60,6 +60,14 @@
               <span v-if="detail.first_price">{{ detail.first_price }}元</span>
               <span v-else>无</span>
             </li>
+            <li class="flex_li">
+              <span>客户名称：</span>
+              <span>{{ detail.customer_name }}</span>
+            </li>
+            <li class="flex_li">
+              <span>客户类型：</span>
+              <span>{{ detail.customer_type }}</span>
+            </li>
           </ul>
         </div>
       </van-row>
@@ -101,6 +109,8 @@
           placeholder="请输入首次开发奖金（选填）"
           ref="bidding"
         />
+        <p>客户名称：{{ detail.customer_name }}</p>
+        <p>客户类型：{{ detail.customer_type }}</p>
       </van-dialog>
     </van-row>
   </van-row>
@@ -295,6 +305,7 @@ export default {
 }
 .approve_content .van-dialog__footer {
   margin-top: 0.625rem;
+  border-top: 1px solid #f9f9f9;
 }
 .pass_dialog .van-cell__value {
   border: 1px solid #ebedf0;
@@ -386,5 +397,11 @@ export default {
   margin-bottom: 0.5rem;
   font-size: 0.65rem;
   color: #000;
+}
+.pass_dialog p {
+  text-align: left;
+  padding-left: 0.625rem;
+  font-size: 0.6rem;
+  color: #323233;
 }
 </style>

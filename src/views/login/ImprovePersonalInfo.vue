@@ -55,6 +55,13 @@
           <van-field v-model="customer" placeholder="请输入客户名称" />
         </van-row>
       </van-row>
+      <van-row class="info_module">
+        <van-row>客户种类</van-row>
+        <van-row class="icon_right flex" @click="typeShow = true">
+          <span>{{ type ? type : "请选择客户种类" }}</span>
+          <van-icon name="arrow" />
+        </van-row>
+      </van-row>
       <van-row class="submit_btn" @click="submitInfo">
         <van-button type="info">提&nbsp;交</van-button>
       </van-row>
@@ -82,6 +89,18 @@
         </van-row>
       </van-popup>
     </transition>
+    <!-- 客户种类 -->
+    <transition name="van-slide-up">
+      <van-popup v-model="typeShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="客户种类选择"
+          :columns="typeList"
+          @cancel="typeShow = false"
+          @confirm="typeConfirm"
+        />
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>
@@ -106,7 +125,16 @@ export default {
       IDaddress: "",
       IDcardurl1: "",
       IDcardurl2: "",
-      customer: ""
+      customer: "",
+      type: "",
+      typeId: "",
+      typeShow: false,
+      typeList: [
+        { id: 1, text: "高开高返有票" },
+        { id: 2, text: "高开高返无票" },
+        { id: 3, text: "佣金有票" },
+        { id: 4, text: "佣金无票" }
+      ]
     };
   },
   created() {
@@ -183,6 +211,11 @@ export default {
       let day = time.getDate();
       return year + "-" + month + "-" + day;
     },
+    typeConfirm(v) {
+      this.typeShow = false;
+      this.type = v.text;
+      this.typeId = v.id;
+    },
     // 提交数据
     submitInfo() {
       let _this = this;
@@ -234,6 +267,12 @@ export default {
           message: "客户名称不能为空!"
         });
         return;
+      } else if (!_this.typeId) {
+        _this.$notify({
+          type: "warning",
+          message: "客户类型不能为空!"
+        });
+        return;
       }
       let data = {
         username: _this.userName,
@@ -242,7 +281,8 @@ export default {
         id_effect_time: _this.IDdateValue,
         id_front_img: _this.IDcardurl1,
         id_back_img: _this.IDcardurl2,
-        customer_name: _this.customer
+        customer_name: _this.customer,
+        customer_type: _this.typeId
       };
       _this.$dialog
         .confirm({

@@ -712,7 +712,7 @@ export default {
     //点击搜索医院列表定位
     positionHospital(item) {
       //点击搜索出的医院列表
-      console.log(item);
+      // console.log(item);
       this.center = {
         lng: item.hospital_longtude,
         lat: item.hospital_latitude
@@ -723,6 +723,7 @@ export default {
       };
       this.inputHidden();
       this.hosSingleData = {};
+      this.clickHandler(item);
     },
     //弹框省市确认
     provinceConfirm(value) {
