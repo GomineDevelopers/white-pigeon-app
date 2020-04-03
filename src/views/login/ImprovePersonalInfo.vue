@@ -77,16 +77,14 @@
     <!-- 身份证时间选择 -->
     <transition name="van-slide-up">
       <van-popup v-model="IDdateShow" position="bottom">
-        <van-row class="area_option">
-          <van-datetime-picker
-            v-model="currentDate"
-            type="date"
-            :min-date="minDate"
-            :max-date="maxDate"
-            @confirm="dateConfirmFn"
-            @cancel="IDdateShow = false"
-          />
-        </van-row>
+        <van-datetime-picker
+          v-model="currentDate"
+          type="date"
+          :min-date="minDate"
+          :max-date="maxDate"
+          @confirm="dateConfirmFn"
+          @cancel="IDdateShow = false"
+        />
       </van-popup>
     </transition>
     <!-- 客户种类 -->
@@ -115,7 +113,7 @@ export default {
       // areaListShow: false,
       // areaValue: "",
       minDate: new Date(),
-      maxDate: new Date(2039, 10, 1),
+      maxDate: new Date(2050, 11, 1),
       IDdateShow: false,
       currentDate: new Date(),
       IDcardFlag: null,
@@ -151,8 +149,6 @@ export default {
     }
 
     this.setMaxDate();
-    // console.log("路由传参", this.$route.query.data);
-    // console.log("重定向地址", this.$route.query.redirect);
   },
   methods: {
     //地区选择确认

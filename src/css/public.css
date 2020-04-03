@@ -74,6 +74,7 @@ span {
 .login_main_body .name_input {
   border-bottom: 1px solid rgba(238, 238, 238);
   font-size: 0.75rem;
+  padding: 0.2rem 0rem;
 }
 
 .login_main_body .forget_password_btn {
@@ -291,6 +292,9 @@ span {
   font-size: 0.625rem;
   color: #a8aec1;
 }
+.van-field__control {
+  line-height: normal;
+}
 @media screen and (min-width: 768px) {
   .map_marker img {
     width: 1rem;
@@ -395,9 +399,6 @@ span {
   }
   .middle_button {
     margin: 0.9375rem 0rem;
-  }
-  .van-field__control {
-    line-height: normal;
   }
   .van-tabbar--fixed {
     bottom: 10px;

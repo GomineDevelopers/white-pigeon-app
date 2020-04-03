@@ -10,7 +10,7 @@
         <van-row class="name_input">
           <van-field v-model="phone" type="number" placeholder="请输入手机号" />
         </van-row>
-        <van-row class="password_input">
+        <van-row class="password_input flex flex_align_center">
           <van-col span="15">
             <van-field v-model="password" type="password" placeholder="请输入密码" />
           </van-col>

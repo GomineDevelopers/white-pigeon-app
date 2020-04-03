@@ -110,7 +110,6 @@ export default {
   }
 };
 </script>
-
 <style scpoed>
 .loginprotocol {
   text-align: left;

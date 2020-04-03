@@ -24,10 +24,21 @@
             </van-row>
           </van-row>
         </van-row>
-
-        <van-row class="no_notify_notice" v-if="!isLoading && isShow">
-          暂无通知
+        <van-row class="notify_body" v-for="(doctorItem, index) in doctorList" :key="index + 'a'">
+          <van-row class="notify_date">{{ doctorItem.modify_time }}</van-row>
+          <van-row class="notify_content">
+            <van-row class="notify_title">您有一个新申请已通过</van-row>
+            <van-row class="notify_text">
+              您在{{ doctorItem.hospital_name }}新增的{{ doctorItem.doctor_name }}医生已于{{
+                doctorItem.modify_time
+              }}已经通过审核，请您及时查看！
+            </van-row>
+          </van-row>
         </van-row>
+
+        <!-- <van-row class="no_notify_notice" v-if="!isLoading && isShow">
+          暂无通知
+        </van-row> -->
       </van-row>
     </van-pull-refresh>
   </van-row>
@@ -39,6 +50,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      doctorList: [],
       notifyList: [],
       isShow: false
     };
@@ -58,6 +70,7 @@ export default {
   },
   mounted() {
     this.getNotifyData();
+    this.getDoctorList();
   },
   methods: {
     //下拉刷新
@@ -67,6 +80,19 @@ export default {
         this.$toast("刷新成功");
         this.isLoading = false;
       }, 500);
+    },
+    getDoctorList() {
+      this.$api
+        .doctorCheckPass()
+        .then(res => {
+          // console.log(res);
+          if (res.code == 200) {
+            this.doctorList = res.doctor_notice_list;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     // 获取消息数据条数
     getNotifyData() {

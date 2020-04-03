@@ -11,7 +11,7 @@
       <van-row class="name_input">
         <van-field v-model="newPasswordAgain" type="password" placeholder="再次输入新密码" />
       </van-row>
-      <van-row class="password_input">
+      <van-row class="password_input flex flex_align_center">
         <van-col span="14">
           <van-field v-model="authCode" placeholder="请输入验证码" />
         </van-col>

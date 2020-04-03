@@ -56,6 +56,7 @@ let api = {
   userCenterProduct: params => post("/hospitalManager/hospitalUserProduct", params), //个人中心我的产品
   userCenterStatistics: params => post("/membercreate/getMyApply", params), //个人中心会议、拜访、申请、积分统计
   notify: params => post("/signManager/SignNotice", params), //消息通知
+  doctorCheckPass: params => post("/signManager/DoctorCheckPass", params), //医生审核通过消息通知
   createVisit: params => post("/visitManager/createVisit", params), //创建拜访
   visitRelation: params => post("/visitManager/visitGetInfoByHospitalId", params), //拜访关联接口
   visitGoal: params => post("/visitManager/visitGoal", params), //拜访目的
