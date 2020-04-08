@@ -27,6 +27,10 @@
             <span>{{ detail.doctor_name }}</span>
           </li>
           <li>
+            <span>科室：</span>
+            <span>{{ detail.section_name }}</span>
+          </li>
+          <li>
             <span>申请时间：</span>
             <span>{{ detail.create_time }}</span>
           </li>
@@ -55,7 +59,7 @@ export default {
     return {
       show: false,
       value: "",
-      detail: {}
+      detail: {},
     };
   },
   created() {
@@ -74,7 +78,7 @@ export default {
       message: "数据加载中...",
       forbidClick: true,
       duration: 0,
-      loadingType: "spinner"
+      loadingType: "spinner",
     });
   },
   mounted() {
@@ -88,18 +92,18 @@ export default {
     getData() {
       this.$api
         .regionDoctorDetail({ doctor_id: this.id })
-        .then(res => {
+        .then((res) => {
           console.log(res);
           if (res.code == 200) {
             this.detail = res.regional_doctor_detail;
           } else {
             this.$dialog.alert({
-              message: res.message
+              message: res.message,
             });
           }
           this.$toast.clear();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.$toast.clear();
         });
@@ -116,11 +120,11 @@ export default {
         message: "数据处理中...",
         forbidClick: true,
         duration: 0,
-        loadingType: "spinner"
+        loadingType: "spinner",
       });
       this.$api
         .regionDoctorCheck({ doctor_id: this.id, is_pass: 1 })
-        .then(res => {
+        .then((res) => {
           if (res.code == 200) {
             this.$toast("处理成功");
             setTimeout(() => {
@@ -129,7 +133,7 @@ export default {
           } else {
             this.$dialog
               .alert({
-                message: res.message
+                message: res.message,
               })
               .then(() => {
                 this.$router.replace({ path: "/approveindex", query: { active: 1 } });
@@ -137,7 +141,7 @@ export default {
           }
           this.$toast.clear();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.$toast.clear();
         });
@@ -162,11 +166,11 @@ export default {
       let data = {
         doctor_id: this.id,
         is_pass: 2,
-        no_pass_reason: this.value
+        no_pass_reason: this.value,
       };
       this.$api
         .regionDoctorCheck(data)
-        .then(res => {
+        .then((res) => {
           done();
           if (res.code == 200) {
             this.$toast("提交成功");
@@ -176,19 +180,19 @@ export default {
           } else {
             this.$dialog
               .alert({
-                message: res.message
+                message: res.message,
               })
               .then(() => {
                 this.$router.replace({ path: "/approveindex", query: { active: 1 } });
               });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           done();
         });
-    }
-  }
+    },
+  },
 };
 </script>
 <style>
