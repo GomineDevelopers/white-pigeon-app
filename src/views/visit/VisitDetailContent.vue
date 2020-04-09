@@ -22,7 +22,7 @@
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">拜访渠道</span>
-        <span>{{ detail.visit_channel == 1 ? "面对面拜访" : "" }}</span>
+        <span>{{ detail.visit_channel == 1 ? "非面对面拜访" : "" }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">产品</span>
@@ -56,7 +56,7 @@ export default {
   name: "visitdetailcontent",
   data() {
     return {
-      detail: {}
+      detail: {},
     };
   },
   created() {
@@ -83,25 +83,25 @@ export default {
         message: "数据加载中...",
         forbidClick: true,
         duration: 0,
-        loadingType: "spinner"
+        loadingType: "spinner",
       });
       this.$api
         .visitDetail({ visit_id })
-        .then(res => {
+        .then((res) => {
           this.$toast.clear();
           if (res.code == 200) {
             this.detail = res.visit_detail;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$toast.clear();
           console.log(err);
         });
     },
     onBack() {
       history.back();
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
