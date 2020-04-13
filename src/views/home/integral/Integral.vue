@@ -45,7 +45,7 @@
                     +{{ bonusDatiled.develop_bonus ? bonusDatiled.develop_bonus : "0" }}
                   </span>
                 </li>
-                <li v-if="bonusDatiled.invite_bonus">
+                <li v-if="'invite_bonus' in bonusDatiled">
                   <span>本期推荐奖励积分</span>
                   <span> +{{ bonusDatiled.invite_bonus ? bonusDatiled.invite_bonus : "0" }} </span>
                 </li>
