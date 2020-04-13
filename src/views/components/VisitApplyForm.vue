@@ -459,7 +459,6 @@ export default {
           visit_image_two: this.visitPhoto[1] || null,
           visit_image_three: this.visitPhoto[2] || null
         };
-        localStorage.setItem("prevTime", this.prevTime);
         this.upDataToServer(data);
       }
     },
@@ -475,15 +474,21 @@ export default {
       this.$api
         .createVisit(data)
         .then(res => {
+          this.$toast.clear();
           if (res.code == 200) {
+            localStorage.setItem("prevTime", this.prevTime);
             this.$toast.success("提交成功");
             setTimeout(() => {
               this.$router.replace("/visitrecord");
             }, 1000);
           } else {
-            this.$toast.fail(res.message);
+            this.$toast({
+              message: res.message,
+              forbidClick: true,
+              duration: 3000,
+              loadingType: "spinner"
+            });
           }
-          this.$toast.clear();
         })
         .catch(err => {
           this.$toast.clear();

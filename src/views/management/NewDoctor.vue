@@ -217,17 +217,11 @@ export default {
       sexValue: "",
       sexId: "",
       sexShow: false,
-      sexList: [
-        { id: 1, text: "男" },
-        { id: 2, text: "女" }
-      ],
+      sexList: [{ id: 1, text: "男" }, { id: 2, text: "女" }],
       customerStatus: "",
       customerStatusId: "",
       customerStatusShow: false,
-      customerStatusList: [
-        { id: 1, text: "在职" },
-        { id: 2, text: "离职" }
-      ],
+      customerStatusList: [{ id: 1, text: "在职" }, { id: 2, text: "离职" }],
       officeValue: "",
       officeId: "",
       officeShow: false,
@@ -320,7 +314,10 @@ export default {
         return this.hospitalList;
       } else {
         return this.hospitalList.filter(value => {
-          return value.text.match(this.hospitalValue);
+          if (value.text.indexOf(this.hospitalValue) != -1) {
+            return value;
+          }
+          // return value.text.match(this.hospitalValue);
         });
       }
     },
