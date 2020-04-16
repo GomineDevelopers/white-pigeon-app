@@ -62,16 +62,15 @@
             <van-icon name="replay" @click="location" />
           </van-row>
         </van-row>
-        <van-row class="info_module">
+        <van-row
+          class="info_module"
+          v-show="doctorFeedbackShow"
+          @click="doctorFeedbackListShow = true"
+        >
           <van-row class="row_title">医生反馈<i>*</i></van-row>
           <van-row class="icon_right flex">
-            <van-field
-              v-model="doctorFeedback"
-              rows="1"
-              autosize
-              type="textarea"
-              placeholder="请输入"
-            />
+            <span class="flex_1">{{ doctorFeedback ? doctorFeedback : "请选择" }}</span>
+            <van-icon name="arrow" />
           </van-row>
         </van-row>
         <van-row class="info_module">
@@ -197,6 +196,18 @@
         />
       </van-popup>
     </transition>
+    <!-- 医生反馈 -->
+    <transition name="van-slide-up">
+      <van-popup v-model="doctorFeedbackListShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="医生反馈选择"
+          :columns="doctorFeedbackList"
+          @cancel="doctorFeedbackListShow = false"
+          @confirm="doctorFeedbackConfirm"
+        />
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>
@@ -231,18 +242,37 @@ export default {
       hospitalList: [],
       customerList: [],
       visitPurposeList: [],
-      visitChannelList: [{ id: 1, text: "非面对面拜访" }],
+      visitChannelList: [{ id: 1, text: "非面对面拜访" }, { id: 2, text: "面对面拜访" }],
       productList: [],
       productPublicityList: [],
       productPublicity: "",
       productPublicityId: "",
+      doctorFeedbackShow: false,
+      doctorFeedbackListShow: false,
+      doctorFeedbackId: "", //医生反馈
       doctorFeedback: "", //医生反馈
+      doctorFeedbackList: [
+        { id: 1, text: "这个产品安全性高，不错" },
+        { id: 2, text: "产品资料感觉还不错，可以考虑试试" },
+        { id: 3, text: "患者反馈副作用小" },
+        { id: 4, text: "平时用的不多，以后尽量多用些。" },
+        { id: 5, text: "同类产品多，尽力而为" },
+        { id: 6, text: "患者信赖厂家产品" },
+        { id: 7, text: "疗效不理想，患者依从性差" },
+        { id: 8, text: "疗效尚可" },
+        { id: 9, text: "相同症状有些疗效显著" },
+        { id: 10, text: "表示了解，并会尝试使用" },
+        { id: 11, text: "安全性高可靠" },
+        { id: 12, text: "表示认可，会处方" },
+        { id: 13, text: "临床效果不错" },
+        { id: 14, text: "不良反应较小，患者依从性高" },
+      ],
       minHour: 10,
       maxHour: 20,
       minDate: new Date(),
       maxDate: new Date(2019, 10, 1),
       currentDate: new Date(),
-      center: { lng: 0, lat: 0 }
+      center: { lng: 0, lat: 0 },
     };
   },
   created() {
@@ -261,7 +291,7 @@ export default {
       message: "数据加载中...",
       forbidClick: true,
       duration: 0,
-      loadingType: "spinner"
+      loadingType: "spinner",
     });
   },
   mounted() {
@@ -277,13 +307,13 @@ export default {
       this.$toast.loading({
         message: "正在定位...",
         forbidClick: true,
-        loadingType: "spinner"
+        loadingType: "spinner",
       });
       this.handler();
     },
     handler() {
       let geoLocation = new BMap.Geolocation();
-      geoLocation.getCurrentPosition(r => {
+      geoLocation.getCurrentPosition((r) => {
         let addr = r.address;
         this.visit_position = addr.city + addr.district + addr.street + addr.street_number;
       });
@@ -310,7 +340,7 @@ export default {
       let visit_id = this.visit_id;
       this.$api
         .visitDetail({ visit_id })
-        .then(res => {
+        .then((res) => {
           if (res.code == 200) {
             console.log(res);
             let data = res.visit_detail;
@@ -323,36 +353,42 @@ export default {
 
             if (data.visit_channel == 1) {
               this.$data.visitChannel = "非面对面拜访";
+              this.doctorFeedbackShow = true;
+            } else if (data.visit_channel == 2) {
+              this.$data.visitChannel = "面对面拜访";
             }
             this.productPublicity = data.propaganda;
             this.productPublicityId = data.propaganda_id;
-            this.doctorFeedback = data.doctor_feedback;
+            this.doctorFeedbackId = data.doctor_feedback;
+            this.doctorFeedback = this.doctorFeedbackList.find((item) => {
+              return item.id == data.doctor_feedback;
+            }).text;
             Object.assign(this.$data, res.visit_detail);
-            this.hospitalInfo.map(item => {
+            this.hospitalInfo.map((item) => {
               if (item.hospital_id == data.hospital_id) {
                 this.customerList.push({
                   id: item.doctor_id,
-                  text: item.doctor_name
+                  text: item.doctor_name,
                 });
               }
             });
-            this.productInfo.map(item => {
+            this.productInfo.map((item) => {
               if (item.hospital_id == data.hospital_id) {
                 this.productList.push({
                   id: item.product_id,
-                  text: item.product_name + "-" + item.package
+                  text: item.product_name + "-" + item.package,
                 });
               }
             });
-            this.goalInfo.map(item => {
+            this.goalInfo.map((item) => {
               if (item.product_id == data.product_id) {
                 this.visitPurposeList.push({
                   id: item.id,
-                  text: item.visit_goal
+                  text: item.visit_goal,
                 });
               }
             });
-            this.visitPropaganda.map(item => {
+            this.visitPropaganda.map((item) => {
               if (item.product_id == data.product_id) {
                 this.productPublicityList.push({ id: item.id, text: item.propaganda });
               }
@@ -360,7 +396,7 @@ export default {
           }
           this.$toast.clear();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.$toast.clear();
         });
@@ -369,7 +405,7 @@ export default {
     getVisitRelation() {
       this.$api
         .visitRelation()
-        .then(res => {
+        .then((res) => {
           if (res.code == 200) {
             let hospitalInfo = res.getInfoByHospitalId;
             let productInfo = res.getproductByHospitalId;
@@ -388,7 +424,7 @@ export default {
                       true &&
                       item.push({
                         id: next.hospital_id,
-                        text: next.hospital_name
+                        text: next.hospital_name,
                       }));
                 return item;
               }, []);
@@ -396,7 +432,7 @@ export default {
             }
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -417,19 +453,19 @@ export default {
       this.productPublicityList = [];
       this.productPublicity = "";
       this.productPublicityId = "";
-      this.hospitalInfo.map(item => {
+      this.hospitalInfo.map((item) => {
         if (item.hospital_id == v.id) {
           this.customerList.push({
             id: item.doctor_id,
-            text: item.doctor_name
+            text: item.doctor_name,
           });
         }
       });
-      this.productInfo.map(item => {
+      this.productInfo.map((item) => {
         if (item.hospital_id == v.id) {
           this.productList.push({
             id: item.product_id,
-            text: item.product_name
+            text: item.product_name,
           });
         }
       });
@@ -460,9 +496,17 @@ export default {
     },
     // 拜访渠道选择
     visitChannelConfirm(v) {
+      this.doctorFeedback = "";
+      this.doctorFeedbackId = "";
       this.visitChannelShow = false;
       this.visitChannel = v.text;
       this.visit_channel = v.id;
+      this.doctorFeedbackShow = this.visit_channel == 1 ? true : false;
+    },
+    doctorFeedbackConfirm(v) {
+      this.doctorFeedbackId = v.id;
+      this.doctorFeedback = v.text;
+      this.doctorFeedbackListShow = false;
     },
     // 产品选择
     productConfirm(v) {
@@ -475,12 +519,12 @@ export default {
       this.productPublicityList = [];
       this.productPublicity = "";
       this.productPublicityId = "";
-      this.goalInfo.map(item => {
+      this.goalInfo.map((item) => {
         if (item.product_id == v.id) {
           this.visitPurposeList.push({ id: item.id, text: item.visit_goal });
         }
       });
-      this.visitPropaganda.map(item => {
+      this.visitPropaganda.map((item) => {
         if (item.product_id == v.id) {
           this.productPublicityList.push({ id: item.id, text: item.propaganda });
         }
@@ -494,13 +538,13 @@ export default {
     //拜访拍照上传
     camera() {
       photograph()
-        .then(res => {
+        .then((res) => {
           console.log("305", res);
-          upload(res, 0).then(res => {
+          upload(res, 0).then((res) => {
             this.visitPhoto.push(res);
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("310", err);
         });
     },
@@ -522,11 +566,15 @@ export default {
         this.$toast("拜访目的不能为空");
       } else if (!this.visit_channel) {
         this.$toast("拜访渠道不能为空");
-      } else if (!this.doctorFeedback) {
-        this.$toast("医生反馈不能为空");
       } else if (!this.visit_position) {
         this.$toast("拜访定位不能为空");
       } else {
+        if (this.visit_channel == 1) {
+          if (!this.doctorFeedbackId) {
+            this.$toast("医生反馈不能为空");
+            return false;
+          }
+        }
         let data = {
           visit_id: this.visit_id,
           hospital_id: this.hospital_id,
@@ -538,12 +586,11 @@ export default {
           product_id: this.product_id,
           propaganda_id: this.productPublicityId,
           visit_position: this.visit_position,
-          doctor_feedback: this.doctorFeedback,
+          doctor_feedback: this.doctorFeedbackId,
           visit_image: this.visitPhoto[0] || null,
           visit_image_two: this.visitPhoto[1] || null,
-          visit_image_three: this.visitPhoto[2] || null
+          visit_image_three: this.visitPhoto[2] || null,
         };
-        localStorage.setItem("prevTime", this.prevTime);
         this.upDataToServer(data);
       }
     },
@@ -554,12 +601,13 @@ export default {
         forbidClick: true,
         duration: 0,
         loadingType: "spinner",
-        overlay: true
+        overlay: true,
       });
       this.$api
         .visitEdit(data)
-        .then(res => {
+        .then((res) => {
           if (res.code == 200) {
+            localStorage.setItem("prevTime", this.prevTime);
             this.$toast.success("提交成功");
             setTimeout(() => {
               this.$router.replace("/visitrecord");
@@ -569,15 +617,15 @@ export default {
           }
           this.$toast.clear();
         })
-        .catch(err => {
+        .catch((err) => {
           this.$toast.clear();
           console.log(err);
         });
     },
     onBack() {
       history.back();
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

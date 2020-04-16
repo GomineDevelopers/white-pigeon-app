@@ -23,6 +23,7 @@
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">拜访渠道</span>
         <span>{{ detail.visit_channel == 1 ? "非面对面拜访" : "" }}</span>
+        <span>{{ detail.visit_channel == 2 ? "面对面拜访" : "" }}</span>
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">产品</span>
@@ -38,7 +39,7 @@
       </van-row>
       <van-row class="doctor_detail_item flex flex_align_center justify_between border_bom">
         <span class="flex_1">医生反馈</span>
-        <span>{{ detail.doctor_feedback }}</span>
+        <span>{{ doctorFeedback }}</span>
       </van-row>
       <van-row
         v-if="detail.refuse_reason != null"
@@ -66,6 +67,23 @@ export default {
   data() {
     return {
       detail: {},
+      doctorFeedback: "",
+      doctorFeedbackList: [
+        { id: 1, text: "这个产品安全性高，不错" },
+        { id: 2, text: "产品资料感觉还不错，可以考虑试试" },
+        { id: 3, text: "患者反馈副作用小" },
+        { id: 4, text: "平时用的不多，以后尽量多用些。" },
+        { id: 5, text: "同类产品多，尽力而为" },
+        { id: 6, text: "患者信赖厂家产品" },
+        { id: 7, text: "疗效不理想，患者依从性差" },
+        { id: 8, text: "疗效尚可" },
+        { id: 9, text: "相同症状有些疗效显著" },
+        { id: 10, text: "表示了解，并会尝试使用" },
+        { id: 11, text: "安全性高可靠" },
+        { id: 12, text: "表示认可，会处方" },
+        { id: 13, text: "临床效果不错" },
+        { id: 14, text: "不良反应较小，患者依从性高" },
+      ],
     };
   },
   created() {
@@ -100,6 +118,9 @@ export default {
           this.$toast.clear();
           if (res.code == 200) {
             this.detail = res.visit_detail;
+            this.doctorFeedback = this.doctorFeedbackList.find((item) => {
+              return item.id == res.visit_detail.doctor_feedback;
+            }).text;
           }
         })
         .catch((err) => {

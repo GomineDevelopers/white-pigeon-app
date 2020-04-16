@@ -61,16 +61,15 @@
             <van-icon name="replay" @click="location" />
           </van-row>
         </van-row>
-        <van-row class="info_module">
+        <van-row
+          class="info_module"
+          v-show="doctorFeedbackShow"
+          @click="doctorFeedbackListShow = true"
+        >
           <van-row class="row_title">医生反馈<i>*</i></van-row>
           <van-row class="icon_right flex">
-            <van-field
-              v-model="doctorFeedback"
-              rows="1"
-              autosize
-              type="textarea"
-              placeholder="请输入"
-            />
+            <span class="flex_1">{{ doctorFeedback ? doctorFeedback : "请选择" }}</span>
+            <van-icon name="arrow" />
           </van-row>
         </van-row>
         <van-row class="info_module">
@@ -174,6 +173,18 @@
         />
       </van-popup>
     </transition>
+    <!-- 医生反馈 -->
+    <transition name="van-slide-up">
+      <van-popup v-model="doctorFeedbackListShow" position="bottom">
+        <van-picker
+          show-toolbar
+          title="医生反馈选择"
+          :columns="doctorFeedbackList"
+          @cancel="doctorFeedbackListShow = false"
+          @confirm="doctorFeedbackConfirm"
+        />
+      </van-popup>
+    </transition>
   </van-row>
 </template>
 <script>
@@ -203,18 +214,37 @@ export default {
       visitPhoto: [],
       customerList: [],
       visitPurposeList: [],
-      visitChannelList: [{ id: 1, text: "非面对面拜访" }],
+      visitChannelList: [{ id: 1, text: "非面对面拜访" }, { id: 2, text: "面对面拜访" }],
       productList: [],
       productPublicityList: [],
       productPublicity: "",
       productPublicityId: "",
+      doctorFeedbackShow: false,
+      doctorFeedbackListShow: false,
+      doctorFeedbackList: [
+        { id: 1, text: "这个产品安全性高，不错" },
+        { id: 2, text: "产品资料感觉还不错，可以考虑试试" },
+        { id: 3, text: "患者反馈副作用小" },
+        { id: 4, text: "平时用的不多，以后尽量多用些。" },
+        { id: 5, text: "同类产品多，尽力而为" },
+        { id: 6, text: "患者信赖厂家产品" },
+        { id: 7, text: "疗效不理想，患者依从性差" },
+        { id: 8, text: "疗效尚可" },
+        { id: 9, text: "相同症状有些疗效显著" },
+        { id: 10, text: "表示了解，并会尝试使用" },
+        { id: 11, text: "安全性高可靠" },
+        { id: 12, text: "表示认可，会处方" },
+        { id: 13, text: "临床效果不错" },
+        { id: 14, text: "不良反应较小，患者依从性高" },
+      ],
       doctorFeedback: "", //医生反馈
+      doctorFeedbackId: "", //医生反馈id
       minHour: 10,
       maxHour: 20,
       minDate: new Date(),
       maxDate: new Date(),
       currentDate: new Date(),
-      center: { lng: 0, lat: 0 }
+      center: { lng: 0, lat: 0 },
     };
   },
   created() {
@@ -244,13 +274,13 @@ export default {
       this.$toast.loading({
         message: "正在定位...",
         forbidClick: true,
-        loadingType: "spinner"
+        loadingType: "spinner",
       });
       this.handler();
     },
     handler() {
       let geoLocation = new BMap.Geolocation();
-      geoLocation.getCurrentPosition(r => {
+      geoLocation.getCurrentPosition((r) => {
         let addr = r.address;
         this.visit_position = addr.city + addr.district + addr.street + addr.street_number;
       });
@@ -276,7 +306,7 @@ export default {
     getVisitRelation(hospital_id) {
       this.$api
         .developdVisit({ hospital_id })
-        .then(res => {
+        .then((res) => {
           console.log(res);
           if (res.code == 200) {
             let hospitalInfo = res.getInfoByHospitalId;
@@ -287,7 +317,7 @@ export default {
               this.$dialog
                 .alert({
                   title: "提示",
-                  message: "该医院下您开发的产品还未签约或没有审核通过的医生，暂不可以申请拜访！"
+                  message: "该医院下您开发的产品还未签约或没有审核通过的医生，暂不可以申请拜访！",
                 })
                 .then(() => {
                   this.$router.push({ path: "/" });
@@ -298,22 +328,22 @@ export default {
             this.hospital_name = hospitalInfo[0].hospital_name;
             this.goalInfo = goalInfo;
             this.visitPropaganda = visitPropaganda;
-            hospitalInfo.map(item => {
+            hospitalInfo.map((item) => {
               if (item.hospital_id == this.hospital_id) {
                 this.customerList.push({ id: item.doctor_id, text: item.doctor_name });
               }
             });
-            productInfo.map(item => {
+            productInfo.map((item) => {
               if (item.hospital_id == this.hospital_id) {
                 this.productList.push({
                   id: item.product_id,
-                  text: item.product_name + "-" + item.package
+                  text: item.product_name + "-" + item.package,
                 });
               }
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -343,9 +373,12 @@ export default {
     },
     // 拜访渠道选择
     visitChannelConfirm(v) {
+      this.doctorFeedback = "";
+      this.doctorFeedbackId = "";
       this.visitChannelShow = false;
       this.visitChannel = v.text;
       this.visit_channel = v.id;
+      this.doctorFeedbackShow = this.visit_channel == 1 ? true : false;
     },
     // 产品选择
     productConfirm(v) {
@@ -358,12 +391,12 @@ export default {
       this.productPublicityList = [];
       this.productPublicity = "";
       this.productPublicityId = "";
-      this.goalInfo.map(item => {
+      this.goalInfo.map((item) => {
         if (item.product_id == v.id) {
           this.visitPurposeList.push({ id: item.id, text: item.visit_goal });
         }
       });
-      this.visitPropaganda.map(item => {
+      this.visitPropaganda.map((item) => {
         if (item.product_id == v.id) {
           this.productPublicityList.push({ id: item.id, text: item.propaganda });
         }
@@ -374,15 +407,20 @@ export default {
       this.productPublicity = v.text;
       this.productPublicityId = v.id;
     },
+    doctorFeedbackConfirm(v) {
+      this.doctorFeedbackId = v.id;
+      this.doctorFeedback = v.text;
+      this.doctorFeedbackListShow = false;
+    },
     camera() {
       photograph()
-        .then(res => {
+        .then((res) => {
           console.log("305", res);
-          upload(res, 0).then(res => {
+          upload(res, 0).then((res) => {
             this.visitPhoto.push(res);
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("310", err);
         });
     },
@@ -412,9 +450,13 @@ export default {
         this.$toast("拜访渠道不能为空");
       } else if (!this.visit_position) {
         this.$toast("拜访定位不能为空");
-      } else if (!this.doctorFeedback) {
-        this.$toast("医生反馈不能为空");
       } else {
+        if (this.visit_channel == 1) {
+          if (!this.doctorFeedbackId) {
+            this.$toast("医生反馈不能为空");
+            return false;
+          }
+        }
         let data = {
           is_create: type,
           hospital_id: this.hospital_id,
@@ -426,10 +468,10 @@ export default {
           product_id: this.product_id,
           propaganda_id: this.productPublicityId,
           visit_position: this.visit_position,
-          doctor_feedback: this.doctorFeedback,
+          doctor_feedback: this.doctorFeedbackId,
           visit_image: this.visitPhoto[0] || null,
           visit_image_two: this.visitPhoto[1] || null,
-          visit_image_three: this.visitPhoto[2] || null
+          visit_image_three: this.visitPhoto[2] || null,
         };
         this.upDataToServer(data);
       }
@@ -441,11 +483,11 @@ export default {
         forbidClick: true,
         duration: 0,
         loadingType: "spinner",
-        overlay: true
+        overlay: true,
       });
       this.$api
         .createVisit(data)
-        .then(res => {
+        .then((res) => {
           this.$toast.clear();
           if (res.code == 200) {
             localStorage.setItem("prevTime", this.prevTime);
@@ -458,19 +500,19 @@ export default {
               message: res.message,
               forbidClick: true,
               duration: 3000,
-              loadingType: "spinner"
+              loadingType: "spinner",
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$toast.clear();
           console.log(err);
         });
     },
     onBack() {
       history.back();
-    }
-  }
+    },
+  },
 };
 </script>
 <style>
