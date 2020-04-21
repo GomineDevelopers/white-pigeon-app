@@ -100,42 +100,54 @@
         </div>
       </van-list>
       <van-list
-        class="approve_list manager_approve"
+        class="approve_list manager_approve manager_approve2"
         v-show="active == 1"
         v-model="docLoading"
         :finished="docFinished"
         finished-text="无更多医生需要审核"
         @load="getHospitalData"
       >
-        <div
-          class="approve_item flex justify_between"
-          v-for="(item, index) in hospitalList"
-          :key="index + 'b'"
-          @click="getDoctorDetail(item.doctor_id)"
-        >
-          <div class="approve_item_detail">
-            <ul>
-              <li>{{ item.user_name }}提交的医生开发</li>
-              <li class="flex justify_start">
-                <span>医院名：</span>
-                <span>{{ item.hospital_name }}</span>
-              </li>
-              <li class="flex justify_start">
-                <span>医生：</span>
-                <span>{{ item.doctor_name }}</span>
-              </li>
-              <li class="flex justify_start">
-                <span>申请时间：</span>
-                <span>{{ item.create_time }}</span>
-              </li>
-            </ul>
-          </div>
-          <div class="approve_state flex">
-            <img v-if="item.status == 3" src="@/assets/image/approve.png" />
-            <img v-if="item.status == 1" src="@/assets/image/approve_pass.png" />
-            <img v-if="item.status == 2" src="@/assets/image/approve_no.png" />
-          </div>
+        <div class="checkAll">
+          <van-button type="info" plain size="mini" @click="checkAll">全选</van-button>
         </div>
+        <van-checkbox-group v-model="result" ref="checkboxGroup">
+          <div class="approve_item flex" v-for="(item, index) in hospitalList" :key="index + 'b'">
+            <van-checkbox :name="item.doctor_id" v-if="item.status == 3"></van-checkbox>
+            <div class="padding_20" v-show="item.status != 3"></div>
+            <div class="flex_1 flex justify_between" @click="getDoctorDetail(item.doctor_id)">
+              <div class="approve_item_detail">
+                <ul>
+                  <li>{{ item.user_name }}提交的医生开发</li>
+                  <li class="flex justify_start">
+                    <span>医院名：</span>
+                    <span>{{ item.hospital_name }}</span>
+                  </li>
+                  <li class="flex justify_start">
+                    <span>医生：</span>
+                    <span>{{ item.doctor_name }}</span>
+                  </li>
+                  <li class="flex justify_start">
+                    <span>申请时间：</span>
+                    <span>{{ item.create_time }}</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="approve_state flex">
+                <img v-if="item.status == 3" src="@/assets/image/approve.png" />
+                <img v-if="item.status == 1" src="@/assets/image/approve_pass.png" />
+                <img v-if="item.status == 2" src="@/assets/image/approve_no.png" />
+              </div>
+            </div>
+          </div>
+        </van-checkbox-group>
+        <van-row class="handle">
+          <span>
+            <button class="refuse" @click="refuseSubmit(2)">拒绝</button>
+          </span>
+          <span>
+            <button class="pass" @click="passSubmit(1)">通过</button>
+          </span>
+        </van-row>
       </van-list>
     </van-pull-refresh>
   </van-row>
@@ -158,7 +170,8 @@ export default {
       docPage: 1, //医生页
       row: 10,
       productList: [], //产品审批数据
-      hospitalList: [] //医生审批数据
+      hospitalList: [], //医生审批数据
+      result: [],
     };
   },
   created() {
@@ -205,14 +218,17 @@ export default {
         this.isLoading = false;
       }, 500);
     },
+    checkAll() {
+      this.$refs.checkboxGroup.toggleAll(true);
+    },
     // 获取产品审批数据
     getProductData() {
       this.$api
         .regionApprove({
           page: this.proPage,
-          row: this.row
+          row: this.row,
         })
-        .then(res => {
+        .then((res) => {
           switch (res.code) {
             case 200:
               let list = res.regional_hospital_product_list;
@@ -233,7 +249,7 @@ export default {
             case 101:
               this.$dialog
                 .alert({
-                  message: res.message
+                  message: res.message,
                 })
                 .then(() => {
                   this.$router.push("/loginpassword");
@@ -241,7 +257,7 @@ export default {
               break;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -251,9 +267,9 @@ export default {
       this.$api
         .regionDoctorList({
           page: this.docPage,
-          row: this.row
+          row: this.row,
         })
-        .then(res => {
+        .then((res) => {
           switch (res.code) {
             case 200:
               let list = res.check_hospital_list;
@@ -274,7 +290,7 @@ export default {
             case 101:
               this.$dialog
                 .alert({
-                  message: res.message
+                  message: res.message,
                 })
                 .then(() => {
                   this.$router.push("/loginpassword");
@@ -282,7 +298,7 @@ export default {
               break;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -295,7 +311,7 @@ export default {
         .confirm({
           message: "退出登录？",
           confirmButtonText: "确定", //改变确认按钮上显示的文字
-          cancelButtonText: "取消" //改变取消按钮上显示的文字
+          cancelButtonText: "取消", //改变取消按钮上显示的文字
         })
         .then(() => {
           localStorage.removeItem("token");
@@ -351,9 +367,60 @@ export default {
     },
     feedbackList() {
       this.$router.push({ path: "/feedbacklist" });
-    }
+    },
+    refuseSubmit(type) {
+      if (this.result.length == 0) {
+        this.$toast("您当前未选择数据");
+        return false;
+      }
+      this.confirm(type);
+    },
+    passSubmit(type) {
+      if (this.result.length == 0) {
+        this.$toast("您当前未选择数据");
+        return false;
+      }
+      this.confirm(type);
+    },
+    confirm(type) {
+      this.$dialog
+        .confirm({
+          message: "确认提交数据吗？",
+        })
+        .then(() => {
+          this.$toast.loading({
+            id: 0,
+            message: "数据提交中...",
+            forbidClick: true,
+            duration: 0,
+            loadingType: "spinner",
+            overlay: true,
+          });
+          let parmas = {
+            doctor_id_list: this.result,
+            is_pass: type,
+          };
+          this.$api
+            .regionDoctorBatch(parmas)
+            .then((res) => {
+              console.log(res);
+              if (res.code == 200) {
+                this.$toast.success("数据提交成功");
+                this.reload(); //刷新当前页面，加载新数据
+              } else {
+                this.$toast.success(res.message);
+              }
+            })
+            .catch((error) => {
+              this.$toast.fail("数据提交失败");
+              console.log(error);
+            });
+        })
+        .catch(() => {
+          console.log("取消");
+        });
+    },
   },
-  watch: {}
 };
 </script>
 <style>
@@ -361,6 +428,9 @@ export default {
   padding-top: 120px;
   padding-left: 0.8rem;
   padding-right: 0.8rem;
+}
+.approve_list .van-checkbox {
+  width: 1.25rem !important;
 }
 </style>
 <style scoped>
@@ -477,5 +547,49 @@ export default {
 }
 .add_icon {
   font-size: 1rem;
+}
+.padding_20 {
+  width: 1.25rem;
+}
+.checkAll {
+  text-align: left;
+}
+.checkAll .van-button span {
+  font-size: 0.625rem;
+}
+.manager_approve2 {
+  padding-bottom: 3rem;
+}
+.handle {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 1rem;
+  width: calc(100% - 1.6rem);
+  padding-right: 0.8rem;
+  margin: auto;
+}
+.handle span {
+  width: 46%;
+  height: 1.5625rem;
+}
+.refuse,
+.pass {
+  display: block;
+  width: 100%;
+  height: 1.5625rem;
+  line-height: 1.5625rem;
+  border: none;
+  border-radius: 0.25rem;
+}
+.refuse {
+  background: #efded6;
+  color: #f86e24;
+}
+.pass {
+  background: #3399ff;
+  color: #fff;
+  margin-left: 0.7rem;
 }
 </style>

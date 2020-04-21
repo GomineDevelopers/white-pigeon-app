@@ -34,6 +34,10 @@
             <span>申请时间：</span>
             <span>{{ detail.create_time }}</span>
           </li>
+          <li v-if="detail.status == 2">
+            <span>不合格理由：</span>
+            <span>{{ detail.no_pass_reason }}</span>
+          </li>
         </ul>
       </van-row>
     </van-row>
