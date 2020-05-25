@@ -34,6 +34,10 @@
         </van-row>
       </van-row>
     </van-row>
+    <van-row class="login_protocol flex flex_align_center flex_justify_center">
+      <van-checkbox v-model="checked" shape="square">我已阅读并同意</van-checkbox>
+      <router-link :to="{ path: '/loginprotocol' }">《用户协议与隐私政策》</router-link>
+    </van-row>
   </van-row>
 </template>
 <script>
@@ -47,7 +51,8 @@ export default {
       password: "",
       error: "",
       res: "",
-      clientid: ""
+      clientid: "",
+      checked: true,
     };
   },
   created() {
@@ -79,26 +84,33 @@ export default {
       if (!regs.test(this.phone)) {
         this.$notify({
           type: "warning",
-          message: "手机号码有误，请重新输入！"
+          message: "手机号码有误，请重新输入！",
         });
         return false;
       }
       if (this.password.length == 0) {
         this.$notify({
           type: "warning",
-          message: "请输入密码！"
+          message: "请输入密码！",
+        });
+        return false;
+      }
+      if (!this.checked) {
+        this.$notify({
+          type: "warning",
+          message: "请阅读并同意《用户协议与隐私政策》！",
         });
         return false;
       }
       this.loading = true;
       let postData = {
         email: this.phone,
-        password: this.password
+        password: this.password,
       };
       console.log("12:" + postData);
       this.$api
         .loginPassword(postData)
-        .then(res => {
+        .then((res) => {
           console.log("154:" + res);
           this.loading = false;
           if (res.code == 200) {
@@ -106,7 +118,7 @@ export default {
             localStorage.setItem("token", res.token);
             this.$api
               .userInfo()
-              .then(res => {
+              .then((res) => {
                 // console.log("用户信息", res);
                 if (res.code == 200) {
                   if (res.user.status != 1) {
@@ -132,7 +144,7 @@ export default {
                         if (this.$route.query.redirect) {
                           console.log("重定向地址", this.$route.query.redirect);
                           this.$router.replace({
-                            path: decodeURIComponent(this.$route.query.redirect)
+                            path: decodeURIComponent(this.$route.query.redirect),
                           });
                         } else {
                           this.$router.replace({ path: "/" });
@@ -142,14 +154,14 @@ export default {
                   }
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 console.log(error);
               });
           } else if (res.code == 401) {
             this.$toast.fail("用户名或密码错误");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.loading = false;
           console.log(error);
         });
@@ -158,19 +170,40 @@ export default {
       if (this.clientid != null) {
         this.$api
           .updateCid({ cid: this.clientid })
-          .then(res => {
+          .then((res) => {
             console.log(res);
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
 .header_text {
   margin-top: 1rem !important;
+}
+</style>
+<style scpoed>
+.register {
+  height: 100vh;
+  position: relative;
+}
+.login_protocol {
+  /* position: absolute;
+  bottom: 1.875rem;
+  left: 0;
+  right: 0; */
+  text-align: center;
+  font-size: 0.625rem;
+  margin-top: 35vh;
+}
+.van-checkbox__icon {
+  font-size: 0.75rem;
+}
+.login_protocol span {
+  font-size: 0.625rem;
 }
 </style>

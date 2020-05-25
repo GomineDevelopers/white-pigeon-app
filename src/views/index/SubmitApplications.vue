@@ -69,7 +69,7 @@
                 v-model="message2"
                 autosize
                 type="textarea"
-                placeholder="对医院竟品情况的了解"
+                placeholder="对医院竞品情况的了解"
               />
             </van-cell-group>
           </van-row>
@@ -114,7 +114,7 @@ export default {
         { text: "6个月", id: 6 },
         { text: "7个月", id: 7 },
         { text: "8个月", id: 8 },
-        { text: "9个月", id: 9 }
+        { text: "9个月", id: 9 },
       ],
       date: "", //完成时间
       message: "",
@@ -125,9 +125,9 @@ export default {
         "十分清楚此医院重点医生信息",
         "可快速进药",
         "开发成功后，用量较大",
-        "可长期进药"
+        "可长期进药",
       ],
-      message2: ""
+      message2: "",
     };
   },
   created() {
@@ -180,7 +180,7 @@ export default {
           forbidClick: true,
           duration: 0,
           loadingType: "spinner",
-          overlay: true
+          overlay: true,
         });
         // console.log("准备提交开发");
         let postData = {
@@ -190,14 +190,14 @@ export default {
           estimated_month: this.timeId,
           complete_time: this.date,
           hospital_know: this.message,
-          commodity_know: this.message2
+          commodity_know: this.message2,
         };
         // 1-已开发  2-不可开发  3-空白医院  4-开发中
         if (this.productData.hospitailStatus == 3) {
           console.log("空白医院的提交");
           this.$api
             .hospitalApply(postData)
-            .then(res => {
+            .then((res) => {
               console.log(res);
               if (res.code == 200) {
                 this.$toast.clear();
@@ -205,7 +205,7 @@ export default {
                   .alert({
                     title: "提示",
                     message:
-                      "您的申请已提交成功！工作人员将在三个工作日内与您取得联系，请保持手机畅通，谢谢！"
+                      "您的申请已提交成功！工作人员将在三个工作日内与您取得联系，请保持手机畅通，谢谢！",
                   })
                   .then(() => {
                     this.$router.push({ path: "/productapply" });
@@ -217,14 +217,14 @@ export default {
                 }, 1500);
               }
             })
-            .catch(error => {
+            .catch((error) => {
               console.log(error);
             });
         } else if (this.productData.hospitailStatus == 4) {
           console.log("开发中医院的提交");
           this.$api
             .hospitalDevelopmentApply(postData)
-            .then(res => {
+            .then((res) => {
               console.log(res);
               if (res.code == 200) {
                 this.$toast.clear();
@@ -232,7 +232,7 @@ export default {
                   .alert({
                     title: "提示",
                     message:
-                      "您的申请已提交成功！工作人员将在三个工作日内与您取得联系，请保持手机畅通，谢谢！"
+                      "您的申请已提交成功！工作人员将在三个工作日内与您取得联系，请保持手机畅通，谢谢！",
                   })
                   .then(() => {
                     this.$router.push({ path: "/productapply" });
@@ -244,14 +244,14 @@ export default {
                 }, 1500);
               }
             })
-            .catch(error => {
+            .catch((error) => {
               console.log(error);
             });
         } else if (this.productData.hospitailStatus == 1) {
           console.log("已开发医院的提交");
           this.$api
             .hospitalDevelopdApply(postData)
-            .then(res => {
+            .then((res) => {
               console.log(res);
               if (res.code == 200) {
                 this.$toast.clear();
@@ -259,7 +259,7 @@ export default {
                   .alert({
                     title: "提示",
                     message:
-                      "您的申请已提交成功！工作人员将在三个工作日内与您取得联系，请保持手机畅通，谢谢！"
+                      "您的申请已提交成功！工作人员将在三个工作日内与您取得联系，请保持手机畅通，谢谢！",
                   })
                   .then(() => {
                     this.$router.push({ path: "/productapply" });
@@ -271,15 +271,15 @@ export default {
                 }, 1500);
               }
             })
-            .catch(error => {
+            .catch((error) => {
               console.log(error);
             });
         }
       } else {
         this.$toast.fail("请填写必填信息");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

@@ -36,8 +36,8 @@
       </van-row>
     </van-row>
     <van-row class="login_protocol flex flex_align_center flex_justify_center">
-      <van-checkbox v-model="checked" shape="square">我已阅读并同意</van-checkbox>
-      <router-link :to="{ path: '/loginprotocol' }">《用户注册协议》</router-link>
+      <van-checkbox v-model="checked">我已阅读并同意</van-checkbox>
+      <router-link :to="{ path: '/loginprotocol' }">《用户协议与隐私政策》</router-link>
     </van-row>
   </van-row>
 </template>
@@ -54,7 +54,7 @@ export default {
       checked: true,
       time: 60,
       timer: null,
-      loading: false
+      loading: false,
     };
   },
   beforeDestroy() {
@@ -84,7 +84,7 @@ export default {
       if (!regs.test(this.phone)) {
         this.$notify({
           type: "warning",
-          message: "手机号码有误，请重新输入！"
+          message: "手机号码有误，请重新输入！",
         });
         return false;
       }
@@ -92,7 +92,7 @@ export default {
       if (this.isDisable) {
         this.$api
           .authCode(postData)
-          .then(res => {
+          .then((res) => {
             console.log(res);
             if (res.code == 200) {
               this.isDisable = false;
@@ -104,7 +104,7 @@ export default {
               this.$toast.fail("验证码发送失败");
             }
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       } else {
@@ -117,35 +117,35 @@ export default {
       if (!regs.test(this.phone)) {
         this.$notify({
           type: "warning",
-          message: "手机号码有误，请重新输入！"
+          message: "手机号码有误，请重新输入！",
         });
         return false;
       }
       if (this.password == "" || this.passwordAgain == "") {
         this.$notify({
           type: "warning",
-          message: "请输入密码！"
+          message: "请输入密码！",
         });
         return false;
       }
       if (this.password != this.passwordAgain) {
         this.$notify({
           type: "warning",
-          message: "两次输入密码不一致！"
+          message: "两次输入密码不一致！",
         });
         return false;
       }
       if (this.authCode == "") {
         this.$notify({
           type: "warning",
-          message: "请输入验证码！"
+          message: "请输入验证码！",
         });
         return false;
       }
       if (!this.checked) {
         this.$notify({
           type: "warning",
-          message: "请阅读并同意《用户注册协议》！"
+          message: "请阅读并同意《用户协议与隐私政策》！",
         });
         return false;
       }
@@ -154,11 +154,11 @@ export default {
         mobile: this.phone,
         password: this.password,
         confirmPasswd: this.passwordAgain,
-        code: this.authCode
+        code: this.authCode,
       };
       this.$api
         .register(postData)
-        .then(res => {
+        .then((res) => {
           // console.log(res);
           if (res.code == 200) {
             this.$toast.success("注册成功！");
@@ -170,12 +170,12 @@ export default {
           }
           this.loading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           this.loading = false;
           console.log(error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

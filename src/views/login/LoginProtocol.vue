@@ -1,7 +1,7 @@
 <template>
   <van-row>
     <van-row class="top_nav_bar nav_bgm">
-      <van-nav-bar title="注册协议" left-arrow @click-left="onBack()" />
+      <van-nav-bar title="用户协议与隐私政策" left-arrow @click-left="onBack()" />
     </van-row>
     <van-row class="main_body">
       <van-row class="loginprotocol">
@@ -106,8 +106,8 @@ export default {
   methods: {
     onBack() {
       history.back();
-    }
-  }
+    },
+  },
 };
 </script>
 <style scpoed>

@@ -42,13 +42,11 @@
         <span>{{ doctorFeedback }}</span>
       </van-row>
       <van-row
-        v-if="detail.refuse_reason != null"
+        v-if="detail.refuse_reason"
         class="doctor_detail_item flex flex_align_center justify_between border_bom"
       >
         <span class="flex_1">拒绝理由</span>
-        <span v-if="detail.refuse_reason == 1">当日拜访医生重复</span>
-        <span v-if="detail.refuse_reason == 2">医生反馈不合格</span>
-        <span v-if="detail.refuse_reason == 3">拜访时间交叉重合</span>
+        <span>{{ detail.refuse_reason }}</span>
       </van-row>
       <van-row class="doctor_detail_item">
         <span>照片上传</span>

@@ -9,7 +9,7 @@ import router from ".././router";
 if (process.env.NODE_ENV == "development") {
   axios.defaults.baseURL = "http://localhost:8080";
 } else if (process.env.NODE_ENV == "production") {
-  axios.defaults.baseURL = "http://back.zidata.cn/api";
+  axios.defaults.baseURL = "http://xbg.zhuque.tech/api";
 }
 
 axios.defaults.timeout = 10000; //设置请求超时
@@ -17,21 +17,21 @@ axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded
 
 // 请求拦截
 axios.interceptors.request.use(
-  config => {
+  (config) => {
     const token = store.state.token;
     if (token) {
       config.headers.Authorization = "Bearer " + token;
     }
     return config;
   },
-  error => {
+  (error) => {
     return Promise.error(error);
   }
 );
 
 // 响应拦截器
 axios.interceptors.response.use(
-  response => {
+  (response) => {
     // var newToken = response.headers.authorization
     // 如果 header 中存在 token，那么触发 refreshToken 方法，替换本地的 token
     if (response.headers.authorization) {
@@ -50,7 +50,7 @@ axios.interceptors.response.use(
     }
   },
   // 根据返回的状态码进行相关操作，例如登录过期提示，错误提示等等
-  error => {
+  (error) => {
     if (error.response.status) {
       switch (error.response.status) {
         case 401:
@@ -59,8 +59,8 @@ axios.interceptors.response.use(
             router.replace({
               path: "/loginpassword",
               query: {
-                redirect: router.currentRoute.fullPath
-              }
+                redirect: router.currentRoute.fullPath,
+              },
             });
           }, 2000);
           break;
@@ -70,8 +70,8 @@ axios.interceptors.response.use(
             router.replace({
               path: "/loginpassword",
               query: {
-                redirect: router.currentRoute.fullPath
-              }
+                redirect: router.currentRoute.fullPath,
+              },
             });
           }, 2000);
           break;
@@ -85,8 +85,8 @@ axios.interceptors.response.use(
             router.replace({
               path: "/loginpassword",
               query: {
-                redirect: router.currentRoute.fullPath
-              }
+                redirect: router.currentRoute.fullPath,
+              },
             });
           }, 2000);
           break;
@@ -98,7 +98,7 @@ axios.interceptors.response.use(
           Toast({
             message: "请求资源不存在",
             duration: 1500,
-            forbidClick: true
+            forbidClick: true,
           });
           break;
         // 其他错误，直接抛出错误提示
@@ -106,14 +106,14 @@ axios.interceptors.response.use(
           Toast({
             message: "用户不存在",
             duration: 1500,
-            forbidClick: true
+            forbidClick: true,
           });
           break;
         case 9000:
           Toast({
             message: "网络错误，请重试",
             duration: 1500,
-            forbidClick: true
+            forbidClick: true,
           });
           break;
         default:
@@ -133,12 +133,12 @@ export function get(url, params) {
   return new Promise((resolve, reject) => {
     axios
       .get(url, {
-        params: params
+        params: params,
       })
-      .then(res => {
+      .then((res) => {
         resolve(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         reject(err.data);
       });
   });
@@ -153,10 +153,10 @@ export function post(url, params) {
   return new Promise((resolve, reject) => {
     axios
       .post(url, QS.stringify(params))
-      .then(res => {
+      .then((res) => {
         resolve(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         reject(err.data);
       });
   });

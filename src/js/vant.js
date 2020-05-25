@@ -32,7 +32,7 @@ import {
   SwipeCell,
   DropdownMenu,
   DropdownItem,
-  Calendar
+  Calendar,
 } from "vant";
 
 Vue.use(Button);

@@ -91,6 +91,18 @@
                     +{{ bonusDatiled.total_deposit ? bonusDatiled.total_deposit : "0" }}
                   </span>
                 </li>
+                <li>
+                  <span>订单号</span>
+                  <span>
+                    {{ bonusDatiled.develop_bonus ? bonusDatiled.develop_bonus : "0" }}
+                  </span>
+                </li>
+                <li>
+                  <span>订单时间</span>
+                  <span>
+                    {{ bonusDatiled.develop_bonus ? bonusDatiled.develop_bonus : "0" }}
+                  </span>
+                </li>
                 <!-- <li>
                   <span>累计延迟积分</span>
                   <span>
@@ -105,6 +117,9 @@
             </van-row>
             <van-row class="cancel_date">核销日期：{{ bonusDatiled.modify_time }}</van-row>
           </van-row>
+          <div class="integral_btn">
+            <van-button type="info" size="normal">确 认</van-button>
+          </div>
         </van-row>
       </van-row>
     </van-pull-refresh>
@@ -120,7 +135,7 @@ export default {
       isLoading: false,
       name: "",
       name2: "",
-      bonusDatiled: {} //积分明细
+      bonusDatiled: {}, //积分明细
     };
   },
   created() {
@@ -149,17 +164,17 @@ export default {
         message: "数据加载中...",
         forbidClick: true,
         duration: 0,
-        loadingType: "spinner"
+        loadingType: "spinner",
       });
       this.$api
         .userInfo()
-        .then(res => {
+        .then((res) => {
           if (res.code == 200) {
             this.name = res.user.name;
             let param = { user_id: res.user.id };
             this.$api
               .bonusDetail(param)
-              .then(res => {
+              .then((res) => {
                 // console.log(res);
                 this.$toast.clear();
                 if (res.code == 200) {
@@ -169,13 +184,13 @@ export default {
                   }
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 this.$toast.clear();
                 console.log(error);
               });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$toast.clear();
           console.log(error);
         });
@@ -190,8 +205,8 @@ export default {
     // 查看提示
     readTips(id) {
       this.tips == id ? (this.tips = -1) : (this.tips = id);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -292,5 +307,12 @@ export default {
 }
 .title .tips.active {
   display: inline-block;
+}
+.integral_btn {
+  margin-top: 40px;
+  text-align: center;
+}
+.integral_btn button {
+  width: 90%;
 }
 </style>

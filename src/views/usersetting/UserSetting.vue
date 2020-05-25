@@ -16,6 +16,10 @@
         <span class="flex_1">关于我们</span>
         <van-icon name="arrow" class="right_icon" />
       </van-row>
+      <van-row class="setting_item flex flex_align_center justify_between" @click="goPrivacy">
+        <span class="flex_1">用户协议与隐私政策</span>
+        <van-icon name="arrow" class="right_icon" />
+      </van-row>
       <van-row class="public_btn">
         <!-- <button @click="loginOut">退出登录</button> -->
         <van-button
@@ -35,7 +39,7 @@ export default {
   data() {
     return {
       loadingText: "正在退出中...",
-      loading: false
+      loading: false,
     };
   },
   created() {
@@ -57,7 +61,7 @@ export default {
       this.loading = true;
       this.$api
         .loginOut()
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.loading = false;
           this.$store.commit("setToken", null);
@@ -66,18 +70,18 @@ export default {
           localStorage.removeItem("isAnswer");
           this.$dialog
             .alert({
-              message: res.message
+              message: res.message,
             })
-            .then(res => {
+            .then((res) => {
               this.$router.replace("/loginpassword");
             });
         })
-        .catch(err => {
+        .catch((err) => {
           this.$dialog
             .alert({
-              message: "请先登录"
+              message: "请先登录",
             })
-            .then(res => {
+            .then((res) => {
               this.$router.replace("/loginpassword");
             });
         });
@@ -94,8 +98,11 @@ export default {
     },
     goBankCard() {
       this.$router.push({ path: "/bankcard" });
-    }
-  }
+    },
+    goPrivacy() {
+      this.$router.push({ path: "/loginprotocol" });
+    },
+  },
 };
 </script>
 <style scoped>
